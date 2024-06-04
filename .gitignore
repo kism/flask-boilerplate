@@ -1,0 +1,25 @@
+# This App
+settings.*
+*.log
+
+# Javascript, if we want to use eslint or something
+node_modules
+
+# Python
+.venv/
+.cache
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/
+settings.yml
+database.csv
