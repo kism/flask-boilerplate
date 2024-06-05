@@ -1,9 +1,24 @@
 # KiSM's Flask Boilerplate
 
+## Clone
+
+```bash
+git clone https://github.com/kism/kism-flask-boilerplate
+
+# CSS
+cd kism-flask-boilerplate/mycoolapp
+curl https://github.com/kism/zy.css/releases/download/main/grab.sh | bash
+cd -
+
+# Prepare
+rm -rf kism-flask-boilerplate/.git
+mv kism-flask-boilerplate "<new repo name>"
+```
+
 ## Poetry
 
 ```bash
-poetry init --name=mycoolapp --python=^3.11
+poetry init --name="<new app name>" --python=^3.11
 poetry add flask
 poetry add waitress # Run in prod
 poetry add pyyaml # I like to load config from yaml
@@ -29,5 +44,4 @@ flask --app mycoolapp run --port 5000
     --clear-untrusted-proxy-headers \
     --threads 4 \
     --call mycoolapp:mycoolapp
-
 ```
