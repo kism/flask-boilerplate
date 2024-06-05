@@ -25,13 +25,13 @@ In my example I replace mycoolapp with mydankapp.
 ```bash
 NEWNAME=mydankapp
 NEWNAMECAMELCASE=MyDankApp
-SETTINGSVAR=mda_sett
+NEWNSETTINGSVAR=mda_sett
 
 # Files, replace in py in j2 files
-find . -type f \( -name "*.py" -o -name "*.j2" \) | while read -r file; do
+find . -type f \( -name "*.py" -o -name "*.j2" -o -name "README_NEWREPO.md" \) | while read -r file; do
     sed -i "s/mycoolapp/${NEWNAME}/g" "$file" # References to project name in repo
     sed -i "s/MyCoolApp/${NEWNAMECAMELCASE}/g" "$file" # Rename Objects
-    sed -i "s/mca_sett/${SETTINGSVAR}/g" "$file" # Rename Settings Variable
+    sed -i "s/mca_sett/${NEWNSETTINGSVAR}/g" "$file" # Rename Settings Variable
 done
 
 # Rename folders
@@ -40,7 +40,9 @@ mv mycoolapp/mycoolapp_blueprint_one.py ./mycoolapp/${NEWNAME}_blueprint_one.py
 mv mycoolapp/mycoolapp_settings.py ./mycoolapp/${NEWNAME}_settings.py
 mv mycoolapp/mycoolapp_logger.py ./mycoolapp/${NEWNAME}_logger.py
 mv mycoolapp $NEWNAME
+mv README_NEWREPO.md README.md
 
+# Rename root folder
 cd ..
 mv kism-flask-boilerplate ${NEWNAME}
 cd ${NEWNAME}
@@ -56,23 +58,6 @@ poetry add pyyaml # I like to load config from yaml
 poetry add requests # Best way to do webrequests in python
 poetry add ruff --group dev # Best linter
 poetry add pylance --group dev # Language server, integrates with vscode
-poetry install
 ```
 
-## Run Dev
-
-```bash
-poetry shell
-flask --app mycoolapp run --port 5000
-
-# Run Prod
-```bash
-.venv/bin/waitress-serve waitress-serve \
-    --listen "127.0.0.1:5000" \
-    --trusted-proxy '*' \
-    --trusted-proxy-headers 'x-forwarded-for x-forwarded-proto x-forwarded-port' \
-    --log-untrusted-proxy-headers \
-    --clear-untrusted-proxy-headers \
-    --threads 4 \
-    --call mycoolapp:mycoolapp
-```
+##
