@@ -41,8 +41,6 @@ class MyCoolAppSettings:
             self.settings_path = paths[0]
             logger.critical("No configuration file found, creating at default location: %s", self.settings_path)
             self.__write_settings()
-            logger.critical("Exiting")
-            sys.exit(1)
 
         # Load settings file from path
         with open(self.settings_path, encoding="utf8") as yaml_file:
@@ -58,6 +56,8 @@ class MyCoolAppSettings:
 
         self.__write_settings()
 
+        self.__check_settings()
+
         logger.info("Config looks all good!")
 
     def __write_settings(self) -> None:
@@ -71,3 +71,12 @@ class MyCoolAppSettings:
             user_account = pwd.getpwuid(os.getuid())[0]
             err = f"Fix permissions: chown {user_account} {self.settings_path}"
             raise PermissionError(err) from exc
+
+    def __check_settings(self) -> True:
+        """Validate Settings."""
+        failure = False
+
+        if failure:
+            logger.error("Settings validation failed")
+            logger.critical("Exiting")
+            sys.exit(1)

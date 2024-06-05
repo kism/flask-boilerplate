@@ -41,12 +41,12 @@ def create_app(test_config: dict | None = None) -> Flask:
 
 def get_mycoolapp_settings() -> dict:
     """Return the settings."""
-    return ala_sett
+    return mca_sett
 
 
 if __name__ == "mycoolapp":  # Is this normal? It might be, the linter doesnt complain about the imports being here.
     from . import mycoolapp_settings
 
-    ala_sett = mycoolapp_settings.MyCoolAppSettings()
+    mca_sett = mycoolapp_settings.MyCoolAppSettings()
 
-    mycoolapp_logger.setup_logger(ala_sett)
+    mycoolapp_logger.setup_logger(mca_sett)

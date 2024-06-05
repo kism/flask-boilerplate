@@ -8,30 +8,30 @@ LOGLEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 
 
-def setup_logger(ala_sett: dict | None = None) -> Logger:
-    """APP LOGGING, set config per ala_sett."""
+def setup_logger(mca_sett: dict | None = None) -> Logger:
+    """APP LOGGING, set config per mca_sett."""
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)
     logging.getLogger("werkzeug").setLevel(logging.DEBUG)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     # Figure out the settings we will use...
-    ala_sett_dict = {"log_level": logging.INFO, "log_path": ""}
-    if ala_sett:
-        ala_sett_dict["log_level"] = ala_sett.log_level
-        ala_sett_dict["log_path"] = ala_sett.log_path
+    mca_sett_dict = {"log_level": logging.INFO, "log_path": ""}
+    if mca_sett:
+        mca_sett_dict["log_level"] = mca_sett.log_level
+        mca_sett_dict["log_path"] = mca_sett.log_path
 
     # Handle our app's logger
     logger = logging.getLogger()
     logger.handlers.clear()
     __set_console_handler(logger)
-    __set_log_level(logger, ala_sett_dict["log_level"])
+    __set_log_level(logger, mca_sett_dict["log_level"])
 
     # If we are logging to a file
-    if ala_sett_dict["log_path"] != "":
-        __set_file_handler(logger, ala_sett_dict["log_path"])
+    if mca_sett_dict["log_path"] != "":
+        __set_file_handler(logger, mca_sett_dict["log_path"])
 
-    if ala_sett:
+    if mca_sett:
         logger.info("Logger settings configured!")
     else:
         logger.info("Logger initial setup complete.")
