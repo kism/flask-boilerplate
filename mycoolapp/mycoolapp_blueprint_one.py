@@ -4,6 +4,10 @@ import logging
 
 from flask import Blueprint, jsonify
 
+from . import get_mycoolapp_settings
+
+mca_sett = get_mycoolapp_settings() # Settings object
+
 logger = logging.getLogger(__name__)
 
 bp = Blueprint("mycoolapp", __name__)

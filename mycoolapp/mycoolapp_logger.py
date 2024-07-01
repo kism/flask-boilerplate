@@ -8,7 +8,7 @@ LOGLEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 
 
-def setup_logger(mca_sett: dict | None = None) -> Logger:
+def setup_logger(mca_sett: dict | None = None) -> True:
     """APP LOGGING, set config per mca_sett."""
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)
