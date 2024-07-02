@@ -17,7 +17,7 @@ function getHello() {
       document.getElementById("MY_COOL_FIELD").innerHTML = `API SUCCESS`;
 
       document.getElementById("MY_COOL_RESULT").innerHTML = msg;
-      document.getElementById("MY_COOL_RESULT").style.color = "#00FF00";
+      document.getElementById("MY_COOL_RESULT").style.color = "#008000";
     })
     .catch((error) => {
       console.error(`Error: ${error.message}`);

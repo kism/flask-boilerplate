@@ -7,11 +7,13 @@ import sys
 
 import yaml
 
+# This means that the logger will have the right name, loging should be done with this object
 logger = logging.getLogger(__name__)
 
 DEFAULT_SETTINGS = {
     "log_level": "INFO",
     "log_path": "",
+    "my_message": "Hello user!",
 }
 
 

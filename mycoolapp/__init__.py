@@ -14,9 +14,9 @@ def create_app(test_config: dict | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
 
-    if test_config:
+    if test_config:  # For Python testing we will often pass in a flask config
         app.config.from_object(test_config)
-    else:
+    else:  # Otherwise we try load config from a file, instance/flask.toml
         flask_config_path = f"{app.instance_path}{os.sep}flask.toml"
         try:
             app.config.from_file("flask.toml", load=tomllib.load, text=False)
@@ -43,13 +43,13 @@ def create_app(test_config: dict | None = None) -> Flask:
 
 
 def get_mycoolapp_settings() -> dict:
-    """Return the settings."""
+    """Return the settings object to whatever needs it."""
     return mca_sett
 
 
 if __name__ == "mycoolapp":  # Is this normal? It might be, the linter doesnt complain about the imports being here.
     from . import mycoolapp_settings
 
-    mca_sett = mycoolapp_settings.MyCoolAppSettings()
+    mca_sett = mycoolapp_settings.MyCoolAppSettings()  # Create the settings object
 
-    mycoolapp_logger.setup_logger(mca_sett)
+    mycoolapp_logger.setup_logger(mca_sett)  # Setup logger per settings
