@@ -10,11 +10,10 @@ ignore = [
     # Modules
     "DJ",  # Django
     "PTH", # KG builtin-open is fine
+    "DTZ", # KG no need to specify timezone
 
     # Specific rules
     "ANN101", # KG Why define self...
-    "DTZ005", # KG no need to specify timezone
-    "DTZ011", # KG no need to specify timezone
     "TD002",  # KG Verbose TODO, only I work on this project
     "TD003",  # KG Verbose TODO, only I work on this project
 ]
