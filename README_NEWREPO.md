@@ -1,6 +1,8 @@
 # mycoolapp
 
-## Run Dev
+## Run
+
+### Run Dev
 
 ```bash
 poetry install
@@ -8,7 +10,7 @@ poetry shell
 flask --app mycoolapp run --port 5000
 ```
 
-## Run Prod
+### Run Prod
 
 ```bash
 poetry install --only main
@@ -21,3 +23,19 @@ poetry install --only main
     --threads 4 \
     --call mycoolapp:create_app
 ```
+
+## Settings
+
+### Flask Settings
+
+`instance/flask.toml`
+
+for example:
+
+```toml
+    DEBUG = true
+```
+
+### App Settings
+
+Defaults are defined in mycoolapp_settings.py, and settings loading and validation are handled in there too.
