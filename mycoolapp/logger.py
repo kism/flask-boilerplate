@@ -1,4 +1,4 @@
-"""Logger functionality for mycoolapp."""
+"""Setup the logger functionality for mycoolapp."""
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -8,7 +8,16 @@ from flask import Flask
 LOGLEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 
-logger = logging.getLogger(__name__)  # Keep this somewhat consistent with the other modules
+
+# In flask the root logger doesnt have any handlers, its all in app.logger
+# root_logger : root,
+# app.logger  : root, mycoolapp,
+# logger      : root, mycoolapp, logger.py,
+# The issue is that waitress, werkzeug (any any other modules that log) will log separately.
+# The aim is, remove the default handler from the flask App and create one on the root logger to apply settings to all.
+
+root_logger = logging.getLogger()
+logger = logging.getLogger(__name__)  # This is where we log to in this module, following the standard of every module.
 
 
 # Pass in the app to make it obvious what we are configuring.
@@ -17,10 +26,8 @@ logger = logging.getLogger(__name__)  # Keep this somewhat consistent with the o
 # Were if we configure the app's root logger it trickles down to each module.
 def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
     """APP LOGGING, set config per mca_sett."""
-    # Configure modules that are external and have their own loggers
-    logging.getLogger("waitress").setLevel(logging.INFO)
-    logging.getLogger("werkzeug").setLevel(logging.DEBUG)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    # Remove the Flask default handlers
+    app.logger.handlers.clear()
 
     # Figure out the settings we will use...
     mca_sett_dict = {"log_level": logging.INFO, "log_path": ""}
@@ -28,12 +35,20 @@ def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
         mca_sett_dict["log_level"] = mca_sett.log_level
         mca_sett_dict["log_path"] = mca_sett.log_path
 
-    __set_formatter(app)
-    __set_log_level(app, mca_sett_dict["log_level"])
+    # If the root_logger doesnt have a handler (It doesn't by default)
+    if len(root_logger.handlers) == 0:
+        __add_console_handler()
 
-    # If we are logging to a file
+    __set_log_level(mca_sett_dict["log_level"])
+
+    # If we are logging to a file, this will only get called once since the default settings don't have a log path
     if mca_sett_dict["log_path"] != "":
-        __set_file_handler(app, mca_sett_dict["log_path"])
+        __add_file_handler(mca_sett_dict["log_path"])
+
+    # Configure modules that are external and have their own loggers
+    logging.getLogger("waitress").setLevel(logging.INFO)
+    logging.getLogger("werkzeug").setLevel(logging.DEBUG)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     if mca_sett:
         logger.info("Logger settings configured!")
@@ -41,36 +56,38 @@ def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
         logger.info("Logger initial setup complete.")
 
 
-def __set_formatter(app: Flask) -> True:
-    """Setup the Formatting for the logger."""
+def __add_console_handler() -> True:
+    """Setup the Console handler."""
     formatter = logging.Formatter(LOG_FORMAT)
-    handler = app.logger.handlers[0]
-    handler.setFormatter(formatter)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    root_logger.addHandler(console_handler)
 
 
-def __set_log_level(app: Flask, log_level: int | str) -> True:
+def __set_log_level(log_level: int | str) -> True:
     """Sets the log level."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
         if log_level not in LOGLEVELS:
             logger.warning(
                 "❗ Invalid logging level: %s, defaulting to INFO",
-                app.logger.getEffectiveLevel(),
+                root_logger.getEffectiveLevel(),
             )
         else:
-            app.logger.setLevel(log_level)
+            root_logger.setLevel(log_level)
             logger.debug("Set log level: %s", log_level)
     else:
-        app.logger.setLevel(log_level)
+        root_logger.setLevel(log_level)
 
 
-def __set_file_handler(app: Flask, log_path: str) -> True:
+def __add_file_handler(log_path: str) -> True:
     """Sets up the file handler."""
     try:
         filehandler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)
         formatter = logging.Formatter(LOG_FORMAT)
         filehandler.setFormatter(formatter)
-        app.logger.addHandler(filehandler)
+        root_logger.addHandler(filehandler)
         logger.info("Logging to file: %s", log_path)
     except IsADirectoryError as exc:
         err = "You are trying to log to a directory, try a file"

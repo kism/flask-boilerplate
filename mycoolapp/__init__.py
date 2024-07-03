@@ -28,7 +28,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         flask_config_path = f"{app.instance_path}{os.sep}flask.toml"
         try:
             app.config.from_file("flask.toml", load=tomllib.load, text=False)
-            app.logger.warning("Loaded flask config from: %s", flask_config_path)
+            app.logger.info("Loaded flask config from: %s", flask_config_path)
         except FileNotFoundError:
             app.logger.info("No flask configuration file found at: %s", flask_config_path)
             app.logger.info("Using flask app.config defaults (this is not a problem).")
