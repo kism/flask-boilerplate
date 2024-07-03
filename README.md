@@ -59,5 +59,3 @@ poetry add requests # Best way to do webrequests in python
 poetry add ruff --group dev # Best linter
 poetry add pylance --group dev # Language server, integrates with vscode
 ```
-
-##

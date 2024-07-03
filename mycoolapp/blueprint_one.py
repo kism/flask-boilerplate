@@ -20,4 +20,6 @@ def get_hello() -> int:
     message = {"msg": mca_sett.my_message}
     status = 200
 
+    logger.debug("GET request to /hello/, returning: %s", mca_sett.my_message)
+
     return jsonify(message), status

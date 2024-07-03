@@ -5,15 +5,23 @@ import tomllib
 
 from flask import Flask, render_template
 
-from . import mycoolapp_logger
+from . import logger
+from .settings import MyCoolAppSettings
 
-mycoolapp_logger.setup_logger()
+mca_sett = MyCoolAppSettings()  # Create the settings object
 
 
 def create_app(test_config: dict | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
 
+    logger.setup_logger(app)  # Setup logger per defaults
+
+    mca_sett.load_settings_from_disk()  # Loads app settings from disk
+
+    logger.setup_logger(app, mca_sett)  # Setup logger per settings
+
+    # This is for the flask config, separate from everything in settings.py
     if test_config:  # For Python testing we will often pass in a flask config
         app.config.from_object(test_config)
     else:  # Otherwise we try load config from a file, instance/flask.toml
@@ -29,15 +37,17 @@ def create_app(test_config: dict | None = None) -> Flask:
     app.logger.debug(flask_settings_message)
 
     # Now that we have loaded out configuration, we can import our modules
-    from . import mycoolapp_blueprint_one
+    from . import blueprint_one
 
     # Register blueprints
-    app.register_blueprint(mycoolapp_blueprint_one.bp)
+    app.register_blueprint(blueprint_one.bp)
 
     @app.route("/")
     def home() -> str:
         """Flask Home."""
         return render_template("home.html.j2", app_name=__name__)
+
+    app.logger.info("Starting Web Server")
 
     return app
 
@@ -45,11 +55,3 @@ def create_app(test_config: dict | None = None) -> Flask:
 def get_mycoolapp_settings() -> dict:
     """Return the settings object to whatever needs it."""
     return mca_sett
-
-
-if __name__ == "mycoolapp":  # Is this normal? It might be, the linter doesnt complain about the imports being here.
-    from . import mycoolapp_settings
-
-    mca_sett = mycoolapp_settings.MyCoolAppSettings()  # Create the settings object
-
-    mycoolapp_logger.setup_logger(mca_sett)  # Setup logger per settings
