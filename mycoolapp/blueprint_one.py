@@ -9,7 +9,10 @@ from . import get_mycoolapp_settings
 mca_sett = get_mycoolapp_settings()  # Get the settings
 
 # This means that the logger will have the right name, loging should be done with this object
-logger = logging.getLogger(__name__)
+# If you were to list all loggers with something like...
+# `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
+# Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)
+logger = logging.getLogger(__name__) # Create a logger named mycoolapp.this_module_name
 
 bp = Blueprint("mycoolapp", __name__)
 

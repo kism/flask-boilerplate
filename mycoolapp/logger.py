@@ -12,18 +12,15 @@ LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 # In flask the root logger doesnt have any handlers, its all in app.logger
 # root_logger : root,
 # app.logger  : root, mycoolapp,
-# logger      : root, mycoolapp, logger.py,
+# logger      : root, mycoolapp, mycoolapp.module_name,
 # The issue is that waitress, werkzeug (any any other modules that log) will log separately.
 # The aim is, remove the default handler from the flask App and create one on the root logger to apply settings to all.
 
-root_logger = logging.getLogger()
+root_logger = logging.getLogger()  # Get the root logger
 logger = logging.getLogger(__name__)  # This is where we log to in this module, following the standard of every module.
 
 
-# Pass in the app to make it obvious what we are configuring.
-# If we were to configure the logger object we get from logging.getLogger(__name__)
-# and change that (modules) logging object's settings it would only be the mycoolapp.logger part.
-# Were if we configure the app's root logger it trickles down to each module.
+# Pass in the app to make it obvious what we are configuring (the logger object within the app object).
 def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
     """APP LOGGING, set config per mca_sett."""
     # Remove the Flask default handlers
@@ -46,9 +43,9 @@ def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
         __add_file_handler(mca_sett_dict["log_path"])
 
     # Configure modules that are external and have their own loggers
-    logging.getLogger("waitress").setLevel(logging.INFO)
-    logging.getLogger("werkzeug").setLevel(logging.DEBUG)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.
+    logging.getLogger("werkzeug").setLevel(logging.DEBUG)  # Only will be used in dev, debug logs incomming requests.
+    logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
     if mca_sett:
         logger.info("Logger settings configured!")
