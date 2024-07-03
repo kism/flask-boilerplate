@@ -1,5 +1,5 @@
 # This App
-settings.*
+settings.yml
 *.log
 
 # Javascript, if we want to use eslint or something
