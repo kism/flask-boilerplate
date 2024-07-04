@@ -16,7 +16,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          apt install pipx
+          sudo apt install pipx
           pipx install poetry
 
       - name: Configure Poetry to install dependencies in virtualenv
