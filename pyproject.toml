@@ -1,26 +1,25 @@
 [tool.poetry]
-name = "kism-flask-boilerplate"
-version = "0.1.0"
+name = "mycoolapp"
+version = "0.0.1"
 description = ""
 authors = ["Kieran Gee <kieran.lost.the.game@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-flask = "^3.0.3"
-waitress = "^3.0.0"
-pyyaml = "^6.0.1"
-requests = "^2.32.3"
-
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.5.0"
-pylance = "^0.13.0"
-
+flask = "*"
+waitress = "*"
+pyyaml = "*"
+requests = "*"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.2.2"
-pytest-cov = "^5.0.0"
+pytest = "*"
+pytest-cov = "*"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "*"
+pylance = "*"
+
 
 [build-system]
 requires = ["poetry-core"]
