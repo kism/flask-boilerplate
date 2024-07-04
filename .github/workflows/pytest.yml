@@ -4,7 +4,7 @@ name: pytest
 on: [push, pull_request]
 
 jobs:
-  check:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,4 +26,5 @@ jobs:
         run: poetry install --without dev
 
       - name: Test with pytest
-        run: .venv/bin/pytest --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        # run: .venv/bin/pytest --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        run: .venv/bin/pytest --doctest-modules --cov=com
