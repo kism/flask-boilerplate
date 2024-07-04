@@ -1,0 +1,29 @@
+---
+name: pytest
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install Poetry
+        run: |
+          apt install pipx
+          pipx install poetry
+
+      - name: Configure Poetry to install dependencies in virtualenv
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        run: poetry install --without dev
+
+      - name: Test with pytest
+        run: |
+          .venv/bin/pytest
+          pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html

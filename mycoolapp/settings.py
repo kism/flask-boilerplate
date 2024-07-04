@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_SETTINGS = {
     "log_level": "INFO",
     "log_path": "",
-    "my_message": "Hello user!",
+    "my_message": "Hello, World!",
 }
 
 
