@@ -1,4 +1,4 @@
-"""I don't know what this does really yet. I think this """
+"""I don't know what this does really yet. I think this."""
 
 import flask
 import pytest

@@ -60,3 +60,10 @@ poetry add ruff --group dev # Best linter
 poetry add pylance --group dev # Language server, integrates with vscode
 poetry add pytest --group test # Testing
 ```
+
+## TODO
+
+- WHY IT SAY DEBUG OFF
+- MIGRATE TO TOML
+- WHY TEST FAIL
+- SETTINGS GROUPING

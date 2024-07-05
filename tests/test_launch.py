@@ -2,10 +2,11 @@
 
 from flask.testing import FlaskClient
 
-
 from mycoolapp import create_app
 
-def test_config():
+
+def test_config() -> None:
+    """Test config or something..."""
     assert not create_app().testing
     assert create_app({"TESTING": True}).testing
 

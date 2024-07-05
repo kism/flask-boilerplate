@@ -14,6 +14,7 @@ DEFAULT_SETTINGS = {
     "log_level": "INFO",
     "log_path": "",
     "my_message": "Hello, World!",
+    "flask": {"DEBUG": True},
 }
 
 
@@ -28,12 +29,12 @@ class MyCoolAppSettings:
         for key, default_value in DEFAULT_SETTINGS.items():
             setattr(self, key, default_value)
 
-    def load_settings_from_disk(self) -> None:
+    def load_settings_from_disk(self, instance_path: str) -> None:
         """Initiate settings object, get settings from file."""
         # Load the settings from one of the paths
 
         paths = []
-        paths.append(os.getcwd() + os.sep + "settings.yml")
+        paths.append(instance_path + os.sep + "settings.yml")
         paths.append(os.path.expanduser("~/.config/mycoolapp/settings.yml"))
         paths.append("/etc/mycoolapp/settings.yml")
 
