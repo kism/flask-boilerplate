@@ -11,14 +11,20 @@ import tomlkit
 logger = logging.getLogger(__name__)
 
 DEFAULT_SETTINGS = {
-    "log_level": "INFO",
-    "log_path": "",
-    "my_message": "Hello, World!",
-    "flask": {"DEBUG": True},
+    "app": {
+        "my_message": "Hello, World!",
+    },
+    "logging": {
+        "level": "INFO",
+        "path": "",
+    },
+    "flask": {  # This section is for Flask default config entries https://flask.palletsprojects.com/en/3.0.x/config/
+        "DEBUG": False,
+    },
 }
 
 
-class MyCoolAppSettings:
+class MyCoolAppConfig:
     """Object Definition for the settings of the app."""
 
     def __init__(self) -> None:

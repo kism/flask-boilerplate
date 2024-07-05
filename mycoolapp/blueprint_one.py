@@ -12,7 +12,7 @@ mca_sett = get_mycoolapp_settings()  # Get the settings
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
 # Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)
-logger = logging.getLogger(__name__) # Create a logger named mycoolapp.this_module_name
+logger = logging.getLogger(__name__)  # Create a logger named mycoolapp.this_module_name
 
 bp = Blueprint("mycoolapp", __name__)
 
@@ -20,9 +20,9 @@ bp = Blueprint("mycoolapp", __name__)
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""
-    message = {"msg": mca_sett.my_message}
+    message = {"msg": mca_sett.app["my_message"]}
     status = 200
 
-    logger.debug("GET request to /hello/, returning: %s", mca_sett.my_message)
+    logger.debug("GET request to /hello/, returning: %s", mca_sett.app["my_message"])
 
     return jsonify(message), status

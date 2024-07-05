@@ -1,16 +1,14 @@
 """Flask webapp mycoolapp."""
 
-from types import SimpleNamespace
-
 from flask import Flask, render_template
 
 from . import logger
-from .settings import MyCoolAppSettings
+from .config import MyCoolAppConfig
 
-mca_sett = MyCoolAppSettings()  # Create the settings object
+mca_sett = MyCoolAppConfig()  # Create the settings object
 
 
-def create_app(test_config: dict | None = None) -> Flask:
+def create_app(test_config: object | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
 
@@ -18,13 +16,15 @@ def create_app(test_config: dict | None = None) -> Flask:
 
     mca_sett.load_settings_from_disk(app.instance_path)  # Loads app settings from disk
 
-    logger.setup_logger(app, mca_sett)  # Setup logger per settings
+    logger.setup_logger(app, mca_sett.logging)  # Setup logger per settings
 
     # This is for the flask config, separate from everything in settings.py
     if test_config:  # For Python testing we will often pass in a flask config
-        app.config.from_object(test_config)
-    else:  # Otherwise we try load config from a file, instance/flask.toml
-        app.config.from_object(SimpleNamespace(**mca_sett.flask))
+        app.config.from_mapping(test_config)
+    else:
+        # Otherwise we try load config from config loaded, I use SimpleNamespace to convert the dictionary
+        # to an object since Flask can't load config from a dict.
+        app.config.from_mapping(mca_sett.flask)
 
     flask_settings_message = "Flask Settings:\n" + "\n".join([f"{key}: {value}" for key, value in app.config.items()])
     app.logger.debug(flask_settings_message)

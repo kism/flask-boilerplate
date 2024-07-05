@@ -21,33 +21,34 @@ logger = logging.getLogger(__name__)  # This is where we log to in this module, 
 
 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
-def setup_logger(app: Flask, mca_sett: dict | None = None) -> True:
+def setup_logger(app: Flask, in_logging_conf: dict | None = None) -> True:
     """APP LOGGING, set config per mca_sett."""
     # Remove the Flask default handlers
     app.logger.handlers.clear()
 
+    logging_conf = in_logging_conf
+
     # Figure out the settings we will use...
-    mca_sett_dict = {"log_level": logging.INFO, "log_path": ""}
-    if mca_sett:
-        mca_sett_dict["log_level"] = mca_sett.log_level
-        mca_sett_dict["log_path"] = mca_sett.log_path
+    if not logging_conf:
+        logging_conf = {"level": logging.INFO, "path": ""}
+
 
     # If the root_logger doesnt have a handler (It doesn't by default)
     if len(root_logger.handlers) == 0:
         __add_console_handler()
 
-    __set_log_level(mca_sett_dict["log_level"])
+    __set_log_level(logging_conf["level"])
 
     # If we are logging to a file, this will only get called once since the default settings don't have a log path
-    if mca_sett_dict["log_path"] != "":
-        __add_file_handler(mca_sett_dict["log_path"])
+    if logging_conf["path"] != "":
+        __add_file_handler(logging_conf["path"])
 
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.
     logging.getLogger("werkzeug").setLevel(logging.DEBUG)  # Only will be used in dev, debug logs incomming requests.
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
-    if mca_sett:
+    if in_logging_conf:
         logger.info("Logger settings configured!")
     else:
         logger.info("Logger initial setup complete.")
