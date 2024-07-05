@@ -19,10 +19,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
-        run: |
-          sudo apt-get install pipx
-          pipx install poetry
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
 
       - name: Configure Poetry to install dependencies in virtualenv
         run: poetry config virtualenvs.in-project true
