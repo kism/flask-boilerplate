@@ -46,7 +46,7 @@ ignore = [
     "TD003",  # KG Verbose TODO, only I work on this project
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
     "S101", # KG asserts allowed in tests.
     "ARG",  # KG Unused function args -> fixtures nevertheless are functionally relevant
