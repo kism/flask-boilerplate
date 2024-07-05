@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.x", "PyPy3.10"]
+        python-version: ["3.x", "pypy3.10"]
 
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          sudo apt install pipx
+          sudo apt-get install pipx
           pipx install poetry
 
       - name: Configure Poetry to install dependencies in virtualenv
