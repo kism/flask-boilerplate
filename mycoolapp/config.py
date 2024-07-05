@@ -1,5 +1,6 @@
 """Settings Processing."""
 
+import contextlib
 import logging
 import os
 import pwd
@@ -56,6 +57,8 @@ class MyCoolAppConfig:
         if not self.settings_path:
             self.settings_path = paths[0]
             logger.critical("No configuration file found, creating at default location: %s", self.settings_path)
+            with contextlib.suppress(Exception):
+                os.makedirs(instance_path) # Create instance path if it doesn't exist
             self.__write_settings()
 
         # Load settings file from path
