@@ -6,7 +6,7 @@ authors = ["Kieran Gee <kieran.lost.the.game@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 flask = "*"
 waitress = "*"
 requests = "*"
@@ -20,11 +20,9 @@ pytest-cov = "*"
 ruff = "*"
 pylance = "*"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.ruff]
 cache-dir = "~/.cache/ruff"
