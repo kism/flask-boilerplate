@@ -1,3 +1,29 @@
+[tool.poetry]
+name = "mycoolapp"
+version = "0.0.1"
+description = ""
+authors = ["Kieran Gee <kieran.lost.the.game@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "*"
+waitress = "*"
+requests = "*"
+tomlkit = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "*"
+pylance = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.ruff]
 cache-dir = "~/.cache/ruff"
 target-version = "py311"
@@ -18,6 +44,13 @@ ignore = [
     "TD003",  # KG Verbose TODO, only I work on this project
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = [
+    "S101", # KG asserts allowed in tests.
+    "ARG",  # KG Unused function args -> fixtures nevertheless are functionally relevant
+    "FBT",  # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
@@ -26,3 +59,6 @@ quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 docstring-code-line-length = 40
+
+[tool.pytest]
+testpaths = "tests"
