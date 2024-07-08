@@ -66,3 +66,5 @@ poetry add pytest --group test # Testing
 - Coverage
 - Codecov
 - instance_path in testing
+- finish create_new_project
+- do some wild regex in create_new_project

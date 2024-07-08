@@ -2,14 +2,13 @@
 name = "mycoolapp"
 version = "0.0.1"
 description = ""
-authors = ["Kieran Gee <kieran.lost.the.game@gmail.com>"]
+authors = ["Your Name <youremailaddress@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 flask = "*"
 waitress = "*"
-requests = "*"
 tomlkit = "*"
 
 [tool.poetry.group.test.dependencies]
@@ -30,8 +29,8 @@ target-version = "py311"
 line-length = 120
 
 [tool.ruff.lint]
-extend-fixable = ["B", "I001"]
-select = ["ALL"] # include all the rules, including new ones
+extend-fixable = ["B", "I001"] # KG I think this means something...
+select = ["ALL"] # KG Include absolutely all of Ruff's rules.
 ignore = [
     # Modules
     "DJ",  # Django
@@ -47,12 +46,16 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
     # Modules
-    "ARG",  # KG Unused function args -> fixtures nevertheless are functionally relevant
-    "FBT",  # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "ARG", # KG Unused function args -> fixtures nevertheless are functionally relevant
+    "FBT", # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
 
     # Specific rules
-    "S101", # KG asserts allowed in tests.
+    "S101",   # KG asserts allowed in tests.
     "INP001", # KG no __init__.py needed for pytest.
+]
+"create_my_new_project.py" = [ # If you have used this boilerplate to start making your app, you can delete this.
+    # Specific rules
+    "T201", # KG print() is fine for the scale of this file
 ]
 
 [tool.ruff.lint.pydocstyle]
