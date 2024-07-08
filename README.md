@@ -51,7 +51,7 @@ cd ${NEWNAME}
 ## Poetry
 
 ```bash
-poetry init --name="${NEWNAME}" --python=^3.11
+poetry init --name="${NEWNAME}" --python=^3.10
 poetry add flask
 poetry add waitress # Run in prod
 poetry add pyyaml # I like to load config from yaml
@@ -63,4 +63,6 @@ poetry add pytest --group test # Testing
 
 ## TODO
 
+- Coverage
 - Codecov
+- instance_path in testing
