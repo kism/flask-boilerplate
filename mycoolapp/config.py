@@ -5,6 +5,7 @@ import logging
 import os
 import pwd
 import sys
+import pprint
 from types import SimpleNamespace
 
 import tomlkit
@@ -26,104 +27,123 @@ DEFAULT_SETTINGS = {
 }
 
 
-def load_settings_from_disk(instance_path: str) -> None:
-    """Initiate settings object, get settings from file."""
-    settings_path = __get_settings_dir(instance_path)  # Get the path of the settings file
+class MyCoolAppConfig:
+    """Settings Object."""
 
-    settings = __load_settings(settings_path)  # Load settings from file
+    def __init__(self) -> None:
+        """Initiate object with default settings.
 
-    __write_settings(settings, settings_path)  # Re-write the settings file
+        Don't validate settings yet
+        Defaults shouldnt necessaraly be enough to get the app to get to the point of starting the webapp.
+        """
+        self.__load_dict(DEFAULT_SETTINGS)
 
-    __check_settings(settings)  # This will exit the program if there is a config issue
+    def load_settings_from_disk(self, instance_path: str) -> None:
+        """Initiate settings object, get settings from file."""
+        settings_path = self.__get_settings_dir(instance_path)  # Get the path of the settings file
 
-    settings = __dict_to_namespace(settings)
+        settings = self.__load_file(settings_path)  # Load settings from file
 
-    logger.info("Config looks all good!")
+        self.__write_settings(settings, settings_path)  # Re-write the settings file
 
-    return settings
+        self.__check_settings(settings)  # This will exit the program if there is a config issue
 
+        self.__load_dict(settings)
 
-def load_settings_from_dictionary(settings: dict) -> None:
-    """Initiate settings dictionary, useful for testing."""
-    __check_settings(settings)  # This will exit the program if there is a config issue
-    settings = __dict_to_namespace(settings)
-    logger.info("Config looks all good!")
-    return settings
+        logger.info("Config looks all good!")
 
+    def load_settings_from_dictionary(self, settings: dict) -> None:
+        """Initiate settings dictionary, useful for testing."""
+        self.__check_settings(settings)  # This will exit the program if there is a config issue
 
-def __write_settings(settings: dict, settings_path: str) -> None:
-    """Write settings file."""
-    try:
-        with open(settings_path, "w", encoding="utf8") as toml_file:
-            settings_write_temp = settings.copy()
-            tomlkit.dump(settings_write_temp, toml_file)
-    except PermissionError as exc:
-        user_account = pwd.getpwuid(os.getuid())[0]
-        err = f"Fix permissions: chown {user_account} {settings_path}"
-        raise PermissionError(err) from exc
+        self.__load_dict(settings)
 
+        logger.info("Config looks all good!")
 
-def __check_settings(settings: dict) -> True:
-    """Validate Settings."""
-    failure = False
+    def log_settings(self) -> None:
+        """Log the settings in full and nice and structured."""
+        log_text = ">>>\nSettings object attributes and their values:"
+        attributes = [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
+        for attr in attributes:
+            log_text += "\n"
+            log_text += f"  {attr}:\n"
+            log_text += f"    {pprint.pformat(getattr(self, attr))}"
+        logger.debug(log_text)
 
-    if "app" not in settings:
-        failure = True  # Somehow no app section of settings
+    def __load_dict(self, settings: dict) -> None:
+        """Load a dict into object vars."""
+        for key, value in settings.items():
+            setattr(self, key, value)
 
-    if failure:
-        logger.error("Settings validation failed")
-        logger.critical("Exiting")
-        sys.exit(1)
-
-
-def __get_settings_dir(instance_path: str) -> str:
-    """Figure out the settings path to load settings from."""
-    settings_path = None
-    paths = []
-    paths.append(instance_path + os.sep + "settings.toml")
-    paths.append(os.path.expanduser("~/.config/mycoolapp/settings.toml"))
-    paths.append("/etc/mycoolapp/settings.toml")
-
-    for path in paths:
-        if os.path.exists(path):
-            logger.info("Found settings at path: %s", path)
-            if not settings_path:
-                logger.info("Using this path as it's the first one that was found")
-                settings_path = path
-        else:
-            logger.info("No settings file found at: %s", path)
-
-    if not settings_path:
-        settings_path = paths[0]
-        logger.critical("No configuration file found, creating at default location: %s", settings_path)
-        with contextlib.suppress(Exception):
-            os.makedirs(instance_path)  # Create instance path if it doesn't exist
-        __write_settings()
-
-    return settings_path
-
-
-def __load_settings(settings_path: str) -> dict:
-    """Load settings from file into a dict."""
-    settings = {}
-
-    with open(settings_path, encoding="utf8") as toml_file:
-        settings_temp = tomlkit.load(toml_file)
-
-    # Set the variables of this object
-    for settings_key in DEFAULT_SETTINGS:
+    def __write_settings(self, settings: dict, settings_path: str) -> None:
+        """Write settings file."""
         try:
-            settings[settings_key] = settings_temp[settings_key]
-        except (KeyError, TypeError):
-            logger.info("%s not defined, leaving as default", settings_key)
+            with open(settings_path, "w", encoding="utf8") as toml_file:
+                settings_write_temp = settings.copy()
+                tomlkit.dump(settings_write_temp, toml_file)
+        except PermissionError as exc:
+            user_account = pwd.getpwuid(os.getuid())[0]
+            err = f"Fix permissions: chown {user_account} {settings_path}"
+            raise PermissionError(err) from exc
 
-    return settings
+    def __check_settings(self, settings: dict) -> True:
+        """Validate Settings."""
+        failure = False
 
+        if "app" not in settings:
+            failure = True  # Somehow no app section of settings
 
-def __dict_to_namespace(d: any) -> any:
-    """I prefer to access the settings via a namespace, no brackets and keys."""
-    if isinstance(d, dict):
-        # Convert nested dictionaries to SimpleNamespace
-        return SimpleNamespace(**{k: __dict_to_namespace(v) for k, v in d.items()})
+        if failure:
+            logger.error("Settings validation failed")
+            logger.critical("Exiting")
+            sys.exit(1)
 
-    return d
+    def __get_settings_dir(self, instance_path: str) -> str:
+        """Figure out the settings path to load settings from."""
+        settings_path = None
+        paths = []
+        paths.append(instance_path + os.sep + "settings.toml")
+        paths.append(os.path.expanduser("~/.config/mycoolapp/settings.toml"))
+        paths.append("/etc/mycoolapp/settings.toml")
+
+        for path in paths:
+            if os.path.exists(path):
+                logger.info("Found settings at path: %s", path)
+                if not settings_path:
+                    logger.info("Using this path as it's the first one that was found")
+                    settings_path = path
+            else:
+                logger.info("No settings file found at: %s", path)
+
+        if not settings_path:
+            settings_path = paths[0]
+            logger.critical("No configuration file found, creating at default location: %s", settings_path)
+            with contextlib.suppress(Exception):
+                os.makedirs(instance_path)  # Create instance path if it doesn't exist
+            self.__write_settings()
+
+        return settings_path
+
+    def __load_file(self, settings_path: str) -> dict:
+        """Load settings from file into a dict."""
+        settings = {}
+
+        with open(settings_path, encoding="utf8") as toml_file:
+            settings_temp = tomlkit.load(toml_file)
+
+        # Set the variables of this object
+        for settings_key in DEFAULT_SETTINGS:
+            try:
+                settings[settings_key] = settings_temp[settings_key]
+            except (KeyError, TypeError):
+                logger.info("%s not defined, leaving as default", settings_key)
+
+        return settings
+
+    def __dict_to_namespace(self, d: any) -> any:
+        """I prefer to access the settings via a namespace, no brackets and keys."""
+        if isinstance(d, dict):
+            # Convert nested dictionaries to SimpleNamespace
+            return SimpleNamespace(**{k: self.__dict_to_namespace(v) for k, v in d.items()})
+
+        return d

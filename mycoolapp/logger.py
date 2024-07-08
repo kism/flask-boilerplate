@@ -31,16 +31,17 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     # Figure out the settings we will use...
     if not logging_conf:
-        logging_conf = SimpleNamespace(level=logging.INFO, path="")
+        # logging_conf = SimpleNamespace(level=logging.INFO, path="")
+        logging_conf = {"level": logging.INFO, "path": ""}
 
     # If the root_logger doesnt have a handler (It doesn't by default)
     if len(root_logger.handlers) == 0:
         __add_console_handler()
 
-    __set_log_level(logging_conf.level)
+    __set_log_level(logging_conf["level"])
 
     # If we are logging to a file, this will only get called once since the default settings don't have a log path
-    if logging_conf.path != "":
+    if logging_conf["path"] != "":
         __add_file_handler(logging_conf.path)
 
     # Configure modules that are external and have their own loggers
