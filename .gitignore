@@ -13,6 +13,7 @@ node_modules
 __pycache__/
 
 instance/
+instance_test/
 .webassets-cache
 
 .pytest_cache/

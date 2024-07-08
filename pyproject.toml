@@ -7,9 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-flask = "*"
-waitress = "*"
-tomlkit = "*"
+flask = "^3.0"
+waitress = "^3.0"
+tomlkit = "^0.12"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
