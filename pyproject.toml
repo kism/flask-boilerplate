@@ -46,9 +46,13 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
-    "S101", # KG asserts allowed in tests.
+    # Modules
     "ARG",  # KG Unused function args -> fixtures nevertheless are functionally relevant
     "FBT",  # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+
+    # Specific rules
+    "S101", # KG asserts allowed in tests.
+    "INP001", # KG no __init__.py needed for pytest.
 ]
 
 [tool.ruff.lint.pydocstyle]

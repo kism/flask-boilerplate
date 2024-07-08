@@ -31,7 +31,6 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     # Figure out the settings we will use...
     if not logging_conf:
-        # logging_conf = SimpleNamespace(level=logging.INFO, path="")
         logging_conf = {"level": logging.INFO, "path": ""}
 
     # If the root_logger doesnt have a handler (It doesn't by default)

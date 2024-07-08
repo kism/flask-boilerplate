@@ -3,10 +3,9 @@
 import contextlib
 import logging
 import os
+import pprint
 import pwd
 import sys
-import pprint
-from types import SimpleNamespace
 
 import tomlkit
 
@@ -40,13 +39,13 @@ class MyCoolAppConfig:
 
     def load_settings_from_disk(self, instance_path: str) -> None:
         """Initiate settings object, get settings from file."""
-        settings_path = self.__get_settings_dir(instance_path)  # Get the path of the settings file
+        settings_path = self.__get_settings_file_path(instance_path)
 
-        settings = self.__load_file(settings_path)  # Load settings from file
+        settings = self.__load_file(settings_path)
 
-        self.__write_settings(settings, settings_path)  # Re-write the settings file
+        self.__write_settings(settings, settings_path)
 
-        self.__check_settings(settings)  # This will exit the program if there is a config issue
+        self.__check_settings(settings)
 
         self.__load_dict(settings)
 
@@ -54,7 +53,7 @@ class MyCoolAppConfig:
 
     def load_settings_from_dictionary(self, settings: dict) -> None:
         """Initiate settings dictionary, useful for testing."""
-        self.__check_settings(settings)  # This will exit the program if there is a config issue
+        self.__check_settings(settings)
 
         self.__load_dict(settings)
 
@@ -76,7 +75,7 @@ class MyCoolAppConfig:
             setattr(self, key, value)
 
     def __write_settings(self, settings: dict, settings_path: str) -> None:
-        """Write settings file."""
+        """Write settings file, used to write initial config to disk."""
         try:
             with open(settings_path, "w", encoding="utf8") as toml_file:
                 settings_write_temp = settings.copy()
@@ -87,7 +86,7 @@ class MyCoolAppConfig:
             raise PermissionError(err) from exc
 
     def __check_settings(self, settings: dict) -> True:
-        """Validate Settings."""
+        """Validate Settings. Exit the program if they don't validate."""
         failure = False
 
         if "app" not in settings:
@@ -98,7 +97,7 @@ class MyCoolAppConfig:
             logger.critical("Exiting")
             sys.exit(1)
 
-    def __get_settings_dir(self, instance_path: str) -> str:
+    def __get_settings_file_path(self, instance_path: str) -> str:
         """Figure out the settings path to load settings from."""
         settings_path = None
         paths = []
@@ -139,11 +138,3 @@ class MyCoolAppConfig:
                 logger.info("%s not defined, leaving as default", settings_key)
 
         return settings
-
-    def __dict_to_namespace(self, d: any) -> any:
-        """I prefer to access the settings via a namespace, no brackets and keys."""
-        if isinstance(d, dict):
-            # Convert nested dictionaries to SimpleNamespace
-            return SimpleNamespace(**{k: self.__dict_to_namespace(v) for k, v in d.items()})
-
-        return d

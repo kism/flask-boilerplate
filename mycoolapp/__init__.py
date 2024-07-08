@@ -14,7 +14,7 @@ def create_app(test_config: dict | None = None) -> Flask:
     logger.setup_logger(app)  # Setup logger per defaults
 
     if test_config:  # For Python testing we will often pass in a flask config
-        mca_sett.load_settings_from_dictionary()  # Loads app settings from dict provided
+        mca_sett.load_settings_from_dictionary(test_config)  # Loads app settings from dict provided
     else:
         mca_sett.load_settings_from_disk(app.instance_path)  # Loads app settings from disk
 
