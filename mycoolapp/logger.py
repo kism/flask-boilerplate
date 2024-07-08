@@ -2,6 +2,7 @@
 
 import logging
 from logging.handlers import RotatingFileHandler
+from types import SimpleNamespace
 
 from flask import Flask
 
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)  # This is where we log to in this module, 
 
 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
-def setup_logger(app: Flask, in_logging_conf: dict | None = None) -> True:
+def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> True:
     """APP LOGGING, set config per mca_sett."""
     # Remove the Flask default handlers
     app.logger.handlers.clear()
@@ -32,7 +33,6 @@ def setup_logger(app: Flask, in_logging_conf: dict | None = None) -> True:
     if not logging_conf:
         logging_conf = {"level": logging.INFO, "path": ""}
 
-
     # If the root_logger doesnt have a handler (It doesn't by default)
     if len(root_logger.handlers) == 0:
         __add_console_handler()
@@ -41,7 +41,7 @@ def setup_logger(app: Flask, in_logging_conf: dict | None = None) -> True:
 
     # If we are logging to a file, this will only get called once since the default settings don't have a log path
     if logging_conf["path"] != "":
-        __add_file_handler(logging_conf["path"])
+        __add_file_handler(logging_conf.path)
 
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.

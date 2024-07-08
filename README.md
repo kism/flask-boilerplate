@@ -63,7 +63,4 @@ poetry add pytest --group test # Testing
 
 ## TODO
 
-- WHY IT SAY DEBUG OFF
-- MIGRATE TO TOML
-- WHY TEST FAIL
-- SETTINGS GROUPING
+- Codecov
