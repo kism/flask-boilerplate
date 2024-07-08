@@ -43,6 +43,14 @@ def load_settings_from_disk(instance_path: str) -> None:
     return settings
 
 
+def load_settings_from_dictionary(settings: dict) -> None:
+    """Initiate settings dictionary, useful for testing."""
+    __check_settings(settings)  # This will exit the program if there is a config issue
+    settings = __dict_to_namespace(settings)
+    logger.info("Config looks all good!")
+    return settings
+
+
 def __write_settings(settings: dict, settings_path: str) -> None:
     """Write settings file."""
     try:
