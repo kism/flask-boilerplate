@@ -4,6 +4,7 @@ Fixtures defined in a conftest.py can be used by any test in that package withou
 """
 
 import os
+import shutil
 
 import flask
 import pytest
@@ -27,7 +28,13 @@ def app() -> True:
 
     yield app  # Yield, no idea what this is
 
-    # clean up / reset resources here
+    # Cleanup TEST_INSTANCE_PATH directory
+    if os.path.exists(TEST_INSTANCE_PATH):
+        shutil.rmtree(TEST_INSTANCE_PATH)
+
+    # Recreate the folder
+    os.makedirs(TEST_INSTANCE_PATH)
+
     return app
 
 
