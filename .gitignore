@@ -13,6 +13,7 @@ node_modules
 __pycache__/
 
 instance/
+.webassets-cache
 
 .pytest_cache/
 .coverage

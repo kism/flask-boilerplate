@@ -116,10 +116,10 @@ class MyCoolAppConfig:
 
         if not settings_path:
             settings_path = paths[0]
-            logger.critical("No configuration file found, creating at default location: %s", settings_path)
+            logger.warning("No configuration file found, creating at default location: %s", settings_path)
             with contextlib.suppress(Exception):
                 os.makedirs(instance_path)  # Create instance path if it doesn't exist
-            self.__write_settings()
+            self.__write_settings(DEFAULT_SETTINGS, settings_path)
 
         return settings_path
 

@@ -8,11 +8,12 @@ import pytest
 
 from mycoolapp import create_app
 
+config_testing_true_valid = {"app": {"my_message": "Hello, World!"}, "logging": {}, "flask": {"TESTING": True}}
 
 @pytest.fixture()
 def app() -> True:
     """TODO?????"""
-    app = create_app()
+    app = create_app(config_testing_true_valid)
     app.config.update(
         {
             "TESTING": True,
