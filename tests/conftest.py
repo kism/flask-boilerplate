@@ -4,7 +4,6 @@ Fixtures defined in a conftest.py can be used by any test in that package withou
 """
 
 import os
-import shutil
 
 import flask
 import pytest
@@ -13,6 +12,7 @@ from mycoolapp import create_app
 
 CONFIG_TESTING_TRUE_VALID = {"app": {"my_message": "Hello, World!"}, "logging": {}, "flask": {"TESTING": True}}
 TEST_INSTANCE_PATH = f"{os.getcwd()}{os.sep}instance_test"
+CONFIG_FILE_PATH = f"{TEST_INSTANCE_PATH}{os.sep}settings.toml"
 
 @pytest.fixture()
 def app() -> True:
@@ -26,16 +26,10 @@ def app() -> True:
 
     # other setup can go here
 
-    yield app  # Yield, no idea what this is
+    yield app  # This is the state that the test will get the object, anything below is cleanup.
 
-    # Cleanup TEST_INSTANCE_PATH directory
-    if os.path.exists(TEST_INSTANCE_PATH):
-        shutil.rmtree(TEST_INSTANCE_PATH)
+    os.unlink(CONFIG_FILE_PATH) # Remove any created config
 
-    # Recreate the folder
-    os.makedirs(TEST_INSTANCE_PATH)
-
-    return app
 
 
 @pytest.fixture()
