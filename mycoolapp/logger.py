@@ -93,4 +93,4 @@ def __add_file_handler(log_path: str) -> True:
 
     except PermissionError as exc:
         err = "The user running this does not have access to the file: " + log_path
-        raise IsADirectoryError(err) from exc
+        raise PermissionError(err) from exc
