@@ -8,12 +8,13 @@ import pytest
 from mycoolapp import create_app
 
 TEST_INSTANCE_PATH = f"{os.getcwd()}{os.sep}instance_test"
+TEST_LOG_PATH = f"{TEST_INSTANCE_PATH}{os.sep}testlog.log"
 CONFIG_FILE_PATH = f"{TEST_INSTANCE_PATH}{os.sep}settings.toml"
 CONFIG_TESTING_TRUE_VALID = {"app": {}, "logging": {}, "flask": {"TESTING": True}}
 CONFIG_TESTING_FALSE_VALID = {"app": {}, "logging": {}, "flask": {}}
 CONFIG_LOGGING_PATH_VALID = {
     "app": {},
-    "logging": {"path": f"{TEST_INSTANCE_PATH}{os.sep}testlog.log"},
+    "logging": {"path": TEST_LOG_PATH},
     "flask": {"TESTING": True},
 }
 CONFIG_LOGGING_PATH_INVALID_DIR = {
@@ -57,10 +58,32 @@ def test_config_logging_to_dir():
 
     assert isinstance(exc_info.type, type(IsADirectoryError))
 
+def test_config_logging():
+    """Test if len(root_logger.handlers) == 0: since it picks up the pytest logger.
+
+    The code isn't covered otherwise.
+    """
+    logger = logging.getLogger()
+
+    handlers = logger.handlers.copy()
+
+    for handler in logger.handlers[:]:  # Iterate over a copy to avoid modification issues
+        logger.removeHandler(handler)
+
+    app = create_app(CONFIG_TESTING_TRUE_VALID)
+
+    assert app
+
+    for handler in handlers:
+        logger.addHandler(handler)
+
+
 
 def test_config_logging_to_file():
     """Test if logging to file works."""
-    create_app(CONFIG_LOGGING_PATH_VALID)
+    app = create_app(CONFIG_LOGGING_PATH_VALID)
+    assert app
+    os.unlink(TEST_LOG_PATH)
 
 
 def test_config_file_creation(caplog: pytest.LogCaptureFixture) -> None:
