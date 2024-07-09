@@ -34,4 +34,9 @@ jobs:
 
       - name: Test with pytest
         # run: .venv/bin/pytest --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        run: .venv/bin/pytest --doctest-modules --cov=com
+        run: .venv/bin/pytest --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

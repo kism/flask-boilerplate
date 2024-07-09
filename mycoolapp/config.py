@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_SETTINGS = {
     "app": {
         "my_message": "Hello, World!",
+        "configuration_failure": False,
     },
     "logging": {
         "level": "INFO",
@@ -35,46 +36,53 @@ class MyCoolAppConfig:
         Don't validate settings yet
         Defaults shouldnt necessaraly be enough to get the app to get to the point of starting the webapp.
         """
-        self.__load_dict(DEFAULT_SETTINGS)
+        self._settings = DEFAULT_SETTINGS
+
+    def __getitem__(self, key: str) -> any:
+        """Make this behave like a dictionary."""
+        return self._settings[key]
+
+    def __contains__(self, key: str) -> str:
+        """Make this behave like a dictionary."""
+        return key in self._settings
+
+    def __repr__(self) -> str:
+        """Make this behave like a dictionary."""
+        return repr(self._settings)
 
     def load_settings_from_disk(self, instance_path: str) -> None:
         """Initiate settings object, get settings from file."""
-        settings_path = self.__get_settings_file_path(instance_path)
+        settings_path = self._get_settings_file_path(instance_path)
 
-        settings = self.__load_file(settings_path)
+        settings = self._load_file(settings_path)
 
-        self.__write_settings(settings, settings_path)
+        settings = self._ensure_all_default_settings(DEFAULT_SETTINGS, settings)
 
-        self.__check_settings(settings)
+        self._write_settings(settings, settings_path)
 
-        self.__load_dict(settings)
+        self._check_settings(settings)
+
+        self._settings = settings
 
         logger.info("Config looks all good!")
 
     def load_settings_from_dictionary(self, settings: dict) -> None:
         """Initiate settings dictionary, useful for testing."""
-        self.__check_settings(settings)
+        settings = self._ensure_all_default_settings(DEFAULT_SETTINGS, settings)
 
-        self.__load_dict(settings)
+        self._check_settings(settings)
+
+        self._settings = settings
 
         logger.info("Config looks all good!")
 
     def log_settings(self) -> None:
         """Log the settings in full and nice and structured."""
-        log_text = ">>>\nSettings object attributes and their values:"
-        attributes = [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith("__")]
-        for attr in attributes:
-            log_text += "\n"
-            log_text += f"  {attr}:\n"
-            log_text += f"    {pprint.pformat(getattr(self, attr))}"
+        log_text = ">>>\nSettings object attributes and their values:\n"
+        log_text += f"{pprint.pformat(self._settings)}"
         logger.debug(log_text)
 
-    def __load_dict(self, settings: dict) -> None:
-        """Load a dict into object vars."""
-        for key, value in settings.items():
-            setattr(self, key, value)
-
-    def __write_settings(self, settings: dict, settings_path: str) -> None:
+    def _write_settings(self, settings: dict, settings_path: str) -> None:
         """Write settings file, used to write initial config to disk."""
         try:
             with open(settings_path, "w", encoding="utf8") as toml_file:
@@ -85,19 +93,28 @@ class MyCoolAppConfig:
             err = f"Fix permissions: chown {user_account} {settings_path}"
             raise PermissionError(err) from exc
 
-    def __check_settings(self, settings: dict) -> True:
+    def _check_settings(self, settings: dict) -> True:
         """Validate Settings. Exit the program if they don't validate."""
         failure = False
 
-        if "app" not in settings:
-            failure = True  # Somehow no app section of settings
+        if settings["app"]["configuration_failure"]:
+            failure = True  # This is a silly example
 
         if failure:
             logger.error("Settings validation failed")
             logger.critical("Exiting")
             sys.exit(1)
 
-    def __get_settings_file_path(self, instance_path: str) -> str:
+    def _ensure_all_default_settings(self, base_dict: dict, target_dict: dict) -> dict:
+        for key, value in base_dict.items():
+            if isinstance(value, dict) and key in target_dict:
+                self._ensure_all_default_settings(value, target_dict[key])
+            elif key not in target_dict:
+                target_dict[key] = target_dict.get(key, value)
+
+        return target_dict
+
+    def _get_settings_file_path(self, instance_path: str) -> str:
         """Figure out the settings path to load settings from."""
         settings_path = None
         paths = []
@@ -119,22 +136,11 @@ class MyCoolAppConfig:
             logger.warning("No configuration file found, creating at default location: %s", settings_path)
             with contextlib.suppress(Exception):
                 os.makedirs(instance_path)  # Create instance path if it doesn't exist
-            self.__write_settings(DEFAULT_SETTINGS, settings_path)
+            self._write_settings(DEFAULT_SETTINGS, settings_path)
 
         return settings_path
 
-    def __load_file(self, settings_path: str) -> dict:
+    def _load_file(self, settings_path: str) -> dict:
         """Load settings from file into a dict."""
-        settings = {}
-
         with open(settings_path, encoding="utf8") as toml_file:
-            settings_temp = tomlkit.load(toml_file)
-
-        # Set the variables of this object
-        for settings_key in DEFAULT_SETTINGS:
-            try:
-                settings[settings_key] = settings_temp[settings_key]
-            except (KeyError, TypeError):
-                logger.info("%s not defined, leaving as default", settings_key)
-
-        return settings
+            return tomlkit.load(toml_file)

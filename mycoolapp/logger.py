@@ -35,13 +35,13 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     # If the root_logger doesnt have a handler (It doesn't by default)
     if len(root_logger.handlers) == 0:
-        __add_console_handler()
+        _add_console_handler()
 
-    __set_log_level(logging_conf["level"])
+    _set_log_level(logging_conf["level"])
 
     # If we are logging to a file, this will only get called once since the default settings don't have a log path
     if logging_conf["path"] != "":
-        __add_file_handler(logging_conf.path)
+        _add_file_handler(logging_conf["path"])
 
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.
@@ -54,7 +54,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
         logger.info("Logger initial setup complete.")
 
 
-def __add_console_handler() -> True:
+def _add_console_handler() -> True:
     """Setup the Console handler."""
     formatter = logging.Formatter(LOG_FORMAT)
     console_handler = logging.StreamHandler()
@@ -63,7 +63,7 @@ def __add_console_handler() -> True:
     root_logger.addHandler(console_handler)
 
 
-def __set_log_level(log_level: int | str) -> True:
+def _set_log_level(log_level: int | str) -> True:
     """Sets the log level."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
@@ -79,7 +79,7 @@ def __set_log_level(log_level: int | str) -> True:
         root_logger.setLevel(log_level)
 
 
-def __add_file_handler(log_path: str) -> True:
+def _add_file_handler(log_path: str) -> True:
     """Sets up the file handler."""
     try:
         filehandler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)
@@ -93,4 +93,4 @@ def __add_file_handler(log_path: str) -> True:
 
     except PermissionError as exc:
         err = "The user running this does not have access to the file: " + log_path
-        raise IsADirectoryError(err) from exc
+        raise PermissionError(err) from exc

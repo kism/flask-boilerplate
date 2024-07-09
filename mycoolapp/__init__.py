@@ -7,9 +7,9 @@ from . import config, logger
 mca_sett = config.MyCoolAppConfig()  # Create the settings object
 
 
-def create_app(test_config: dict | None = None) -> Flask:
+def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
 
     logger.setup_logger(app)  # Setup logger per defaults
 
@@ -18,9 +18,9 @@ def create_app(test_config: dict | None = None) -> Flask:
     else:
         mca_sett.load_settings_from_disk(app.instance_path)  # Loads app settings from disk
 
-    logger.setup_logger(app, mca_sett.logging)  # Setup logger per settings
+    logger.setup_logger(app, mca_sett["logging"])  # Setup logger per settings
 
-    app.config.from_mapping(mca_sett.flask)  # Flask config settings, separate
+    app.config.from_mapping(mca_sett["flask"])  # Flask config settings, separate
 
     # Do some debug logging of settings
     mca_sett.log_settings()

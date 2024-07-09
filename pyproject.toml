@@ -2,19 +2,20 @@
 name = "mycoolapp"
 version = "0.0.1"
 description = ""
-authors = ["Kieran Gee <kieran.lost.the.game@gmail.com>"]
+authors = ["Your Name <youremailaddress@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-flask = "*"
-waitress = "*"
-requests = "*"
-tomlkit = "*"
+flask = "^3.0"
+waitress = "^3.0"
+tomlkit = "^0.12"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-cov = "*"
+pytest-mock = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -30,29 +31,40 @@ target-version = "py311"
 line-length = 120
 
 [tool.ruff.lint]
-extend-fixable = ["B", "I001"]
-select = ["ALL"] # include all the rules, including new ones
+extend-fixable = ["B", "I001"] # KG I think this means something...
+extend-unsafe-fixes = [
+    "F401",
+] # KG I don't like that this is fixed automatically (this doesnt work?)
+select = ["ALL"] # KG Include absolutely all of Ruff's rules.
 ignore = [
     # Modules
-    "DJ",  # Django
-    "PTH", # KG builtin-open is fine
-    "DTZ", # KG no need to specify timezone
+    "DJ",  # KG Django not required
+    "PTH", # KG builtin 'open' is fine, not going to use pathlib
+    "DTZ", # KG no need to specify timezone for time objects
 
     # Specific rules
-    "ANN101", # KG Why define self...
+    "ANN101", # KG Why define self type for object functions...
     "TD002",  # KG Verbose TODO, only I work on this project
     "TD003",  # KG Verbose TODO, only I work on this project
+    "ISC001", # KG conflict in the formatter
+    "COM812", # KG conflict in the formatter
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
     # Modules
-    "ARG",  # KG Unused function args -> fixtures nevertheless are functionally relevant
-    "FBT",  # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "ARG", # KG Unused function args -> fixtures nevertheless are functionally relevant
+    "FBT", # KG Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
 
     # Specific rules
-    "S101", # KG asserts allowed in tests.
+    "S101",   # KG asserts allowed in tests.
+    "ANN201", # KG Not really needed for pytest.
     "INP001", # KG no __init__.py needed for pytest.
+    "SLF001", # KG Accessing private members is needed for testing.
+]
+"create_my_new_project.py" = [ # If you have used this boilerplate to start making your app, you can delete this.
+    # Specific rules
+    "T201", # KG print() is fine for the scale of this file
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -64,5 +76,6 @@ indent-style = "space"
 docstring-code-format = true
 docstring-code-line-length = 40
 
-[tool.pytest]
-testpaths = "tests"
+[tool.pytest.ini_options]
+addopts = "--cov=mycoolapp --cov-report=term --cov-report=html"
+testpaths = ["tests"]
