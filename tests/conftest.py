@@ -14,27 +14,20 @@ CONFIG_TESTING_TRUE_VALID = {"app": {"my_message": "Hello, World!"}, "logging": 
 TEST_INSTANCE_PATH = f"{os.getcwd()}{os.sep}instance_test"
 CONFIG_FILE_PATH = f"{TEST_INSTANCE_PATH}{os.sep}settings.toml"
 
+
 @pytest.fixture()
 def app() -> True:
-    """TODO?????"""
+    """This fixture uses the default settings within the flask app."""
     app = create_app(test_config=None, instance_path=TEST_INSTANCE_PATH)
-    app.config.update(
-        {
-            "TESTING": True,
-        },
-    )
-
-    # other setup can go here
 
     yield app  # This is the state that the test will get the object, anything below is cleanup.
 
-    os.unlink(CONFIG_FILE_PATH) # Remove any created config
-
+    os.unlink(CONFIG_FILE_PATH)  # Remove any created config
 
 
 @pytest.fixture()
 def client(app: flask.Flask) -> any:
-    """TODO?????"""
+    """This returns a test client for the default app()."""
     return app.test_client()
 
 

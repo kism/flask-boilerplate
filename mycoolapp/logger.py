@@ -41,7 +41,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     # If we are logging to a file, this will only get called once since the default settings don't have a log path
     if logging_conf["path"] != "":
-        __add_file_handler(logging_conf.path)
+        __add_file_handler(logging_conf["path"])
 
     # Configure modules that are external and have their own loggers
     logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.

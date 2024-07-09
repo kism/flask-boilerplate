@@ -44,11 +44,10 @@ else:
 to_copy_folder_list = [".github", ".vscode", "mycoolapp", "tests"]
 
 for folder_name in to_copy_folder_list:
-  shutil.copytree(os.getcwd() + os.sep + folder_name, dest_folder_path + os.sep + folder_name)
+    shutil.copytree(os.getcwd() + os.sep + folder_name, dest_folder_path + os.sep + folder_name)
 
 to_copy_file_list = ["pyproject.toml", "poetry.toml", ".gitignore"]
 for file_name in to_copy_file_list:
-  shutil.copyfile(os.getcwd() + os.sep + file_name, dest_folder_path + os.sep + file_name)
+    shutil.copyfile(os.getcwd() + os.sep + file_name, dest_folder_path + os.sep + file_name)
 
 shutil.copyfile(os.getcwd() + os.sep + "README_NEWREPO.md", dest_folder_path + os.sep + "README.md")
-

@@ -20,9 +20,9 @@ bp = Blueprint("mycoolapp", __name__)
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""
-    message = {"msg": mca_sett.app["my_message"]}
+    message = {"msg": mca_sett["app"]["my_message"]}
     status = 200
 
-    logger.debug("GET request to /hello/, returning: %s", mca_sett.app["my_message"])
+    logger.debug("GET request to /hello/, returning: %s", mca_sett["app"]["my_message"])
 
     return jsonify(message), status
