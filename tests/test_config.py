@@ -74,6 +74,7 @@ def test_config_logging():
 
     assert app
 
+    # Restore PyTest's handlers
     for handler in handlers:
         logger.addHandler(handler)
 
