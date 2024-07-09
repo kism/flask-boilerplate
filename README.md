@@ -65,7 +65,6 @@ poetry add pytest --group test # Testing
 
 - Coverage
 - Codecov
-- instance_path in testing
+- Pytest have location for configs so they arent everything
 - finish create_new_project
 - do some wild regex in create_new_project
-- revert settings back to just being a dictionary
