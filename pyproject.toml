@@ -10,10 +10,12 @@ python = "^3.10"
 flask = "^3.0"
 waitress = "^3.0"
 tomlkit = "^0.12"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-cov = "*"
+pytest-mock = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -30,7 +32,9 @@ line-length = 120
 
 [tool.ruff.lint]
 extend-fixable = ["B", "I001"] # KG I think this means something...
-extend-unsafe-fixes = ["F401"] # KG I don't like that this is fixed automatically (this doesnt work?)
+extend-unsafe-fixes = [
+    "F401",
+] # KG I don't like that this is fixed automatically (this doesnt work?)
 select = ["ALL"] # KG Include absolutely all of Ruff's rules.
 ignore = [
     # Modules
@@ -56,6 +60,7 @@ ignore = [
     "S101",   # KG asserts allowed in tests.
     "ANN201", # KG Not really needed for pytest.
     "INP001", # KG no __init__.py needed for pytest.
+    "SLF001", # KG Accessing private members is needed for testing.
 ]
 "create_my_new_project.py" = [ # If you have used this boilerplate to start making your app, you can delete this.
     # Specific rules

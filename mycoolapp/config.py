@@ -52,15 +52,15 @@ class MyCoolAppConfig:
 
     def load_settings_from_disk(self, instance_path: str) -> None:
         """Initiate settings object, get settings from file."""
-        settings_path = self.__get_settings_file_path(instance_path)
+        settings_path = self._get_settings_file_path(instance_path)
 
-        settings = self.__load_file(settings_path)
+        settings = self._load_file(settings_path)
 
-        settings = self.__ensure_all_default_settings(DEFAULT_SETTINGS, settings)
+        settings = self._ensure_all_default_settings(DEFAULT_SETTINGS, settings)
 
-        self.__write_settings(settings, settings_path)
+        self._write_settings(settings, settings_path)
 
-        self.__check_settings(settings)
+        self._check_settings(settings)
 
         self._settings = settings
 
@@ -68,9 +68,9 @@ class MyCoolAppConfig:
 
     def load_settings_from_dictionary(self, settings: dict) -> None:
         """Initiate settings dictionary, useful for testing."""
-        settings = self.__ensure_all_default_settings(DEFAULT_SETTINGS, settings)
+        settings = self._ensure_all_default_settings(DEFAULT_SETTINGS, settings)
 
-        self.__check_settings(settings)
+        self._check_settings(settings)
 
         self._settings = settings
 
@@ -82,7 +82,7 @@ class MyCoolAppConfig:
         log_text += f"{pprint.pformat(self._settings)}"
         logger.debug(log_text)
 
-    def __write_settings(self, settings: dict, settings_path: str) -> None:
+    def _write_settings(self, settings: dict, settings_path: str) -> None:
         """Write settings file, used to write initial config to disk."""
         try:
             with open(settings_path, "w", encoding="utf8") as toml_file:
@@ -93,7 +93,7 @@ class MyCoolAppConfig:
             err = f"Fix permissions: chown {user_account} {settings_path}"
             raise PermissionError(err) from exc
 
-    def __check_settings(self, settings: dict) -> True:
+    def _check_settings(self, settings: dict) -> True:
         """Validate Settings. Exit the program if they don't validate."""
         failure = False
 
@@ -105,16 +105,16 @@ class MyCoolAppConfig:
             logger.critical("Exiting")
             sys.exit(1)
 
-    def __ensure_all_default_settings(self, base_dict: dict, target_dict: dict) -> dict:
+    def _ensure_all_default_settings(self, base_dict: dict, target_dict: dict) -> dict:
         for key, value in base_dict.items():
             if isinstance(value, dict) and key in target_dict:
-                self.__ensure_all_default_settings(value, target_dict[key])
+                self._ensure_all_default_settings(value, target_dict[key])
             elif key not in target_dict:
                 target_dict[key] = target_dict.get(key, value)
 
         return target_dict
 
-    def __get_settings_file_path(self, instance_path: str) -> str:
+    def _get_settings_file_path(self, instance_path: str) -> str:
         """Figure out the settings path to load settings from."""
         settings_path = None
         paths = []
@@ -136,11 +136,11 @@ class MyCoolAppConfig:
             logger.warning("No configuration file found, creating at default location: %s", settings_path)
             with contextlib.suppress(Exception):
                 os.makedirs(instance_path)  # Create instance path if it doesn't exist
-            self.__write_settings(DEFAULT_SETTINGS, settings_path)
+            self._write_settings(DEFAULT_SETTINGS, settings_path)
 
         return settings_path
 
-    def __load_file(self, settings_path: str) -> dict:
+    def _load_file(self, settings_path: str) -> dict:
         """Load settings from file into a dict."""
         with open(settings_path, encoding="utf8") as toml_file:
             return tomlkit.load(toml_file)

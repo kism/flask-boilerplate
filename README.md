@@ -68,3 +68,4 @@ poetry add pytest --group test # Testing
 - finish create_new_project
 - do some wild regex in create_new_project
 - new readme's
+- cleanup -> True
