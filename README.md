@@ -1,5 +1,7 @@
 # KiSM's Flask Boilerplate
 
+[![codecov](https://codecov.io/github/kism/kism-flask-boilerplate/graph/badge.svg?token=NARIB5JF9M)](https://codecov.io/github/kism/kism-flask-boilerplate)
+
 ## Clone
 
 ```bash
