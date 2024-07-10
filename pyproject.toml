@@ -10,7 +10,7 @@ python = "^3.10"
 flask = "^3.0"
 waitress = "^3.0"
 tomlkit = "^0.12"
-pytest-mock = "^3.14.0"
+pytest-mock = "^3.14"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
