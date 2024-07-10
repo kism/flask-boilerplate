@@ -1,7 +1,7 @@
 # KiSM's Flask Boilerplate
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kism/kism-flask-boilerplate/main.yml)
-[![codecov](https://codecov.io/github/kism/kism-flask-boilerplate/graph/badge.svg?token=NARIB5JF9M)](https://codecov.io/github/kism/kism-flask-boilerplate)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/kism/flask-boilerplate/main.yml)
+[![codecov](https://codecov.io/github/kism/flask-boilerplate/graph/badge.svg?token=NARIB5JF9M)](https://codecov.io/github/kism/flask-boilerplate)
 
 ## Clone
 
