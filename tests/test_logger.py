@@ -18,16 +18,15 @@ def test_config_invalid_log_level(get_test_config: dict, caplog: pytest.LogCaptu
 
 def test_config_logging_to_dir(get_test_config: dict):
     """Test if logging to directory raises error."""
-    with pytest.raises(IsADirectoryError) as exc_info:
+    with pytest.raises(IsADirectoryError):
         create_app(get_test_config("logging_path_invalid"))
-
-    assert isinstance(exc_info.type, type(IsADirectoryError))
 
 
 def test_config_logging_to_file(get_test_config: dict):
     """Test if logging to file works."""
     app = create_app(get_test_config("logging_path_valid"))
     assert app
+    assert os.path.isfile(pytest.TEST_LOG_PATH)
     os.unlink(pytest.TEST_LOG_PATH)
 
 

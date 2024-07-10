@@ -10,6 +10,7 @@ def test_home(client: FlaskClient) -> None:
     response = client.get("/")
     assert response.status_code == HTTPStatus.OK
 
+
 def test_static_js_exists(client: FlaskClient) -> None:
     """Check that /static/mycoolapp.js exists."""
     response = client.get("/static/mycoolapp.js")
