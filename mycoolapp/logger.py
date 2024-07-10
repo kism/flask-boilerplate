@@ -15,21 +15,21 @@ LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 # app.logger  : root, mycoolapp,
 # logger      : root, mycoolapp, mycoolapp.module_name,
 # The issue is that waitress, werkzeug (any any other modules that log) will log separately.
-# The aim is, remove the default handler from the flask App and create one on the root logger to apply settings to all.
+# The aim is, remove the default handler from the flask App and create one on the root logger to apply config to all.
 
 root_logger = logging.getLogger()  # Get the root logger
 logger = logging.getLogger(__name__)  # This is where we log to in this module, following the standard of every module.
 
 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
-def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> True:
+def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> None:
     """APP LOGGING, set config per mca_sett."""
     # Remove the Flask default handlers
     app.logger.handlers.clear()
 
     logging_conf = in_logging_conf
 
-    # Figure out the settings we will use...
+    # Figure out the config we will use...
     if not logging_conf:
         logging_conf = {"level": logging.INFO, "path": ""}
 
@@ -39,7 +39,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     _set_log_level(logging_conf["level"])
 
-    # If we are logging to a file, this will only get called once since the default settings don't have a log path
+    # If we are logging to a file, this will only get called once since the default config don't have a log path
     if logging_conf["path"] != "":
         _add_file_handler(logging_conf["path"])
 
@@ -49,12 +49,12 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
     if in_logging_conf:
-        logger.info("Logger settings configured!")
+        logger.info("Logger config configured!")
     else:
         logger.info("Logger initial setup complete.")
 
 
-def _add_console_handler() -> True:
+def _add_console_handler() -> None:
     """Setup the Console handler."""
     formatter = logging.Formatter(LOG_FORMAT)
     console_handler = logging.StreamHandler()
@@ -63,7 +63,7 @@ def _add_console_handler() -> True:
     root_logger.addHandler(console_handler)
 
 
-def _set_log_level(log_level: int | str) -> True:
+def _set_log_level(log_level: int | str) -> None:
     """Sets the log level."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
@@ -79,7 +79,7 @@ def _set_log_level(log_level: int | str) -> True:
         root_logger.setLevel(log_level)
 
 
-def _add_file_handler(log_path: str) -> True:
+def _add_file_handler(log_path: str) -> None:
     """Sets up the file handler."""
     try:
         filehandler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)

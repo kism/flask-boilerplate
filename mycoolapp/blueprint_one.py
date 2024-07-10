@@ -4,9 +4,9 @@ import logging
 
 from flask import Blueprint, jsonify
 
-from . import get_mycoolapp_settings
+from . import get_mycoolapp_config
 
-mca_sett = get_mycoolapp_settings()  # Get the settings
+mca_sett = get_mycoolapp_config()  # Get the config
 
 # This means that the logger will have the right name, loging should be done with this object
 # If you were to list all loggers with something like...

@@ -1,5 +1,3 @@
-# This App
-settings.yml
 *.log
 
 # Javascript, if we want to use eslint or something
@@ -23,5 +21,4 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-settings.yml
 database.csv

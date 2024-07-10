@@ -7,7 +7,7 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true
   },
-  // Language settings
+  // Language config
   "python.languageServer": "Pylance",
   "python.terminal.activateEnvInCurrentTerminal": true,
 }

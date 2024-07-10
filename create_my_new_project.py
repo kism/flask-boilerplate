@@ -20,11 +20,11 @@ new_project_name_split = new_project_name_prompt.split()
 
 new_name = ("".join(new_project_name_split)).lower()
 new_name_camel_case = "".join(x for x in new_project_name_prompt.title() if not x.isspace())
-new_settings_var = "".join([word[0] for word in new_project_name_split]) + "_sett"
+new_config_var = "".join([word[0] for word in new_project_name_split]) + "_sett"
 
 print(f"new_name: {new_name}")
 print(f"new_name_camel_case: {new_name_camel_case}")
-print(f"new_settings_var: {new_settings_var}")
+print(f"new_config_var: {new_config_var}")
 
 # Create new app folder
 
@@ -51,3 +51,83 @@ for file_name in to_copy_file_list:
     shutil.copyfile(os.getcwd() + os.sep + file_name, dest_folder_path + os.sep + file_name)
 
 shutil.copyfile(os.getcwd() + os.sep + "README_NEWREPO.md", dest_folder_path + os.sep + "README.md")
+
+# Remove unwanted dirs
+folders_to_remove = ["__pycache__"]
+
+for root, dirs, _ in os.walk(dest_folder_path, topdown=False):
+    for name in dirs:
+        if name in folders_to_remove:
+            folder_path = os.path.join(root, name)
+            shutil.rmtree(folder_path)
+            print(f"Removed: {folder_path}")
+
+
+# Replace strings in files
+
+
+def find_and_replace_in_files(directory: str, find_str: str, replace_str: str) -> None:
+    """Recursively replace strings in files."""
+    for root, __, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            with open(file_path, encoding="utf-8") as f:
+                content = f.read()
+            new_content = content.replace(find_str, replace_str)
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(new_content)
+            print(f"Replaced string in: {file_path}")
+
+
+find_and_replace_in_files(dest_folder_path, "mycoolapp", new_name)
+find_and_replace_in_files(dest_folder_path, "MyCoolApp", new_name_camel_case)
+find_and_replace_in_files(dest_folder_path, "mca_sett", new_config_var)
+
+
+# Replace file and dir names
+
+
+def find_and_replace_file_names(directory: str, find_str: str, replace_str: str) -> None:
+    """Recursively replace strings in files."""
+    for root, _, files in os.walk(directory):
+        for file_name in files:
+            if find_str in file_name:
+                old_path = os.path.join(root, file_name)
+                new_path = os.path.join(root, file_name.replace(find_str, replace_str))
+                os.rename(old_path, new_path)
+                print(f"Renamed file: {old_path} to {new_path}")
+
+
+def find_and_replace_dir_names(directory: str, find_str: str, replace_str: str) -> None:
+    """Recursively replace strings in dirs."""
+    for dirpath, dirnames, _ in os.walk(directory):
+        for dirname in dirnames:
+            if find_str in dirname:
+                old_path = os.path.join(dirpath, dirname)
+                new_path = os.path.join(dirpath, dirname.replace(find_str, replace_str))
+                os.rename(old_path, new_path)
+                print(f"Renamed directory: {old_path} -> {new_path}")
+
+
+def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: str) -> None:
+    """Do both."""
+    find_and_replace_dir_names(directory, find_str, replace_str)
+    find_and_replace_file_names(directory, find_str, replace_str)
+
+
+find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
+
+# Print instructions
+
+print(f"""
+Done!
+
+Todo for you, get the css:
+---------------------------------
+cd {dest_folder_path}
+cd {new_name}
+curl -LsS https://github.com/kism/zy.css/releases/download/main/grab.sh | bash
+cd ..
+---------------------------------
+Todo for you: Read your new projects README.md for the next steps.
+""")

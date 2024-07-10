@@ -24,18 +24,10 @@ poetry install --only main
     --call mycoolapp:create_app
 ```
 
-## Settings
+## Testing
 
-### Flask Settings
+Run `pytest`
 
-`instance/flask.toml`
+## Config
 
-for example:
-
-```toml
-    DEBUG = true
-```
-
-### App Settings
-
-Defaults are defined in mycoolapp_settings.py, and settings loading and validation are handled in there too.
+Defaults are defined in config.py, and config loading and validation are handled in there too.

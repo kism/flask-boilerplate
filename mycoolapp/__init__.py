@@ -4,7 +4,7 @@ from flask import Flask, render_template
 
 from . import config, logger
 
-mca_sett = config.MyCoolAppConfig()  # Create the settings object
+mca_sett = config.MyCoolAppConfig()  # Create the config object
 
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
@@ -14,17 +14,17 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     logger.setup_logger(app)  # Setup logger per defaults
 
     if test_config:  # For Python testing we will often pass in a flask config
-        mca_sett.load_settings_from_dictionary(test_config)  # Loads app settings from dict provided
+        mca_sett.load_config_from_dictionary(test_config)  # Loads app config from dict provided
     else:
-        mca_sett.load_settings_from_disk(app.instance_path)  # Loads app settings from disk
+        mca_sett.load_config_from_disk(app.instance_path)  # Loads app config from disk
 
-    logger.setup_logger(app, mca_sett["logging"])  # Setup logger per settings
+    logger.setup_logger(app, mca_sett["logging"])  # Setup logger per config
 
-    app.config.from_mapping(mca_sett["flask"])  # Flask config settings, separate
+    app.config.from_mapping(mca_sett["flask"])  # Flask config config, separate
 
-    # Do some debug logging of settings
-    mca_sett.log_settings()
-    app_config_str = f"Flask object loaded app.config: \n{app.config.items()}"
+    # Do some debug logging of config
+    mca_sett.log_config()
+    app_config_str = f">>>\nFlask object loaded app.config:\n{app.config.items()}"
     app.logger.debug(app_config_str)
 
     # Now that we have loaded out configuration, we can import our modules
@@ -43,6 +43,6 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     return app
 
 
-def get_mycoolapp_settings() -> dict:
-    """Return the settings object to whatever needs it."""
+def get_mycoolapp_config() -> dict:
+    """Return the config object to whatever needs it."""
     return mca_sett
