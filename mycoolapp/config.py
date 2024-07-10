@@ -38,6 +38,11 @@ class MyCoolAppConfig:
         """
         self._config = DEFAULT_CONFIG
 
+
+    """ These next special methods make this object behave like a dict, a few methods are missing
+    __setitem__, __len__,__delitem__
+    https://gist.github.com/turicas/1510860
+    """
     def __getitem__(self, key: str) -> any:
         """Make this behave like a dictionary."""
         return self._config[key]

@@ -26,3 +26,7 @@ At the end of the script it will give you some instructions to use poetry, and g
   - pyproject.toml
 - handle when there are flask config items that arent in the default config
 - write readme about testing
+- write readme about badges
+- indicate comments written by me
+- more comments
+- code review
