@@ -118,3 +118,14 @@ def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: 
 find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
 
 print("Done!")
+print()
+print("Next steps:")
+print(f"cd {dest_folder_path}")
+print("poetry install")
+print("poetry shell")
+print(f"cd {new_name}")
+print(
+    "curl -LsS https://github.com/kism/zy.css/releases/download/main/grab.sh | bash "
+    "# This gets the latest version of the css"
+)
+print("cd ..")

@@ -26,16 +26,4 @@ poetry install --only main
 
 ## Settings
 
-### Flask Settings
-
-`instance/flask.toml`
-
-for example:
-
-```toml
-    DEBUG = true
-```
-
-### App Settings
-
-Defaults are defined in mycoolapp_settings.py, and settings loading and validation are handled in there too.
+Defaults are defined in config.py, and settings loading and validation are handled in there too.

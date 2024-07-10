@@ -13,7 +13,7 @@ from jinja2 import Template
 from mycoolapp import create_app
 
 TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance_test")
-CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "settings.toml")
+CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "config.toml")
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), f"tests{os.sep}configs")
 TEST_LOG_PATH = os.path.join(TEST_INSTANCE_PATH, "test.log")
 

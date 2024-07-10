@@ -118,9 +118,9 @@ class MyCoolAppConfig:
         """Figure out the settings path to load settings from."""
         settings_path = None
         paths = []
-        paths.append(instance_path + os.sep + "settings.toml")
-        paths.append(os.path.expanduser("~/.config/mycoolapp/settings.toml"))
-        paths.append("/etc/mycoolapp/settings.toml")
+        paths.append(instance_path + os.sep + "config.toml")
+        paths.append(os.path.expanduser("~/.config/mycoolapp/config.toml"))
+        paths.append("/etc/mycoolapp/config.toml")
 
         for path in paths:
             if os.path.exists(path):
