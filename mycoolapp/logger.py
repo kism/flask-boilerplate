@@ -15,7 +15,7 @@ LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 # app.logger  : root, mycoolapp,
 # logger      : root, mycoolapp, mycoolapp.module_name,
 # The issue is that waitress, werkzeug (any any other modules that log) will log separately.
-# The aim is, remove the default handler from the flask App and create one on the root logger to apply settings to all.
+# The aim is, remove the default handler from the flask App and create one on the root logger to apply config to all.
 
 root_logger = logging.getLogger()  # Get the root logger
 logger = logging.getLogger(__name__)  # This is where we log to in this module, following the standard of every module.
@@ -29,7 +29,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     logging_conf = in_logging_conf
 
-    # Figure out the settings we will use...
+    # Figure out the config we will use...
     if not logging_conf:
         logging_conf = {"level": logging.INFO, "path": ""}
 
@@ -39,7 +39,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
 
     _set_log_level(logging_conf["level"])
 
-    # If we are logging to a file, this will only get called once since the default settings don't have a log path
+    # If we are logging to a file, this will only get called once since the default config don't have a log path
     if logging_conf["path"] != "":
         _add_file_handler(logging_conf["path"])
 
@@ -49,7 +49,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
     if in_logging_conf:
-        logger.info("Logger settings configured!")
+        logger.info("Logger config configured!")
     else:
         logger.info("Logger initial setup complete.")
 

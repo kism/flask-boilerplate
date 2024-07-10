@@ -24,6 +24,6 @@ poetry install --only main
     --call mycoolapp:create_app
 ```
 
-## Settings
+## Config
 
-Defaults are defined in config.py, and settings loading and validation are handled in there too.
+Defaults are defined in config.py, and config loading and validation are handled in there too.

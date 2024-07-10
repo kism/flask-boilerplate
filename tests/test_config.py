@@ -10,7 +10,7 @@ from mycoolapp import create_app
 
 def test_config_valid(get_test_config: dict):
     """Test passing config to app."""
-    # TEST: Assert that the settings dictionary can set config attributes successfully.
+    # TEST: Assert that the config dictionary can set config attributes successfully.
     assert not create_app(get_test_config("testing_false_valid")).testing
     assert create_app(get_test_config("testing_true_valid")).testing
 
@@ -29,7 +29,7 @@ def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
     """Try mock a persmission error."""
     import mycoolapp
 
-    sett = mycoolapp.get_mycoolapp_settings()
+    sett = mycoolapp.get_mycoolapp_config()
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -37,11 +37,11 @@ def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
     mocker.patch("builtins.open", mock_open_func)
 
     with pytest.raises(PermissionError):
-        sett._write_settings({}, pytest.CONFIG_FILE_PATH)
+        sett._write_config({}, pytest.CONFIG_FILE_PATH)
 
 
 def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture) -> None:
-    """Tests relating to settings file."""
+    """Tests relating to config file."""
     # TEST: that file is created when no config is provided.
     caplog.set_level(logging.WARNING)
     create_app(test_config=None, instance_path=pytest.TEST_INSTANCE_PATH)
@@ -54,10 +54,10 @@ def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFi
 
 
 def test_dictionary_functions_of_config():
-    """Test the functions in the settings object that let it behave like a dictionary."""
+    """Test the functions in the config object that let it behave like a dictionary."""
     import mycoolapp
 
-    sett = mycoolapp.get_mycoolapp_settings()
+    sett = mycoolapp.get_mycoolapp_config()
 
     # TEST: __contains__ method.
     assert "app" in sett

@@ -20,7 +20,7 @@ TEST_LOG_PATH = os.path.join(TEST_INSTANCE_PATH, "test.log")
 
 @pytest.fixture()
 def app() -> any:
-    """This fixture uses the default settings within the flask app."""
+    """This fixture uses the default config within the flask app."""
     app = create_app(test_config=None, instance_path=TEST_INSTANCE_PATH)
 
     yield app  # This is the state that the test will get the object, anything below is cleanup.
