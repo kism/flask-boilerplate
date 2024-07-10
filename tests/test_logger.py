@@ -8,46 +8,30 @@ import pytest_mock
 
 from mycoolapp import create_app
 
-TEST_INSTANCE_PATH = f"{os.getcwd()}{os.sep}instance_test"
-TEST_LOG_PATH = f"{TEST_INSTANCE_PATH}{os.sep}testlog.log"
-CONFIG_TESTING_TRUE_VALID = {"app": {}, "logging": {}, "flask": {"TESTING": True}}
-CONFIG_LOGGING_INVALID = {"app": {}, "logging": {}, "flask": {"TESTING": True}}
-CONFIG_LOGGING_INVALID_LOG_LEVEL = {"app": {}, "logging": {"level": "INVALID"}, "flask": {"TESTING": True}}
-CONFIG_LOGGING_PATH_VALID = {
-    "app": {},
-    "logging": {"path": TEST_LOG_PATH},
-    "flask": {"TESTING": True},
-}
-CONFIG_LOGGING_PATH_INVALID_DIR = {
-    "app": {},
-    "logging": {"path": f"{TEST_INSTANCE_PATH}"},
-    "flask": {"TESTING": True},
-}
 
-
-def test_config_invalid_log_level(caplog: pytest.LogCaptureFixture):
+def test_config_invalid_log_level(get_test_config: dict, caplog: pytest.LogCaptureFixture):
     """Test if logging to file works."""
     caplog.set_level(logging.WARNING)
-    create_app(CONFIG_LOGGING_INVALID_LOG_LEVEL)
+    create_app(get_test_config("logging_invalid_log_level"))
     assert "Invalid logging level" in caplog.text
 
 
-def test_config_logging_to_dir():
+def test_config_logging_to_dir(get_test_config: dict):
     """Test if logging to directory raises error."""
     with pytest.raises(IsADirectoryError) as exc_info:
-        create_app(CONFIG_LOGGING_PATH_INVALID_DIR)
+        create_app(get_test_config("logging_path_invalid"))
 
     assert isinstance(exc_info.type, type(IsADirectoryError))
 
 
-def test_config_logging_to_file():
+def test_config_logging_to_file(get_test_config: dict):
     """Test if logging to file works."""
-    app = create_app(CONFIG_LOGGING_PATH_VALID)
+    app = create_app(get_test_config("logging_path_valid"))
     assert app
-    os.unlink(TEST_LOG_PATH)
+    os.unlink(pytest.TEST_LOG_PATH)
 
 
-def test_config_logging():
+def test_config_logging(get_test_config: dict):
     """Test if len(root_logger.handlers) == 0: since it picks up the pytest logger.
 
     The code isn't covered otherwise.
@@ -59,7 +43,7 @@ def test_config_logging():
     for handler in logger.handlers[:]:  # Iterate over a copy to avoid modification issues
         logger.removeHandler(handler)
 
-    app = create_app(CONFIG_TESTING_TRUE_VALID)
+    app = create_app(get_test_config("testing_true_valid"))
 
     assert app
 
@@ -78,4 +62,4 @@ def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
     mocker.patch("builtins.open", mock_open_func)
 
     with pytest.raises(PermissionError):
-      _add_file_handler(TEST_LOG_PATH)
+        _add_file_handler(pytest.TEST_LOG_PATH)

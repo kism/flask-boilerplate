@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)  # This is where we log to in this module, 
 
 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
-def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> True:
+def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> None:
     """APP LOGGING, set config per mca_sett."""
     # Remove the Flask default handlers
     app.logger.handlers.clear()
@@ -54,7 +54,7 @@ def setup_logger(app: Flask, in_logging_conf: SimpleNamespace | None = None) -> 
         logger.info("Logger initial setup complete.")
 
 
-def _add_console_handler() -> True:
+def _add_console_handler() -> None:
     """Setup the Console handler."""
     formatter = logging.Formatter(LOG_FORMAT)
     console_handler = logging.StreamHandler()
@@ -63,7 +63,7 @@ def _add_console_handler() -> True:
     root_logger.addHandler(console_handler)
 
 
-def _set_log_level(log_level: int | str) -> True:
+def _set_log_level(log_level: int | str) -> None:
     """Sets the log level."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
@@ -79,7 +79,7 @@ def _set_log_level(log_level: int | str) -> True:
         root_logger.setLevel(log_level)
 
 
-def _add_file_handler(log_path: str) -> True:
+def _add_file_handler(log_path: str) -> None:
     """Sets up the file handler."""
     try:
         filehandler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)

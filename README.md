@@ -6,8 +6,8 @@
 ## Clone
 
 ```bash
-git clone https://github.com/kism/kism-flask-boilerplate
-cd kism-flask-boilerplate
+git clone https://github.com/kism/flask-boilerplate
+cd flask-boilerplate
 
 # CSS
 cd mycoolapp
@@ -47,7 +47,7 @@ mv README_NEWREPO.md README.md
 
 # Rename root folder
 cd ..
-mv kism-flask-boilerplate ${NEWNAME}
+mv flask-boilerplate ${NEWNAME}
 cd ${NEWNAME}
 ```
 
@@ -66,8 +66,7 @@ poetry add pytest --group test # Testing
 
 ## TODO
 
-- Codecov
 - finish create_new_project
 - do some wild regex in create_new_project
 - new readme's
-- cleanup -> True
+- tests separate out configs

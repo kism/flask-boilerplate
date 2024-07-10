@@ -86,14 +86,14 @@ class MyCoolAppConfig:
         """Write settings file, used to write initial config to disk."""
         try:
             with open(settings_path, "w", encoding="utf8") as toml_file:
-                settings_write_temp = settings.copy()
+                settings_write_temp = settings.copy() # TODO Why copy
                 tomlkit.dump(settings_write_temp, toml_file)
         except PermissionError as exc:
             user_account = pwd.getpwuid(os.getuid())[0]
             err = f"Fix permissions: chown {user_account} {settings_path}"
             raise PermissionError(err) from exc
 
-    def _check_settings(self, settings: dict) -> True:
+    def _check_settings(self, settings: dict) -> None:
         """Validate Settings. Exit the program if they don't validate."""
         failure = False
 
