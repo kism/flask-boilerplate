@@ -28,3 +28,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 - indicate comments written by me
 - more comments
 - code review
+- unit tests for the config merging
