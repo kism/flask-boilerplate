@@ -45,6 +45,7 @@ def test_set_log_level(get_test_config: FunctionType):
 
     logger = logging.getLogger("TEST_LOGGER")
 
+    # TEST: Logger ends up with correct values
     _set_log_level(logger, 50)
     assert logger.getEffectiveLevel() == 50  # noqa: PLR2004 50 = 50
 
@@ -56,3 +57,8 @@ def test_set_log_level(get_test_config: FunctionType):
 
     _set_log_level(logger, "INVALID")
     assert logger.getEffectiveLevel() == 20  # noqa: PLR2004 Invalid shoudl result in INFO (20)
+
+    # Reset the object
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+        handler.close()

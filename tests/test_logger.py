@@ -50,3 +50,8 @@ def test_handlers_added(get_test_config: dict):
     # TEST: Two handlers when logging to file expected, another one shouldnt be created
     mycoolapp.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
+
+    # Reset the object
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+        handler.close()

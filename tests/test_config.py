@@ -32,6 +32,7 @@ def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFi
     assert "No configuration file found, creating at default location:" in caplog.text
     caplog.clear()
 
+    # TEST: that file is not created when config is provided.
     caplog.set_level(logging.WARNING)
     create_app(test_config=get_test_config("testing_true_valid"), instance_path=pytest.TEST_INSTANCE_PATH)
     assert "No configuration file found, creating at default location:" not in caplog.text

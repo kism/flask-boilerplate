@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)  # This is where we log to in this module, 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
 def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | None = None) -> None:
     """APP LOGGING, set config per mca_sett."""
-    if not in_logger: # This should only not be the case for testing.
+    if not in_logger:  # This should only not be the case for testing.
         in_logger = logging.getLogger()  # Get the root logger
 
     app.logger.handlers.clear()  # Remove the Flask default handlers
@@ -48,6 +48,7 @@ def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | Non
 def _has_file_handler(in_logger: logging.Logger) -> bool:
     """Check if logger has file handler."""
     return any(isinstance(handler, logging.FileHandler) for handler in in_logger.handlers)
+
 
 def _has_console_handler(in_logger: logging.Logger) -> bool:
     """Check if logger has console handler."""
