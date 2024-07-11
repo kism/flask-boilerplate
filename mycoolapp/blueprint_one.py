@@ -12,11 +12,12 @@ mca_conf = get_mycoolapp_config()  # Get the config
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
 # Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)
-logger = logging.getLogger(__name__)  # Create a logger named mycoolapp.this_module_name
+logger = logging.getLogger(__name__)  # Create a logger: mycoolapp.this_module_name, inherit config from root logger
 
 bp = Blueprint("mycoolapp", __name__)
 
 
+# KISM-BOILERPLATE, this is the demo api endpoint, enough to show a basic javascript interaction.
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""

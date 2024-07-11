@@ -35,7 +35,7 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
 
     @app.route("/")
     def home() -> str:
-        """Flask Home."""
+        """Flask home."""
         return render_template("home.html.j2", app_name=__name__)
 
     app.logger.info("Starting Web Server")

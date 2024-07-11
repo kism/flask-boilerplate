@@ -12,10 +12,10 @@ import tomlkit
 # This means that the logger will have the right name, loging should be done with this object
 logger = logging.getLogger(__name__)
 
+# Default config dictionary, also works as a schema
 DEFAULT_CONFIG = {
     "app": {
         "my_message": "Hello, World!",
-        "configuration_failure": False,
     },
     "logging": {
         "level": "INFO",
@@ -103,8 +103,12 @@ class MyCoolAppConfig:
 
         self._warn_config_entry_not_in_schema(DEFAULT_CONFIG, config, "<root>")
 
-        if config["app"]["configuration_failure"]:
-            failure = True  # This is a silly example
+        # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
+
+        # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
+        # This is a silly example and should be removed!
+        if "configuration_failure" in config["app"]:
+            failure = True
 
         if failure:
             logger.error("Config validation failed")
@@ -112,7 +116,10 @@ class MyCoolAppConfig:
             sys.exit(1)
 
     def _warn_config_entry_not_in_schema(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
-        """This is recursive, be careful."""
+        """If the loaded config has a key that isn't in the schema (default config), we log a warning.
+
+        This is recursive, be careful.
+        """
         if parent_key != "flask":
             for key, value in base_dict.items():
                 if isinstance(value, dict) and key in target_dict:
