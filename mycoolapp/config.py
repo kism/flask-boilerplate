@@ -101,6 +101,8 @@ class MyCoolAppConfig:
         """Validate Config. Exit the program if they don't validate."""
         failure = False
 
+        self._warn_config_entry_not_in_schema(DEFAULT_CONFIG, config, "<root>")
+
         if config["app"]["configuration_failure"]:
             failure = True  # This is a silly example
 
@@ -109,7 +111,23 @@ class MyCoolAppConfig:
             logger.critical("Exiting")
             sys.exit(1)
 
+    def _warn_config_entry_not_in_schema(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
+        """This is recursive, be careful."""
+        if parent_key != "flask":
+            for key, value in base_dict.items():
+                if isinstance(value, dict) and key in target_dict:
+                    self._warn_config_entry_not_in_schema(target_dict[key], value, key)
+                elif key not in target_dict:
+                    if parent_key != "<root>":
+                        parent_key = f"[{parent_key}]"
+
+                    msg = f"Config entry key {parent_key}[{key}] not in schema"
+                    logger.warning(msg)
+
+        return target_dict
+
     def _ensure_all_default_config(self, base_dict: dict, target_dict: dict) -> dict:
+        """This is recursive, be careful."""
         for key, value in base_dict.items():
             if isinstance(value, dict) and key in target_dict:
                 self._ensure_all_default_config(value, target_dict[key])
@@ -138,7 +156,7 @@ class MyCoolAppConfig:
         if not config_path:
             config_path = paths[0]
             logger.warning("No configuration file found, creating at default location: %s", config_path)
-            with contextlib.suppress(Exception):
+            with contextlib.suppress(FileExistsError):
                 os.makedirs(instance_path)  # Create instance path if it doesn't exist
             self._write_config(DEFAULT_CONFIG, config_path)
 
