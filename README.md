@@ -31,3 +31,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 - unit tests for the config merging
 - ensure warning when config options not in schema
 - logger cleanup code
+- isdirectory error and permissions error handling on every open

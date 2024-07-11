@@ -5,7 +5,7 @@ import pytest_mock
 
 
 def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
-    """Try mock a persmission error."""
+    """Mock a Permissions error with mock_open."""
     import mycoolapp
 
     sett = mycoolapp.get_mycoolapp_config()
@@ -15,6 +15,7 @@ def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
 
     mocker.patch("builtins.open", mock_open_func)
 
+    # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
         sett._write_config({}, pytest.TEST_CONFIG_FILE_PATH)
 
