@@ -4,6 +4,7 @@
 # Imports, for this script NO external packages should be required.
 
 import os
+import re
 import shutil
 import sys
 
@@ -116,6 +117,33 @@ def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: 
 
 
 find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
+
+# Edit pyproject.toml
+
+
+def remove_text(file_path: str, pattern: str):
+    # Read the file content
+    with open(file_path) as file:
+        content = file.read()
+
+    # Use re.DOTALL to include newline characters in the match
+    modified_content = re.sub(pattern, "", content)
+
+    print(modified_content)
+
+    # Write the modified content back to the file
+    with open(file_path, "w") as file:
+        file.write(modified_content)
+
+
+# Path to the file you want to modify
+file_path = os.path.join(dest_folder_path, "pyproject.toml")
+pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
+remove_text(file_path, pattern)
+
+pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
+file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}main.yml")
+remove_text(file_path, pattern)
 
 # Print instructions
 

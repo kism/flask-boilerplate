@@ -21,7 +21,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 
 ## TODO
 
-- do some wild regex in create_new_project
-  - workflow
-  - pyproject.toml
 - code review
