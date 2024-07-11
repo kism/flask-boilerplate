@@ -1,15 +1,9 @@
 ---
-name: main
+name: Test (PyTest)
 
 on: [push, pull_request]
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: chartboost/ruff-action@v1
-
   test:
     runs-on: ubuntu-latest
     strategy:
