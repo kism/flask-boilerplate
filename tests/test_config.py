@@ -10,8 +10,12 @@ from mycoolapp import create_app
 def test_config_valid(get_test_config: dict):
     """Test passing config to app."""
     # TEST: Assert that the config dictionary can set config attributes successfully.
-    assert not create_app(get_test_config("testing_false_valid")).testing
-    assert create_app(get_test_config("testing_true_valid")).testing
+    assert not create_app(
+        get_test_config("testing_false_valid")
+    ).testing, "Flask testing config item not being set correctly."
+    assert create_app(
+        get_test_config("testing_true_valid")
+    ).testing, "Flask testing config item not being set correctly."
 
 
 def test_config_invalid(get_test_config: dict):
@@ -20,8 +24,8 @@ def test_config_invalid(get_test_config: dict):
     with pytest.raises(SystemExit) as exc_info:
         create_app(get_test_config("invalid"))
 
-    assert isinstance(exc_info.type, type(SystemExit))
-    assert exc_info.value.code == 1
+    assert isinstance(exc_info.type, type(SystemExit)), "App did not exit on config validation failure."
+    assert exc_info.value.code == 1, "App did not have correct exit code for config validation failure."
 
 
 def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture) -> None:
