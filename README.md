@@ -10,9 +10,10 @@ I have made a few simple webapps that read a config, and have no database.
 
 This was a learning experience to make something where I was 100% happy with the structure and will use it for my projects.
 
-- Load config from TOML
+- App config loads from TOML
 - 100% test coverage with PyTest
 - Only Three PyPi packages (and their dependencies) for prod
+- Close to all project/tool configs in pyproject.toml
 
 This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>.
 
@@ -34,4 +35,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 
 ## TODO
 
-- code review
+- See if "my method" of doing config is okay
