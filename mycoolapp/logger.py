@@ -19,12 +19,13 @@ LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"  # This is the log
 logger = logging.getLogger(__name__)  # This is where we log to in this module, following the standard of every module.
 
 
-# Pass in the app to make it obvious what we are configuring (the logger object within the app object).
+# Pass in the whole app object to make it obvious we are configuring the logger object within the app object.
 def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | None = None) -> None:
-    """APP LOGGING, set config per mca_conf."""
-    if not in_logger:  # Only the case when testing with pytest.
+    """Setup the logger, set config per mca_conf."""
+    if not in_logger:  # in_logger should only exist when testing with PyTest.
         in_logger = logging.getLogger()  # Get the root logger
 
+    # The root logger has no handlers initially in flask, app.logger does though.
     app.logger.handlers.clear()  # Remove the Flask default handlers
 
     # If the logger doesnt have a console handler (root logger doesn't by default)
