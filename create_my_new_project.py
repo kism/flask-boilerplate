@@ -146,7 +146,6 @@ file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}mai
 remove_text(file_path, pattern)
 
 # Print instructions
-
 print(f"""
 Done!
 
