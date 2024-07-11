@@ -20,7 +20,7 @@ new_project_name_split = new_project_name_prompt.split()
 
 new_name = ("".join(new_project_name_split)).lower()
 new_name_camel_case = "".join(x for x in new_project_name_prompt.title() if not x.isspace())
-new_config_var = "".join([word[0] for word in new_project_name_split]) + "_sett"
+new_config_var = "".join([word[0] for word in new_project_name_split]) + "_conf"
 
 print(f"new_name: {new_name}")
 print(f"new_name_camel_case: {new_name_camel_case}")
@@ -81,7 +81,7 @@ def find_and_replace_in_files(directory: str, find_str: str, replace_str: str) -
 
 find_and_replace_in_files(dest_folder_path, "mycoolapp", new_name)
 find_and_replace_in_files(dest_folder_path, "MyCoolApp", new_name_camel_case)
-find_and_replace_in_files(dest_folder_path, "mca_sett", new_config_var)
+find_and_replace_in_files(dest_folder_path, "mca_conf", new_config_var)
 
 
 # Replace file and dir names

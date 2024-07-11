@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify
 
 from . import get_mycoolapp_config
 
-mca_sett = get_mycoolapp_config()  # Get the config
+mca_conf = get_mycoolapp_config()  # Get the config
 
 # This means that the logger will have the right name, loging should be done with this object
 # If you were to list all loggers with something like...
@@ -20,9 +20,9 @@ bp = Blueprint("mycoolapp", __name__)
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""
-    message = {"msg": mca_sett["app"]["my_message"]}
+    message = {"msg": mca_conf["app"]["my_message"]}
     status = 200
 
-    logger.debug("GET request to /hello/, returning: %s", mca_sett["app"]["my_message"])
+    logger.debug("GET request to /hello/, returning: %s", mca_conf["app"]["my_message"])
 
     return jsonify(message), status

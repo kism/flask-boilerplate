@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)  # This is where we log to in this module, 
 
 # Pass in the app to make it obvious what we are configuring (the logger object within the app object).
 def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | None = None) -> None:
-    """APP LOGGING, set config per mca_sett."""
+    """APP LOGGING, set config per mca_conf."""
     if not in_logger:  # This should only not be the case for testing.
         in_logger = logging.getLogger()  # Get the root logger
 

@@ -10,7 +10,7 @@ def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
     import mycoolapp
 
-    sett = mycoolapp.get_mycoolapp_config()
+    conf = mycoolapp.get_mycoolapp_config()
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -19,23 +19,23 @@ def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
 
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
-        sett._write_config({}, pytest.TEST_CONFIG_FILE_PATH)
+        conf._write_config({}, pytest.TEST_CONFIG_FILE_PATH)
 
 
 def test_dictionary_functions_of_config():
     """Test the functions in the config object that let it behave like a dictionary."""
     import mycoolapp
 
-    sett = mycoolapp.get_mycoolapp_config()
+    conf = mycoolapp.get_mycoolapp_config()
 
     # TEST: __contains__ method.
-    assert "app" in sett
+    assert "app" in conf
 
     # TEST: __repr__ method.
-    assert isinstance(str(sett), str)
+    assert isinstance(str(conf), str)
 
     # TEST: __getitem__ method.
-    assert isinstance(sett["app"], dict)
+    assert isinstance(conf["app"], dict)
 
 
 def test_config_dictionary_merge(get_test_config: dict):
@@ -43,7 +43,7 @@ def test_config_dictionary_merge(get_test_config: dict):
     import mycoolapp
     from mycoolapp import config
 
-    sett = mycoolapp.get_mycoolapp_config()
+    conf = mycoolapp.get_mycoolapp_config()
 
     test_dictionaries = [
         {},
@@ -52,7 +52,7 @@ def test_config_dictionary_merge(get_test_config: dict):
     ]
 
     for test_dictionary in test_dictionaries:
-        result_dict = sett._ensure_all_default_config(config.DEFAULT_CONFIG, test_dictionary)
+        result_dict = conf._ensure_all_default_config(config.DEFAULT_CONFIG, test_dictionary)
 
         # TEST: Check that the resulting config after ensuring default is valid
         assert isinstance(result_dict["app"], dict)
@@ -62,8 +62,8 @@ def test_config_dictionary_merge(get_test_config: dict):
         assert isinstance(result_dict["flask"], dict)
 
     # TEST: If an item isn't in the schema, it still ends up around, not that this is a good idea...
-    result_dict = sett._ensure_all_default_config(config.DEFAULT_CONFIG, {"TEST_SETTINGS_ENTRY_NOT_IN_SCHEMA": "lmao"})
-    assert result_dict["TEST_SETTINGS_ENTRY_NOT_IN_SCHEMA"]
+    result_dict = conf._ensure_all_default_config(config.DEFAULT_CONFIG, {"TEST_CONFIG_ENTRY_NOT_IN_SCHEMA": "lmao"})
+    assert result_dict["TEST_CONFIG_ENTRY_NOT_IN_SCHEMA"]
 
 
 def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
@@ -73,13 +73,13 @@ def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
 
     caplog.set_level(logging.WARNING)
     caplog.set_level(logging.INFO)
-    sett = mycoolapp.get_mycoolapp_config()
+    conf = mycoolapp.get_mycoolapp_config()
     test_config = {
-        "TEST_SETTINGS_ROOT_ENTRY_NOT_IN_SCHEMA": "",
-        "app": {"my_message": "", "configuration_failure": "", "TEST_SETTINGS_APP_ENTRY_NOT_IN_SCHEMA": ""},
+        "TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA": "",
+        "app": {"my_message": "", "configuration_failure": "", "TEST_CONFIG_APP_ENTRY_NOT_IN_SCHEMA": ""},
     }
 
-    # TEST: Warning when settings loaded has a key that is not in the schema
-    sett._warn_config_entry_not_in_schema(config.DEFAULT_CONFIG, test_config, "<root>")
-    assert "Config entry key <root>[TEST_SETTINGS_ROOT_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
-    assert "Config entry key [app][TEST_SETTINGS_APP_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
+    # TEST: Warning when config loaded has a key that is not in the schema
+    conf._warn_config_entry_not_in_schema(config.DEFAULT_CONFIG, test_config, "<root>")
+    assert "Config entry key <root>[TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
+    assert "Config entry key [app][TEST_CONFIG_APP_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
