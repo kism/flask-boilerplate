@@ -12,8 +12,10 @@ def test_config_invalid_log_level(get_test_config: FunctionType, caplog: pytest.
 
     caplog.set_level(logging.WARNING)
     app = create_app(get_test_config("logging_invalid_log_level"))
-    assert "Invalid logging level" in caplog.text
+    # TEST: App still starts
     assert app
+    # TEST: Assert that the invalid logging level message gets logged
+    assert "Invalid logging level" in caplog.text
 
 
 def test_handlers_added(get_test_config: dict):

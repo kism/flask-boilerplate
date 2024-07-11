@@ -1,7 +1,6 @@
 """Test the logger of the app."""
 
 import logging
-from types import FunctionType
 
 import pytest
 import pytest_mock
@@ -18,11 +17,12 @@ def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
 
     logger = logging.getLogger("TEST_LOGGER")
 
+    # TEST: That a permissions error is raised.
     with pytest.raises(PermissionError):
         _add_file_handler(logger, pytest.TEST_LOG_PATH)
 
 
-def test_config_logging_to_dir(get_test_config: FunctionType):
+def test_config_logging_to_dir():
     """Test if logging to directory raises error.
 
     This one needs to go at the end since it interferes with other tests???
@@ -36,7 +36,7 @@ def test_config_logging_to_dir(get_test_config: FunctionType):
         _add_file_handler(logger, pytest.TEST_INSTANCE_PATH)
 
 
-def test_set_log_level(get_test_config: FunctionType):
+def test_set_log_level():
     """Test if logging to directory raises error.
 
     This one needs to go at the end since it interferes with other tests???

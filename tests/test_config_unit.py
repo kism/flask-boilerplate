@@ -29,13 +29,13 @@ def test_dictionary_functions_of_config():
     conf = mycoolapp.get_mycoolapp_config()
 
     # TEST: __contains__ method.
-    assert "app" in conf
+    assert "app" in conf, "__contains__ method of config object doesn't work"
 
     # TEST: __repr__ method.
-    assert isinstance(str(conf), str)
+    assert isinstance(str(conf), str), "__repr__ method of config object doesn't work"
 
     # TEST: __getitem__ method.
-    assert isinstance(conf["app"], dict)
+    assert isinstance(conf["app"], dict), "__getitem__ method of config object doesn't work"
 
 
 def test_config_dictionary_merge(get_test_config: dict):
@@ -72,7 +72,6 @@ def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
     from mycoolapp import config
 
     caplog.set_level(logging.WARNING)
-    caplog.set_level(logging.INFO)
     conf = mycoolapp.get_mycoolapp_config()
     test_config = {
         "TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA": "",

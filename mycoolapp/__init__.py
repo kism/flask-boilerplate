@@ -13,14 +13,14 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
 
     logger.setup_logger(app, mca_conf["logging"])  # Setup logger per defaults
 
-    if test_config:  # For Python testing we will often pass in a flask config
+    if test_config:  # For Python testing we will often pass in a config
         mca_conf.load_config_from_dictionary(test_config)  # Loads app config from dict provided
     else:
         mca_conf.load_config_from_disk(app.instance_path)  # Loads app config from disk
 
     logger.setup_logger(app, mca_conf["logging"])  # Setup logger per config
 
-    app.config.from_mapping(mca_conf["flask"])  # Flask config config, separate
+    app.config.from_mapping(mca_conf["flask"])  # Flask config, separate
 
     # Do some debug logging of config
     mca_conf.log_config()
