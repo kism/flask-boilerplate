@@ -1,7 +1,7 @@
 # KiSM's Flask Boilerplate
 
 ![Check](https://github.com/kism/flask-boilerplate/actions/workflows/check.yml/badge.svg)
-![Test](https://github.com/github/kism/flask-boilerplate/workflows/test.yml/badge.svg)
+![Test](https://github.com/kism/flask-boilerplate/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/github/kism/flask-boilerplate/graph/badge.svg?token=NARIB5JF9M)](https://codecov.io/github/kism/flask-boilerplate)
 
 ## Get started
