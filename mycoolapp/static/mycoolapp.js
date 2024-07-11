@@ -3,6 +3,7 @@ function getHello() {
 
   const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout:
 
+  // GET the hello endpoint that the flask app has
   fetch("hello", {
     method: "GET",
     signal: controller.signal,
@@ -10,7 +11,7 @@ function getHello() {
     .then((response) => {
       // Check if the request was successful (status code 200)
       if (response.ok) {
-        return response.json();
+        return response.json(); // We interperate the response as json and pass it along...
       } else {
         document.getElementById("MY_COOL_FIELD").innerHTML = `API FAILURE`; // Set message in element to indicate failure
         document.getElementById("MY_COOL_RESULT").innerHTML = `${response.status}`; // Set message in element to message recieved from flask
@@ -20,14 +21,13 @@ function getHello() {
       }
     })
     .then((data) => {
-      // Get the 'msg' field from the JSON data
-      const msg = data.msg;
+      const msg = data.msg; // Get the 'msg' field from the JSON data
       document.getElementById("MY_COOL_FIELD").innerHTML = `API SUCCESS`; // Set message in element to indicate success
       document.getElementById("MY_COOL_RESULT").innerHTML = msg; // Set message in element to message recieved from flask
       document.getElementById("MY_COOL_RESULT").style.color = "#008000"; // Set message in element to message recieved from flask
     })
     .catch((error) => {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId); //Stop the timeout since we only care about the GET timing out
       if (error.name === "AbortError") {
         console.error("Fetch request timed out");
         document.getElementById("MY_COOL_FIELD").innerHTML = `API FAILURE`; // Set message in element to indicate failure

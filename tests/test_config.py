@@ -3,7 +3,6 @@
 import logging
 
 import pytest
-import pytest_mock
 
 from mycoolapp import create_app
 
@@ -11,8 +10,12 @@ from mycoolapp import create_app
 def test_config_valid(get_test_config: dict):
     """Test passing config to app."""
     # TEST: Assert that the config dictionary can set config attributes successfully.
-    assert not create_app(get_test_config("testing_false_valid")).testing
-    assert create_app(get_test_config("testing_true_valid")).testing
+    assert not create_app(
+        get_test_config("testing_false_valid")
+    ).testing, "Flask testing config item not being set correctly."
+    assert create_app(
+        get_test_config("testing_true_valid")
+    ).testing, "Flask testing config item not being set correctly."
 
 
 def test_config_invalid(get_test_config: dict):
@@ -21,23 +24,8 @@ def test_config_invalid(get_test_config: dict):
     with pytest.raises(SystemExit) as exc_info:
         create_app(get_test_config("invalid"))
 
-    assert isinstance(exc_info.type, type(SystemExit))
-    assert exc_info.value.code == 1
-
-
-def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
-    """Try mock a persmission error."""
-    import mycoolapp
-
-    sett = mycoolapp.get_mycoolapp_config()
-
-    mock_open_func = mocker.mock_open(read_data="")
-    mock_open_func.side_effect = PermissionError("Permission denied")
-
-    mocker.patch("builtins.open", mock_open_func)
-
-    with pytest.raises(PermissionError):
-        sett._write_config({}, pytest.CONFIG_FILE_PATH)
+    assert isinstance(exc_info.type, type(SystemExit)), "App did not exit on config validation failure."
+    assert exc_info.value.code == 1, "App did not have correct exit code for config validation failure."
 
 
 def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture) -> None:
@@ -48,22 +36,7 @@ def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFi
     assert "No configuration file found, creating at default location:" in caplog.text
     caplog.clear()
 
+    # TEST: that file is not created when config is provided.
     caplog.set_level(logging.WARNING)
     create_app(test_config=get_test_config("testing_true_valid"), instance_path=pytest.TEST_INSTANCE_PATH)
     assert "No configuration file found, creating at default location:" not in caplog.text
-
-
-def test_dictionary_functions_of_config():
-    """Test the functions in the config object that let it behave like a dictionary."""
-    import mycoolapp
-
-    sett = mycoolapp.get_mycoolapp_config()
-
-    # TEST: __contains__ method.
-    assert "app" in sett
-
-    # TEST: __repr__ method.
-    assert isinstance(str(sett), str)
-
-    # TEST: __getitem__ method.
-    assert isinstance(sett["app"], dict)

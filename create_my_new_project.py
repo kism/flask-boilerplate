@@ -4,12 +4,13 @@
 # Imports, for this script NO external packages should be required.
 
 import os
+import re
 import shutil
 import sys
 
 # Get new app related names
 
-if sys.argv[1]:  # USE QUOTES IF YOU ARE USING THE PROGRAM LIKE THIS
+if len(sys.argv) > 1:  # USE QUOTES IF YOU ARE USING THE PROGRAM LIKE THIS
     new_project_name_prompt = sys.argv[1]
 else:
     print("Enter the name of the app, with spaces between each word.")
@@ -18,9 +19,14 @@ else:
 
 new_project_name_split = new_project_name_prompt.split()
 
+while len(new_project_name_split) == 1:
+    print("Please make the project name more than one word.")
+    new_project_name_prompt = input("Name: ")
+    new_project_name_split = new_project_name_prompt.split()
+
 new_name = ("".join(new_project_name_split)).lower()
 new_name_camel_case = "".join(x for x in new_project_name_prompt.title() if not x.isspace())
-new_config_var = "".join([word[0] for word in new_project_name_split]) + "_sett"
+new_config_var = "".join([word[0] for word in new_project_name_split]) + "_conf"
 
 print(f"new_name: {new_name}")
 print(f"new_name_camel_case: {new_name_camel_case}")
@@ -60,7 +66,6 @@ for root, dirs, _ in os.walk(dest_folder_path, topdown=False):
         if name in folders_to_remove:
             folder_path = os.path.join(root, name)
             shutil.rmtree(folder_path)
-            print(f"Removed: {folder_path}")
 
 
 # Replace strings in files
@@ -76,12 +81,11 @@ def find_and_replace_in_files(directory: str, find_str: str, replace_str: str) -
             new_content = content.replace(find_str, replace_str)
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(new_content)
-            print(f"Replaced string in: {file_path}")
 
 
 find_and_replace_in_files(dest_folder_path, "mycoolapp", new_name)
 find_and_replace_in_files(dest_folder_path, "MyCoolApp", new_name_camel_case)
-find_and_replace_in_files(dest_folder_path, "mca_sett", new_config_var)
+find_and_replace_in_files(dest_folder_path, "mca_conf", new_config_var)
 
 
 # Replace file and dir names
@@ -95,7 +99,6 @@ def find_and_replace_file_names(directory: str, find_str: str, replace_str: str)
                 old_path = os.path.join(root, file_name)
                 new_path = os.path.join(root, file_name.replace(find_str, replace_str))
                 os.rename(old_path, new_path)
-                print(f"Renamed file: {old_path} to {new_path}")
 
 
 def find_and_replace_dir_names(directory: str, find_str: str, replace_str: str) -> None:
@@ -106,7 +109,6 @@ def find_and_replace_dir_names(directory: str, find_str: str, replace_str: str) 
                 old_path = os.path.join(dirpath, dirname)
                 new_path = os.path.join(dirpath, dirname.replace(find_str, replace_str))
                 os.rename(old_path, new_path)
-                print(f"Renamed directory: {old_path} -> {new_path}")
 
 
 def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: str) -> None:
@@ -116,6 +118,32 @@ def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: 
 
 
 find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
+
+# Edit pyproject.toml, .github/workflows/main.yml
+
+
+def remove_text(file_path: str, pattern: str) -> None:
+    """Remove text from file per compiled regex pattern."""
+    # Read the file content
+    with open(file_path) as file:
+        content = file.read()
+
+    # Use re.DOTALL to include newline characters in the match
+    modified_content = re.sub(pattern, "", content)
+
+    # Write the modified content back to the file
+    with open(file_path, "w") as file:
+        file.write(modified_content)
+
+
+# Path to the file you want to modify
+file_path = os.path.join(dest_folder_path, "pyproject.toml")
+pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
+remove_text(file_path, pattern)
+
+pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
+file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}main.yml")
+remove_text(file_path, pattern)
 
 # Print instructions
 

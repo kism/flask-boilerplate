@@ -12,10 +12,10 @@ import tomlkit
 # This means that the logger will have the right name, loging should be done with this object
 logger = logging.getLogger(__name__)
 
+# Default config dictionary, also works as a schema
 DEFAULT_CONFIG = {
     "app": {
         "my_message": "Hello, World!",
-        "configuration_failure": False,
     },
     "logging": {
         "level": "INFO",
@@ -37,6 +37,11 @@ class MyCoolAppConfig:
         Defaults shouldnt necessaraly be enough to get the app to get to the point of starting the webapp.
         """
         self._config = DEFAULT_CONFIG
+
+    """ These next special methods make this object behave like a dict, a few methods are missing
+    __setitem__, __len__,__delitem__
+    https://gist.github.com/turicas/1510860
+    """
 
     def __getitem__(self, key: str) -> any:
         """Make this behave like a dictionary."""
@@ -96,15 +101,40 @@ class MyCoolAppConfig:
         """Validate Config. Exit the program if they don't validate."""
         failure = False
 
-        if config["app"]["configuration_failure"]:
-            failure = True  # This is a silly example
+        self._warn_config_entry_not_in_schema(DEFAULT_CONFIG, config, "<root>")
+
+        # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
+
+        # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
+        # This is a silly example and should be removed!
+        if "configuration_failure" in config["app"]:
+            failure = True
 
         if failure:
             logger.error("Config validation failed")
             logger.critical("Exiting")
             sys.exit(1)
 
+    def _warn_config_entry_not_in_schema(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
+        """If the loaded config has a key that isn't in the schema (default config), we log a warning.
+
+        This is recursive, be careful.
+        """
+        if parent_key != "flask":
+            for key, value in base_dict.items():
+                if isinstance(value, dict) and key in target_dict:
+                    self._warn_config_entry_not_in_schema(target_dict[key], value, key)
+                elif key not in target_dict:
+                    if parent_key != "<root>":
+                        parent_key = f"[{parent_key}]"
+
+                    msg = f"Config entry key {parent_key}[{key}] not in schema"
+                    logger.warning(msg)
+
+        return target_dict
+
     def _ensure_all_default_config(self, base_dict: dict, target_dict: dict) -> dict:
+        """This is recursive, be careful."""
         for key, value in base_dict.items():
             if isinstance(value, dict) and key in target_dict:
                 self._ensure_all_default_config(value, target_dict[key])
@@ -122,7 +152,7 @@ class MyCoolAppConfig:
         paths.append("/etc/mycoolapp/config.toml")
 
         for path in paths:
-            if os.path.exists(path):
+            if os.path.isfile(path):
                 logger.info("Found config at path: %s", path)
                 if not config_path:
                     logger.info("Using this path as it's the first one that was found")
@@ -133,7 +163,7 @@ class MyCoolAppConfig:
         if not config_path:
             config_path = paths[0]
             logger.warning("No configuration file found, creating at default location: %s", config_path)
-            with contextlib.suppress(Exception):
+            with contextlib.suppress(FileExistsError):
                 os.makedirs(instance_path)  # Create instance path if it doesn't exist
             self._write_config(DEFAULT_CONFIG, config_path)
 
