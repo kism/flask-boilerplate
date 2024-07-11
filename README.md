@@ -34,4 +34,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 
 ## TODO
 
-- ee if "my method" of doing config is okay
+- See if "my method" of doing config is okay
