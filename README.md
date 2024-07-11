@@ -29,3 +29,5 @@ At the end of the script it will give you some instructions to use poetry, and g
 - more comments
 - code review
 - unit tests for the config merging
+- ensure warning when config options not in schema
+- logger cleanup code

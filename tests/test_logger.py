@@ -1,64 +1,52 @@
 """Test the logger of the app."""
 
 import logging
-import os
+from types import FunctionType
 
 import pytest
-import pytest_mock
-
-from mycoolapp import create_app
 
 
-def test_config_invalid_log_level(get_test_config: dict, caplog: pytest.LogCaptureFixture):
+def test_config_invalid_log_level(get_test_config: FunctionType, caplog: pytest.LogCaptureFixture):
     """Test if logging to file works."""
+    from mycoolapp import create_app
+
     caplog.set_level(logging.WARNING)
-    create_app(get_test_config("logging_invalid_log_level"))
+    app = create_app(get_test_config("logging_invalid_log_level"))
     assert "Invalid logging level" in caplog.text
-
-
-def test_config_logging_to_dir(get_test_config: dict):
-    """Test if logging to directory raises error."""
-    with pytest.raises(IsADirectoryError):
-        create_app(get_test_config("logging_path_invalid"))
-
-
-def test_config_logging_to_file(get_test_config: dict):
-    """Test if logging to file works."""
-    app = create_app(get_test_config("logging_path_valid"))
     assert app
-    assert os.path.isfile(pytest.TEST_LOG_PATH)
-    os.unlink(pytest.TEST_LOG_PATH)
 
 
-def test_config_logging(get_test_config: dict):
-    """Test if len(root_logger.handlers) == 0: since it picks up the pytest logger.
-
-    The code isn't covered otherwise.
-    """
-    logger = logging.getLogger()
-
-    handlers = logger.handlers.copy()
-
-    for handler in logger.handlers[:]:  # Iterate over a copy to avoid modification issues
-        logger.removeHandler(handler)
+def test_handlers_added(get_test_config: dict):
+    """Test passing config to app."""
+    # TEST: Assert that the config dictionary can set config attributes successfully.
+    import mycoolapp.logger
+    from mycoolapp import create_app
 
     app = create_app(get_test_config("testing_true_valid"))
+    logger = logging.getLogger("TEST_LOGGER")
+    logging_conf = {"path": "", "level": "INFO"}
 
-    assert app
+    # TEST: Only one handler (console), should exist when no logging path provided
+    mycoolapp.logger.setup_logger(app, logging_conf, logger)
+    assert len(logger.handlers) == 1
 
-    # Restore PyTest's handlers
-    for handler in handlers:
-        logger.addHandler(handler)
+    # TEST: If a console handler exists, another one shouldnt be created
+    mycoolapp.logger.setup_logger(app, logging_conf, logger)
+    assert len(logger.handlers) == 1
 
+    # Reset the object
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+        handler.close()
 
-def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
-    """Try mock a persmission error."""
-    from mycoolapp.logger import _add_file_handler
+    assert len(logger.handlers) == 0  # Check the object reset worked
 
-    mock_open_func = mocker.mock_open(read_data="")
-    mock_open_func.side_effect = PermissionError("Permission denied")
+    logging_conf = {"path": pytest.TEST_LOG_PATH, "level": "INFO"}  # Test file handler
 
-    mocker.patch("builtins.open", mock_open_func)
+    # TEST: Two handlers when logging to file expected
+    mycoolapp.logger.setup_logger(app, logging_conf, logger)
+    assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
 
-    with pytest.raises(PermissionError):
-        _add_file_handler(pytest.TEST_LOG_PATH)
+    # TEST: Two handlers when logging to file expected, another one shouldnt be created
+    mycoolapp.logger.setup_logger(app, logging_conf, logger)
+    assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected

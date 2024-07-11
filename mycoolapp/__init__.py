@@ -4,14 +4,14 @@ from flask import Flask, render_template
 
 from . import config, logger
 
-mca_sett = config.MyCoolAppConfig()  # Create the config object
+mca_sett = config.MyCoolAppConfig()  # Create the default config object
 
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
 
-    logger.setup_logger(app)  # Setup logger per defaults
+    logger.setup_logger(app, mca_sett["logging"])  # Setup logger per defaults
 
     if test_config:  # For Python testing we will often pass in a flask config
         mca_sett.load_config_from_dictionary(test_config)  # Loads app config from dict provided

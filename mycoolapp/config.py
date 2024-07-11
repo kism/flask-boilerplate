@@ -127,7 +127,7 @@ class MyCoolAppConfig:
         paths.append("/etc/mycoolapp/config.toml")
 
         for path in paths:
-            if os.path.exists(path):
+            if os.path.isfile(path):
                 logger.info("Found config at path: %s", path)
                 if not config_path:
                     logger.info("Using this path as it's the first one that was found")

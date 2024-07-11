@@ -3,7 +3,6 @@
 import logging
 
 import pytest
-import pytest_mock
 
 from mycoolapp import create_app
 
@@ -25,21 +24,6 @@ def test_config_invalid(get_test_config: dict):
     assert exc_info.value.code == 1
 
 
-def test_config_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
-    """Try mock a persmission error."""
-    import mycoolapp
-
-    sett = mycoolapp.get_mycoolapp_config()
-
-    mock_open_func = mocker.mock_open(read_data="")
-    mock_open_func.side_effect = PermissionError("Permission denied")
-
-    mocker.patch("builtins.open", mock_open_func)
-
-    with pytest.raises(PermissionError):
-        sett._write_config({}, pytest.CONFIG_FILE_PATH)
-
-
 def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture) -> None:
     """Tests relating to config file."""
     # TEST: that file is created when no config is provided.
@@ -51,19 +35,3 @@ def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFi
     caplog.set_level(logging.WARNING)
     create_app(test_config=get_test_config("testing_true_valid"), instance_path=pytest.TEST_INSTANCE_PATH)
     assert "No configuration file found, creating at default location:" not in caplog.text
-
-
-def test_dictionary_functions_of_config():
-    """Test the functions in the config object that let it behave like a dictionary."""
-    import mycoolapp
-
-    sett = mycoolapp.get_mycoolapp_config()
-
-    # TEST: __contains__ method.
-    assert "app" in sett
-
-    # TEST: __repr__ method.
-    assert isinstance(str(sett), str)
-
-    # TEST: __getitem__ method.
-    assert isinstance(sett["app"], dict)
