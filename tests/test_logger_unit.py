@@ -7,7 +7,7 @@ import pytest_mock
 
 
 def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
-    """Try mock a persmission error."""
+    """Try mock a permission error."""
     from mycoolapp.logger import _add_file_handler
 
     mock_open_func = mocker.mock_open(read_data="")
@@ -56,7 +56,7 @@ def test_set_log_level():
     assert logger.getEffectiveLevel() == 30  # noqa: PLR2004 Warning = 30
 
     _set_log_level(logger, "INVALID")
-    assert logger.getEffectiveLevel() == 20  # noqa: PLR2004 Invalid shoudl result in INFO (20)
+    assert logger.getEffectiveLevel() == 20  # noqa: PLR2004 Invalid log level, should result in INFO (20)
 
     # Reset the object
     for handler in logger.handlers[:]:

@@ -9,7 +9,7 @@ import sys
 
 import tomlkit
 
-# This means that the logger will have the right name, loging should be done with this object
+# This means that the logger will have the right name, logging should be done with this object
 logger = logging.getLogger(__name__)
 
 # Default config dictionary, also works as a schema
@@ -34,7 +34,7 @@ class MyCoolAppConfig:
         """Initiate object with default config.
 
         Don't validate config yet
-        Defaults shouldnt necessaraly be enough to get the app to get to the point of starting the webapp.
+        Defaults shouldn't necessarily be enough to get the app to get to the point of starting the webapp.
         """
         self._config = DEFAULT_CONFIG
 

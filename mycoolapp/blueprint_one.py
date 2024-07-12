@@ -8,7 +8,7 @@ from . import get_mycoolapp_config
 
 mca_conf = get_mycoolapp_config()  # Get the config
 
-# This means that the logger will have the right name, loging should be done with this object
+# This means that the logger will have the right name, logging should be done with this object
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
 # Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)

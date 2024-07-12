@@ -6,14 +6,20 @@
 
 ## Why this boilerplate?
 
-I have made a few simple webapps that read a config, and have no database.
+I have made a few simple web apps, this is what I use as a starting point for my future projects.
 
-This was a learning experience to make something where I was 100% happy with the structure and will use it for my projects.
+App features:
 
-- App config loads from TOML
+- App config loads from a TOML file
+- Logging configuration, can log to file too
+- Example api call and frontend javascript that utilises it
 - 100% test coverage with PyTest
+
+Project features:
+
 - Only Three PyPi packages (and their dependencies) for prod
 - Close to all project/tool configs in pyproject.toml
+- Virtual environment and dependencies managed by Poetry.
 
 This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>.
 
