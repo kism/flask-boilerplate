@@ -32,7 +32,7 @@ def test_handlers_added(get_test_config: dict):
     mycoolapp.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 1
 
-    # TEST: If a console handler exists, another one shouldnt be created
+    # TEST: If a console handler exists, another one shouldn't be created
     mycoolapp.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 1
 
@@ -49,7 +49,7 @@ def test_handlers_added(get_test_config: dict):
     mycoolapp.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
 
-    # TEST: Two handlers when logging to file expected, another one shouldnt be created
+    # TEST: Two handlers when logging to file expected, another one shouldn't be created
     mycoolapp.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
 

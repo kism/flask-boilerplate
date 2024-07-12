@@ -5,11 +5,11 @@ from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 
-LOGLEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]  # Valid str logging levels.
+LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]  # Valid str logging levels.
 LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"  # This is the logging message format that I like.
 
 
-# In flask the root logger doesnt have any handlers, its all in app.logger
+# In flask the root logger doesn't have any handlers, its all in app.logger
 # root_logger : root,
 # app.logger  : root, mycoolapp,
 # logger      : root, mycoolapp, mycoolapp.module_name,
@@ -28,7 +28,7 @@ def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | Non
     # The root logger has no handlers initially in flask, app.logger does though.
     app.logger.handlers.clear()  # Remove the Flask default handlers
 
-    # If the logger doesnt have a console handler (root logger doesn't by default)
+    # If the logger doesn't have a console handler (root logger doesn't by default)
     if not _has_console_handler(in_logger):
         _add_console_handler(in_logger)
 
@@ -39,8 +39,8 @@ def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | Non
         _add_file_handler(in_logger, logging_conf["path"])
 
     # Configure modules that are external and have their own loggers
-    logging.getLogger("waitress").setLevel(logging.INFO)  # Prod webserver, info has useful info.
-    logging.getLogger("werkzeug").setLevel(logging.DEBUG)  # Only will be used in dev, debug logs incomming requests.
+    logging.getLogger("waitress").setLevel(logging.INFO)  # Prod web server, info has useful info.
+    logging.getLogger("werkzeug").setLevel(logging.DEBUG)  # Only will be used in dev, debug logs incoming requests.
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
     logger.info("Logger config set!")
@@ -69,7 +69,7 @@ def _set_log_level(in_logger: logging.Logger, log_level: int | str) -> None:
     """Sets the log level."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
-        if log_level not in LOGLEVELS:
+        if log_level not in LOG_LEVELS:
             in_logger.setLevel("INFO")
             logger.warning(
                 "❗ Invalid logging level: %s, defaulting to INFO",
@@ -85,7 +85,7 @@ def _set_log_level(in_logger: logging.Logger, log_level: int | str) -> None:
 def _add_file_handler(in_logger: logging.Logger, log_path: str) -> None:
     """Sets up the file handler."""
     try:
-        filehandler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)
+        file_handler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)
     except IsADirectoryError as exc:
         err = "You are trying to log to a directory, try a file"
         raise IsADirectoryError(err) from exc
@@ -94,6 +94,6 @@ def _add_file_handler(in_logger: logging.Logger, log_path: str) -> None:
         raise PermissionError(err) from exc
 
     formatter = logging.Formatter(LOG_FORMAT)
-    filehandler.setFormatter(formatter)
-    in_logger.addHandler(filehandler)
+    file_handler.setFormatter(formatter)
+    in_logger.addHandler(file_handler)
     logger.info("Logging to file: %s", log_path)
