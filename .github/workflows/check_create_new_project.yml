@@ -17,5 +17,19 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Test with pytest
+      - name: Test run the create new project script
         run: python create_my_new_project.py "my dank app"
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
+
+      - name: Configure Poetry to install dependencies in virtualenv
+        run: poetry config virtualenvs.in-project true
+
+      - name: Install dependencies
+        working-directory: ../mydankapp
+        run: poetry install --without dev
+
+      - name: Test with pytest
+        working-directory: ../mydankapp
+        run: .venv/bin/pytest # No code coverage for this one
