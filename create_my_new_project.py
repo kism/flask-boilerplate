@@ -142,7 +142,7 @@ pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
 pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
-file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}main.yml")
+file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
 remove_text(file_path, pattern)
 
 # Print instructions
