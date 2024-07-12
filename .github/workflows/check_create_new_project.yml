@@ -18,4 +18,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Test with pytest
-        run: python create_new_project.py "my dank app"
+        run: python create_my_new_project.py "my dank app"
