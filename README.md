@@ -21,13 +21,9 @@ Project features:
 - Close to all project/tool configs in pyproject.toml
 - Virtual environment and dependencies managed by Poetry.
 
-This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>.
+This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>. Have a look at <https://github.com/dbohdan/classless-css> too if you want a different css.
 
 ## Get started
-
-Install pipx <https://pipx.pypa.io/stable/>
-
-Install poetry with pipx `pipx install poetry`
 
 ```bash
 git clone https://github.com/kism/flask-boilerplate
@@ -35,9 +31,11 @@ cd flask-boilerplate
 python create_my_new_project.py
 ```
 
+`create_my_new_project.py` Doesn't require any pip packages and can be run with your operating systems default python.
+
 This will create the new project directory in the parent directory, with the new name.
 
-At the end of the script it will give you some instructions to use poetry, and grab the css.
+At the end of the script it will give you some instructions to use poetry, and grab the my css.
 
 ## TODO
 

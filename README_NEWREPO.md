@@ -1,5 +1,11 @@
 # mycoolapp
 
+## Prerequisites
+
+Install pipx <https://pipx.pypa.io/stable/>
+
+Install poetry with pipx `pipx install poetry`
+
 ## Run
 
 ### Run Dev
@@ -46,7 +52,7 @@ Open the link in your browser and browse into the 'htmlcov' directory.
 
 #### Codecov
 
-The template rero uses codecov to get a badge on the README.md, look at their guides on confing that up since it's stripped out of this repo.
+The template repo uses codecov to get a badge on the README.md, look at their guides on config that up since it's stripped out of this repo.
 
 ## Config
 
