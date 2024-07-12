@@ -14,7 +14,7 @@ if len(sys.argv) > 1:  # USE QUOTES IF YOU ARE USING THE PROGRAM LIKE THIS
     new_project_name_prompt = sys.argv[1]
 else:
     print("Enter the name of the app, with spaces between each word.")
-    print("For example: My Dank App")
+    print("For example: my dank app")
     new_project_name_prompt = input("Name: ")
 
 new_project_name_split = new_project_name_prompt.split()
@@ -144,6 +144,7 @@ remove_text(file_path, pattern)
 pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
 file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
 remove_text(file_path, pattern)
+
 
 # Print instructions
 print(f"""
