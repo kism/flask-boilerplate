@@ -8,13 +8,13 @@ import re
 import shutil
 import sys
 
-# Get new app related names
+# region: Get new app related names
 
 if len(sys.argv) > 1:  # USE QUOTES IF YOU ARE USING THE PROGRAM LIKE THIS
     new_project_name_prompt = sys.argv[1]
 else:
     print("Enter the name of the app, with spaces between each word.")
-    print("For example: My Dank App")
+    print("For example: my dank app")
     new_project_name_prompt = input("Name: ")
 
 new_project_name_split = new_project_name_prompt.split()
@@ -32,7 +32,8 @@ print(f"new_name: {new_name}")
 print(f"new_name_camel_case: {new_name_camel_case}")
 print(f"new_config_var: {new_config_var}")
 
-# Create new app folder
+# endregion
+# region: Create new app folder
 
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 dest_folder_path = os.path.join(parent_dir, new_name)
@@ -45,7 +46,8 @@ else:
     os.makedirs(dest_folder_path)
     print(f"The folder '{new_name}' has been created in the parent directory.")
 
-# Copy folders to destination
+# endregion
+# region: Copy folders to destination
 
 to_copy_folder_list = [".github", ".vscode", "mycoolapp", "tests"]
 
@@ -58,7 +60,8 @@ for file_name in to_copy_file_list:
 
 shutil.copyfile(os.getcwd() + os.sep + "README_NEWREPO.md", dest_folder_path + os.sep + "README.md")
 
-# Remove unwanted dirs
+# endregion
+# region: Remove unwanted dirs
 folders_to_remove = ["__pycache__"]
 
 for root, dirs, _ in os.walk(dest_folder_path, topdown=False):
@@ -68,7 +71,8 @@ for root, dirs, _ in os.walk(dest_folder_path, topdown=False):
             shutil.rmtree(folder_path)
 
 
-# Replace strings in files
+# endregion
+# region: Replace strings in files
 
 
 def find_and_replace_in_files(directory: str, find_str: str, replace_str: str) -> None:
@@ -88,7 +92,8 @@ find_and_replace_in_files(dest_folder_path, "MyCoolApp", new_name_camel_case)
 find_and_replace_in_files(dest_folder_path, "mca_conf", new_config_var)
 
 
-# Replace file and dir names
+# endregion
+# region: Replace file and dir names
 
 
 def find_and_replace_file_names(directory: str, find_str: str, replace_str: str) -> None:
@@ -119,7 +124,8 @@ def find_and_replace_file_dir_names(directory: str, find_str: str, replace_str: 
 
 find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
 
-# Edit pyproject.toml, .github/workflows/main.yml
+# endregion
+# region: Edit pyproject.toml, .github/workflows/main.yml
 
 
 def remove_text(file_path: str, pattern: str) -> None:
@@ -136,16 +142,19 @@ def remove_text(file_path: str, pattern: str) -> None:
         file.write(modified_content)
 
 
-# Path to the file you want to modify
+# endregion
+# region: Path to the file you want to modify
 file_path = os.path.join(dest_folder_path, "pyproject.toml")
 pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
 pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
-file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}main.yml")
+file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
 remove_text(file_path, pattern)
 
-# Print instructions
+
+# endregion
+# region: Print instructions
 print(f"""
 Done!
 
@@ -158,3 +167,4 @@ cd ..
 ---------------------------------
 Todo for you: Read your new projects README.md for the next steps.
 """)
+# endregion
