@@ -50,4 +50,3 @@ At the end of the script it will give you some instructions to use poetry, and g
 ## TODO
 
 - See if "my method" of doing config is okay
-- Folding code in create_my_new_project.py
