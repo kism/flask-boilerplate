@@ -11,7 +11,8 @@ I have made a few simple web apps, this is what I use as a starting point for my
 App features:
 
 - App config loads from a TOML file
-- Logging configuration including logging to file
+  - I don't like using app.config, config.py makes configuration much more flexible.
+- Logging configuration, including logging to file
 - Example api call
   - Frontend javascript on the homepage that utilises it
 - 100% test coverage with PyTest
@@ -46,7 +47,3 @@ python create_my_new_project.py
 This will create the new project directory in the parent directory, with the new name.
 
 At the end of the script it will give you some instructions to use poetry, and grab the my css.
-
-## TODO
-
-- See if "my method" of doing config is okay
