@@ -11,15 +11,25 @@ I have made a few simple web apps, this is what I use as a starting point for my
 App features:
 
 - App config loads from a TOML file
-- Logging configuration, can log to file too
-- Example api call and frontend javascript that utilises it
+- Logging configuration including logging to file
+- Example api call
+  - Frontend javascript on the homepage that utilises it
 - 100% test coverage with PyTest
+- No database
+  - Maybe i'll make it optional in the future
 
 Project features:
 
 - Only Three PyPi packages (and their dependencies) for prod
 - Close to all project/tool configs in pyproject.toml
-- Virtual environment and dependencies managed by Poetry.
+- Virtual environment and dependencies managed by Poetry
+
+Boilerplate features:
+
+- Comments marked with KISM-BOILERPLATE where there is placeholder code that you will remove/replace.
+- `create_my_new_project.py` script to make you a new project based on this, with a different name.
+  - New repo has a README.md file with instructions for running the web app
+  - This repo has a test workflow to ensure that it works and tests pass after generating.
 
 This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>. Have a look at <https://github.com/dbohdan/classless-css> too if you want a different css.
 

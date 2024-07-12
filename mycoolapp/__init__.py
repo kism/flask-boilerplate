@@ -27,16 +27,19 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     app_config_str = f">>>\nFlask object loaded app.config:\n{app.config.items()}"
     app.logger.debug(app_config_str)
 
-    # Now that we have loaded out configuration, we can import our modules
+    # Now that we have loaded out configuration, we can import our blueprints
+    # KISM-BOILERPLATE: This is a demo blueprint blueprint_one.py. Rename the file
+    #  and vars to make your own http endpoints and pages. Use multiple blueprints if
+    #  you have functionality you can categorise.
     from . import blueprint_one
 
-    # Register blueprints
-    app.register_blueprint(blueprint_one.bp)
+    app.register_blueprint(blueprint_one.bp)  # Register blueprint
 
+    # Flask homepage, generally don't have this as a blueprint.
     @app.route("/")
     def home() -> str:
         """Flask home."""
-        return render_template("home.html.j2", app_name=__name__)
+        return render_template("home.html.j2", app_name=__name__)  # Return a webpage
 
     app.logger.info("Starting Web Server")
 

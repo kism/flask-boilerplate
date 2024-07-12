@@ -1,4 +1,4 @@
-"""Blueprints for ..."""
+"""Blueprints for..."""
 
 import logging
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)  # Create a logger: mycoolapp.this_module_n
 bp = Blueprint("mycoolapp", __name__)
 
 
-# KISM-BOILERPLATE, this is the demo api endpoint, enough to show a basic javascript interaction.
+# KISM-BOILERPLATE: This is the demo api endpoint, enough to show a basic javascript interaction.
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""
@@ -26,4 +26,4 @@ def get_hello() -> int:
 
     logger.debug("GET request to /hello/, returning: %s", mca_conf["app"]["my_message"])
 
-    return jsonify(message), status
+    return jsonify(message), status # Return json, not a webpage.
