@@ -11,8 +11,8 @@ I have made a few simple web apps, this is what I use as a starting point for my
 App features:
 
 - App config loads from a TOML file
-- Example api call and frontend javascript that utilises it
 - Logging configuration, can log to file too
+- Example api call and frontend javascript that utilises it
 - 100% test coverage with PyTest
 
 Project features:
