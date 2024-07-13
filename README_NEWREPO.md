@@ -30,11 +30,21 @@ poetry install --only main
     --call mycoolapp:create_app
 ```
 
-## Testing
+## Check/Test
+
+### Checking
+
+Run `ruff check .` or get the vscode ruff extension, the rules are defined in pyproject.toml.
+
+### Testing
 
 Run `pytest`, It will get its config from pyproject.toml
 
 Of course when you start writing your app many of the tests will break. With the comments it serves as a somewhat tutorial on using `pytest`, that being said I am not an expert.
+
+### Workflows
+
+The '.github' folder has both a Check and Test workflow.
 
 To get the workflow passing badges on your repo, have a look at <https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge>
 

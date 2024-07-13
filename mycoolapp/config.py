@@ -108,11 +108,11 @@ class MyCoolAppConfig:
         # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
         # This is a silly example and should be removed!
         if "configuration_failure" in config["app"]:
+            logger.critical("Your config has the 'configuration_failure' key!")
             failure = True
 
         if failure:
-            logger.error("Config validation failed")
-            logger.critical("Exiting")
+            logger.critical("Config validation failed, Exiting")
             sys.exit(1)
 
     def _warn_config_entry_not_in_schema(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
