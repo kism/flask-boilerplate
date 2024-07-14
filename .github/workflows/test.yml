@@ -1,7 +1,8 @@
 ---
 name: Test (PyTest)
 
-on: [push, pull_request]
+on: [push]
+#on: [push, pull_request]
 
 jobs:
   test_boilerplate:
