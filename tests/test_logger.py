@@ -1,6 +1,7 @@
 """Test the logger of the app."""
 
 import logging
+import os
 from types import FunctionType
 
 import pytest
@@ -56,3 +57,5 @@ def test_handlers_added(app: Flask):
     for handler in logger.handlers[:]:
         logger.removeHandler(handler)
         handler.close()
+
+    os.unlink(pytest.TEST_LOG_PATH)
