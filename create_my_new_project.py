@@ -52,13 +52,13 @@ else:
 to_copy_folder_list = [".github", ".vscode", "mycoolapp", "tests"]
 
 for folder_name in to_copy_folder_list:
-    shutil.copytree(os.join(os.getcwd(), folder_name, dest_folder_path, folder_name))
+    shutil.copytree(os.path.join(os.getcwd(), folder_name, dest_folder_path, folder_name))
 
 to_copy_file_list = ["pyproject.toml", "poetry.toml", ".gitignore"]
 for file_name in to_copy_file_list:
-    shutil.copyfile(os.join(os.getcwd(), file_name, dest_folder_path, file_name))
+    shutil.copyfile(os.path.join(os.getcwd(), file_name, dest_folder_path, file_name))
 
-shutil.copyfile(os.join(os.getcwd(), "README_NEWREPO.md"), os.join( dest_folder_path, "README.md"))
+shutil.copyfile(os.path.join(os.getcwd(), "README_NEWREPO.md"), os.path.join( dest_folder_path, "README.md"))
 
 # endregion
 # region: Remove unwanted dirs
