@@ -28,7 +28,7 @@ def test_config_invalid(get_test_config: dict):
     assert exc_info.value.code == 1, "App did not have correct exit code for config validation failure."
 
 
-def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture) -> None:
+def test_config_file_creation(get_test_config: dict, caplog: pytest.LogCaptureFixture):
     """Tests relating to config file."""
     # TEST: that file is created when no config is provided.
     caplog.set_level(logging.WARNING)

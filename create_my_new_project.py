@@ -52,13 +52,13 @@ else:
 to_copy_folder_list = [".github", ".vscode", "mycoolapp", "tests"]
 
 for folder_name in to_copy_folder_list:
-    shutil.copytree(os.getcwd() + os.sep + folder_name, dest_folder_path + os.sep + folder_name)
+    shutil.copytree(os.path.join(os.getcwd(), folder_name), os.path.join(dest_folder_path, folder_name))
 
 to_copy_file_list = ["pyproject.toml", "poetry.toml", ".gitignore"]
 for file_name in to_copy_file_list:
-    shutil.copyfile(os.getcwd() + os.sep + file_name, dest_folder_path + os.sep + file_name)
+    shutil.copyfile(os.path.join(os.getcwd(), file_name), os.path.join(dest_folder_path, file_name))
 
-shutil.copyfile(os.getcwd() + os.sep + "README_NEWREPO.md", dest_folder_path + os.sep + "README.md")
+shutil.copyfile(os.path.join(os.getcwd(), "README_NEWREPO.md"), os.path.join( dest_folder_path, "README.md"))
 
 # endregion
 # region: Remove unwanted dirs
@@ -148,8 +148,14 @@ file_path = os.path.join(dest_folder_path, "pyproject.toml")
 pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
-pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
-file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
+file_path = os.path.join(dest_folder_path, ".github", "workflows", "test.yml")
+pattern = re.compile("^.*Upload coverage reports to Codecov" + ".*\n")
+remove_text(file_path, pattern)
+
+file_path = os.path.join(dest_folder_path, ".gitignore")
+pattern = re.compile(re.escape("# Only for the boilerplate") + ".*\n")
+remove_text(file_path, pattern)
+pattern = re.compile(re.escape("poetry.lock") + ".*\n")
 remove_text(file_path, pattern)
 
 

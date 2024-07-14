@@ -147,7 +147,7 @@ class MyCoolAppConfig:
         """Figure out the config path to load config from."""
         config_path = None
         paths = []
-        paths.append(instance_path + os.sep + "config.toml")
+        paths.append(os.path.join(instance_path, "config.toml"))
         paths.append(os.path.expanduser("~/.config/mycoolapp/config.toml"))
         paths.append("/etc/mycoolapp/config.toml")
 
