@@ -12,14 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run image
-        uses: abatilo/actions-poetry@v2
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          cache: "poetry"
           python-version: ${{ matrix.python-version }}
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
 
       - name: Configure Poetry to install dependencies in virtualenv
         run: poetry config virtualenvs.in-project true
