@@ -60,6 +60,7 @@ ignore = [
     "S101",    # KG asserts allowed in tests.
     "ANN201",  # KG Not really needed for pytest.
     "SLF001",  # KG Accessing private members is needed for testing.
+    "INP001",  # __init__.py not needed for PyTest.
 ]
 "create_my_new_project.py" = [ # If you have used this boilerplate to start making your app, you can delete this.
     # Specific rules

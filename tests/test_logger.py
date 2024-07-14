@@ -4,6 +4,7 @@ import logging
 from types import FunctionType
 
 import pytest
+from flask import Flask
 
 
 def test_config_invalid_log_level(get_test_config: FunctionType, caplog: pytest.LogCaptureFixture):
@@ -18,13 +19,11 @@ def test_config_invalid_log_level(get_test_config: FunctionType, caplog: pytest.
     assert "Invalid logging level" in caplog.text
 
 
-def test_handlers_added(get_test_config: dict):
+def test_handlers_added(app: Flask):
     """Test passing config to app."""
     # TEST: Assert that the config dictionary can set config attributes successfully.
     import mycoolapp.logger
-    from mycoolapp import create_app
 
-    app = create_app(get_test_config("testing_true_valid"))
     logger = logging.getLogger("TEST_LOGGER")
     logging_conf = {"path": "", "level": "INFO"}
 

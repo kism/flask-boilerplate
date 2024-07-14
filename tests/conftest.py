@@ -4,6 +4,7 @@ Fixtures defined in a conftest.py can be used by any test in that package withou
 """
 
 import os
+import shutil
 
 import flask
 import pytest
@@ -16,6 +17,13 @@ TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance_test")
 TEST_CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "config.toml")
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), f"tests{os.sep}configs")
 TEST_LOG_PATH = os.path.join(TEST_INSTANCE_PATH, "test.log")
+
+# Cleanup TEST_INSTANCE_PATH directory, this will be run before any testing.
+if os.path.exists(TEST_INSTANCE_PATH):
+    shutil.rmtree(TEST_INSTANCE_PATH)
+
+# Recreate the folder
+os.makedirs(TEST_INSTANCE_PATH)
 
 
 @pytest.fixture()

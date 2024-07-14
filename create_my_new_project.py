@@ -149,7 +149,7 @@ pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
 file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
-pattern = re.compile("^.*Upload coverage reports to Codecov" + ".*")
+pattern = re.compile("^.*Upload coverage reports to Codecov" + ".*\n")
 remove_text(file_path, pattern)
 
 file_path = os.path.join(dest_folder_path, ".gitignore")

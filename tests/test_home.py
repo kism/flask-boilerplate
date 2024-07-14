@@ -5,7 +5,7 @@ from http import HTTPStatus
 from flask.testing import FlaskClient
 
 
-def test_home(client: FlaskClient) -> None:
+def test_home(client: FlaskClient):
     """Test the hello API endpoint. This one uses the fixture in conftest.py."""
     response = client.get("/")
     # TEST: HTTP OK
@@ -16,7 +16,7 @@ def test_home(client: FlaskClient) -> None:
     assert b"<!doctype html>" in response.data
 
 
-def test_static_js_exists(client: FlaskClient) -> None:
+def test_static_js_exists(client: FlaskClient):
     """Check that /static/mycoolapp.js exists."""
     response = client.get("/static/mycoolapp.js")
     # TEST: That the javascript loads
