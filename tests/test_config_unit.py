@@ -39,7 +39,7 @@ def test_dictionary_functions_of_config():
 
 
 def test_config_dictionary_merge(get_test_config: dict):
-    """Unit test the dictionary merge in _ensure_all_default_config."""
+    """Unit test the dictionary merge in _merge_with_defaults."""
     import mycoolapp
     from mycoolapp import config
 
@@ -52,7 +52,7 @@ def test_config_dictionary_merge(get_test_config: dict):
     ]
 
     for test_dictionary in test_dictionaries:
-        result_dict = conf._ensure_all_default_config(config.DEFAULT_CONFIG, test_dictionary)
+        result_dict = conf._merge_with_defaults(config.DEFAULT_CONFIG, test_dictionary)
 
         # TEST: Check that the resulting config after ensuring default is valid
         assert isinstance(result_dict["app"], dict)
@@ -62,12 +62,12 @@ def test_config_dictionary_merge(get_test_config: dict):
         assert isinstance(result_dict["flask"], dict)
 
     # TEST: If an item isn't in the schema, it still ends up around, not that this is a good idea...
-    result_dict = conf._ensure_all_default_config(config.DEFAULT_CONFIG, {"TEST_CONFIG_ENTRY_NOT_IN_SCHEMA": "lmao"})
+    result_dict = conf._merge_with_defaults(config.DEFAULT_CONFIG, {"TEST_CONFIG_ENTRY_NOT_IN_SCHEMA": "lmao"})
     assert result_dict["TEST_CONFIG_ENTRY_NOT_IN_SCHEMA"]
 
 
 def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
-    """Unit test _warn_config_entry_not_in_schema."""
+    """Unit test _warn_unexpected_keys."""
     import mycoolapp
     from mycoolapp import config
 
@@ -79,6 +79,6 @@ def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
     }
 
     # TEST: Warning when config loaded has a key that is not in the schema
-    conf._warn_config_entry_not_in_schema(config.DEFAULT_CONFIG, test_config, "<root>")
+    conf._warn_unexpected_keys(config.DEFAULT_CONFIG, test_config, "<root>")
     assert "Config entry key <root>[TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
     assert "Config entry key [app][TEST_CONFIG_APP_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
