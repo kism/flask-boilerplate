@@ -8,17 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13.0-beta.3"]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
+          cache: "poetry"
           python-version: ${{ matrix.python-version }}
-
-      - name: Run image
-        uses: abatilo/actions-poetry@v2
 
       - name: Configure Poetry to install dependencies in virtualenv
         run: poetry config virtualenvs.in-project true
@@ -45,7 +46,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          cache: 'poetry'
+          cache: "poetry"
           python-version: ${{ matrix.python-version }}
 
       - name: Run create_my_new_project.py
