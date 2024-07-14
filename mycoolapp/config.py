@@ -36,7 +36,7 @@ class MyCoolAppConfig:
         Don't validate config yet
         Defaults shouldn't necessarily be enough to get the app to get to the point of starting the webapp.
         """
-        self._config = DEFAULT_CONFIG
+        self._config = DEFAULT_CONFIG.copy()
 
     """ These next special methods make this object behave like a dict, a few methods are missing
     __setitem__, __len__,__delitem__
@@ -44,38 +44,38 @@ class MyCoolAppConfig:
     """
 
     def __getitem__(self, key: str) -> any:
-        """Make this behave like a dictionary."""
+        """Get item from config like a dictionary."""
         return self._config[key]
 
     def __contains__(self, key: str) -> str:
-        """Make this behave like a dictionary."""
+        """Check if key is 'in' the configuration."""
         return key in self._config
 
     def __repr__(self) -> str:
-        """Make this behave like a dictionary."""
+        """Return string representation of the config."""
         return repr(self._config)
 
-    def load_config_from_disk(self, instance_path: str) -> None:
+    def load_from_disk(self, instance_path: str) -> None:
         """Initiate config object, get config from file."""
         config_path = self._get_config_file_path(instance_path)
 
         config = self._load_file(config_path)
 
-        config = self._ensure_all_default_config(DEFAULT_CONFIG, config)
+        config = self._merge_with_defaults(DEFAULT_CONFIG, config)
 
         self._write_config(config, config_path)
 
-        self._check_config(config)
+        self._validate_config(config)
 
         self._config = config
 
-        logger.info("Config looks all good!")
+        logger.info("Configuration loaded successfully!")
 
-    def load_config_from_dictionary(self, config: dict) -> None:
-        """Initiate config dictionary, useful for testing."""
-        config = self._ensure_all_default_config(DEFAULT_CONFIG, config)
+    def load_from_dictionary(self, config: dict) -> None:
+        """Load from dictionary, useful for testing."""
+        config = self._merge_with_defaults(DEFAULT_CONFIG, config)
 
-        self._check_config(config)
+        self._validate_config(config)
 
         self._config = config
 
@@ -84,11 +84,11 @@ class MyCoolAppConfig:
     def log_config(self) -> None:
         """Log the config in full and nice and structured."""
         log_text = ">>>\nConfig dict attributes and their values:\n"
-        log_text += f"{pprint.pformat(self._config)}"
+        log_text += pprint.pformat(self._config)
         logger.debug(log_text)
 
     def _write_config(self, config: dict, config_path: str) -> None:
-        """Write config file, used to write initial config to disk."""
+        """Write configuration to a file."""
         try:
             with open(config_path, "w", encoding="utf8") as toml_file:
                 tomlkit.dump(config, toml_file)
@@ -97,25 +97,25 @@ class MyCoolAppConfig:
             err = f"Fix permissions: chown {user_account} {config_path}"
             raise PermissionError(err) from exc
 
-    def _check_config(self, config: dict) -> None:
+    def _validate_config(self, config: dict) -> None:
         """Validate Config. Exit the program if they don't validate."""
         failure = False
 
-        self._warn_config_entry_not_in_schema(DEFAULT_CONFIG, config, "<root>")
+        self._warn_unexpected_keys(DEFAULT_CONFIG, config, "<root>")
 
         # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
 
         # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
         # This is a silly example and should be removed!
         if "configuration_failure" in config["app"]:
-            logger.critical("Your config has the 'configuration_failure' key!")
+            logger.critical("Config contains 'configuration_failure' key!")
             failure = True
 
         if failure:
-            logger.critical("Config validation failed, Exiting")
+            logger.critical("Config validation failed, Exiting.")
             sys.exit(1)
 
-    def _warn_config_entry_not_in_schema(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
+    def _warn_unexpected_keys(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
         """If the loaded config has a key that isn't in the schema (default config), we log a warning.
 
         This is recursive, be careful.
@@ -123,7 +123,7 @@ class MyCoolAppConfig:
         if parent_key != "flask":
             for key, value in base_dict.items():
                 if isinstance(value, dict) and key in target_dict:
-                    self._warn_config_entry_not_in_schema(target_dict[key], value, key)
+                    self._warn_unexpected_keys(target_dict[key], value, key)
                 elif key not in target_dict:
                     if parent_key != "<root>":
                         parent_key = f"[{parent_key}]"
@@ -133,11 +133,11 @@ class MyCoolAppConfig:
 
         return target_dict
 
-    def _ensure_all_default_config(self, base_dict: dict, target_dict: dict) -> dict:
+    def _merge_with_defaults(self, base_dict: dict, target_dict: dict) -> dict:
         """This is recursive, be careful."""
         for key, value in base_dict.items():
             if isinstance(value, dict) and key in target_dict:
-                self._ensure_all_default_config(value, target_dict[key])
+                self._merge_with_defaults(value, target_dict[key])
             elif key not in target_dict:
                 target_dict[key] = target_dict.get(key, value)
 
@@ -146,10 +146,11 @@ class MyCoolAppConfig:
     def _get_config_file_path(self, instance_path: str) -> str:
         """Figure out the config path to load config from."""
         config_path = None
-        paths = []
-        paths.append(os.path.join(instance_path, "config.toml"))
-        paths.append(os.path.expanduser("~/.config/mycoolapp/config.toml"))
-        paths.append("/etc/mycoolapp/config.toml")
+        paths = [
+            os.path.join(instance_path, "config.toml"),
+            os.path.expanduser("~/.config/mycoolapp/config.toml"),
+            "/etc/mycoolapp/config.toml",
+        ]
 
         for path in paths:
             if os.path.isfile(path):
@@ -170,6 +171,6 @@ class MyCoolAppConfig:
         return config_path
 
     def _load_file(self, config_path: str) -> dict:
-        """Load config from file into a dict."""
+        """Load configuration from a file."""
         with open(config_path, encoding="utf8") as toml_file:
             return tomlkit.load(toml_file)

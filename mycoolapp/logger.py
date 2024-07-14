@@ -43,21 +43,21 @@ def setup_logger(app: Flask, logging_conf: dict, in_logger: logging.Logger | Non
     logging.getLogger("werkzeug").setLevel(logging.DEBUG)  # Only will be used in dev, debug logs incoming requests.
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # Bit noisy when set to info, used by requests module.
 
-    logger.info("Logger config set!")
+    logger.info("Logger configuration set!")
 
 
 def _has_file_handler(in_logger: logging.Logger) -> bool:
-    """Check if logger has file handler."""
+    """Check if logger has a file handler."""
     return any(isinstance(handler, logging.FileHandler) for handler in in_logger.handlers)
 
 
 def _has_console_handler(in_logger: logging.Logger) -> bool:
-    """Check if logger has console handler."""
+    """Check if logger has a console handler."""
     return any(isinstance(handler, logging.StreamHandler) for handler in in_logger.handlers)
 
 
 def _add_console_handler(in_logger: logging.Logger) -> None:
-    """Setup the Console handler."""
+    """Add a console handler to the logger."""
     formatter = logging.Formatter(LOG_FORMAT)
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
@@ -66,14 +66,14 @@ def _add_console_handler(in_logger: logging.Logger) -> None:
 
 
 def _set_log_level(in_logger: logging.Logger, log_level: int | str) -> None:
-    """Sets the log level."""
+    """Set the log level of the logger."""
     if isinstance(log_level, str):
         log_level = log_level.upper()
         if log_level not in LOG_LEVELS:
             in_logger.setLevel("INFO")
             logger.warning(
                 "❗ Invalid logging level: %s, defaulting to INFO",
-                in_logger.getEffectiveLevel(),
+                log_level,
             )
         else:
             in_logger.setLevel(log_level)
@@ -83,7 +83,7 @@ def _set_log_level(in_logger: logging.Logger, log_level: int | str) -> None:
 
 
 def _add_file_handler(in_logger: logging.Logger, log_path: str) -> None:
-    """Sets up the file handler."""
+    """Add a file handler to the logger."""
     try:
         file_handler = RotatingFileHandler(log_path, maxBytes=1000000, backupCount=5)
     except IsADirectoryError as exc:
