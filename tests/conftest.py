@@ -13,9 +13,9 @@ from jinja2 import Template
 
 from mycoolapp import create_app
 
-TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance_test")
+TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance", "instance_test")
 TEST_CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "config.toml")
-TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), f"tests{os.sep}configs")
+TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), "tests", "configs")
 TEST_LOG_PATH = os.path.join(TEST_INSTANCE_PATH, "test.log")
 
 # Cleanup TEST_INSTANCE_PATH directory, this will be run before any testing.
@@ -60,8 +60,8 @@ def get_test_config() -> dict:
         filename_toml = f"{config_name}.toml"
         filename_toml_j2 = f"{config_name}.toml.j2"
 
-        filepath_toml = os.path.join(TEST_CONFIGS_LOCATION, os.path.join(TEST_CONFIGS_LOCATION, filename_toml))
-        filepath_toml_j2 = os.path.join(TEST_CONFIGS_LOCATION, os.path.join(TEST_CONFIGS_LOCATION, filename_toml_j2))
+        filepath_toml = os.path.join(TEST_CONFIGS_LOCATION, TEST_CONFIGS_LOCATION, filename_toml)
+        filepath_toml_j2 = os.path.join(TEST_CONFIGS_LOCATION, TEST_CONFIGS_LOCATION, filename_toml_j2)
 
         assert not (
             os.path.isfile(filepath_toml) and os.path.isfile(filepath_toml_j2)
