@@ -148,8 +148,14 @@ file_path = os.path.join(dest_folder_path, "pyproject.toml")
 pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
-pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
 file_path = os.path.join(dest_folder_path, f".github{os.sep}workflows{os.sep}test.yml")
+pattern = re.compile("^.*Upload coverage reports to Codecov" + ".*")
+remove_text(file_path, pattern)
+
+file_path = os.path.join(dest_folder_path, ".gitignore")
+pattern = re.compile(re.escape("# Only for the boilerplate") + ".*\n")
+remove_text(file_path, pattern)
+pattern = re.compile(re.escape("poetry.lock") + ".*\n")
 remove_text(file_path, pattern)
 
 
