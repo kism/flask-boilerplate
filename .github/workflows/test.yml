@@ -24,7 +24,16 @@ jobs:
         uses: abatilo/actions-poetry@v2
 
       - name: Configure Poetry to install dependencies in virtualenv
-        run: poetry config virtualenvs.in-project true
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+
+      # Uncomment below for workflow caching https://github.com/abatilo/actions-poetry/tree/v2/
+      # - name: Define a cache for the virtual environment based on the dependencies lock file
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ./.venv
+      #     key: venv-${{ hashFiles('poetry.lock') }}
 
       - name: Install dependencies
         run: poetry install --without dev
@@ -59,7 +68,16 @@ jobs:
         uses: abatilo/actions-poetry@v2
 
       - name: Configure Poetry to install dependencies in virtualenv
-        run: poetry config virtualenvs.in-project true
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+
+      # Uncomment below for workflow caching https://github.com/abatilo/actions-poetry/tree/v2/
+      # - name: Define a cache for the virtual environment based on the dependencies lock file
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ./.venv
+      #     key: venv-${{ hashFiles('poetry.lock') }}
 
       - name: Install dependencies
         working-directory: ../mydankapp
