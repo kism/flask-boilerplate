@@ -58,7 +58,7 @@ to_copy_file_list = ["pyproject.toml", "poetry.toml", ".gitignore"]
 for file_name in to_copy_file_list:
     shutil.copyfile(os.path.join(os.getcwd(), file_name), os.path.join(dest_folder_path, file_name))
 
-shutil.copyfile(os.path.join(os.getcwd(), "README_NEWREPO.md"), os.path.join( dest_folder_path, "README.md"))
+shutil.copyfile(os.path.join(os.getcwd(), "README_NEWREPO.md"), os.path.join(dest_folder_path, "README.md"))
 
 # endregion
 # region: Remove unwanted dirs
@@ -149,7 +149,7 @@ pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
 remove_text(file_path, pattern)
 
 file_path = os.path.join(dest_folder_path, ".github", "workflows", "test.yml")
-pattern = re.compile("^.*Upload coverage reports to Codecov" + ".*\n")
+pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
 remove_text(file_path, pattern)
 
 file_path = os.path.join(dest_folder_path, ".gitignore")
