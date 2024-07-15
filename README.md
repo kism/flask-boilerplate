@@ -47,3 +47,9 @@ python create_my_new_project.py
 This will create the new project directory in the parent directory, with the new name.
 
 At the end of the script it will give you some instructions to use poetry, and grab the my css.
+
+## Todo
+
+- Different folder name
+- Change workflow names, remove boilerplate
+- Cleanup create_app creating config.toml in test fixtures

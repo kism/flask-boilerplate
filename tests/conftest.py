@@ -3,6 +3,7 @@
 Fixtures defined in a conftest.py can be used by any test in that package without needing to import them.
 """
 
+import contextlib
 import os
 import shutil
 
@@ -29,12 +30,15 @@ os.makedirs(TEST_INSTANCE_PATH)
 @pytest.fixture()
 def app() -> any:
     """This fixture uses the default config within the flask app."""
+    assert not os.path.exists(TEST_CONFIG_FILE_PATH), "Tests should start without config file existing by default."
+
     app = create_app(test_config=None, instance_path=TEST_INSTANCE_PATH)
 
     yield app  # This is the state that the test will get the object, anything below is cleanup.
 
     # Remove any created config/logs
-    os.unlink(TEST_CONFIG_FILE_PATH)
+    with contextlib.suppress(FileNotFoundError):
+        os.unlink(TEST_CONFIG_FILE_PATH)
 
 
 @pytest.fixture()
