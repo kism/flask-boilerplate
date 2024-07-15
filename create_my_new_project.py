@@ -25,10 +25,13 @@ while len(new_project_name_split) == 1:
     new_project_name_split = new_project_name_prompt.split()
 
 new_name = ("".join(new_project_name_split)).lower()
+new_name_hyphens = ("-".join(new_project_name_split)).lower()
 new_name_camel_case = "".join(x for x in new_project_name_prompt.title() if not x.isspace())
 new_config_var = "".join([word[0] for word in new_project_name_split]) + "_conf"
 
+
 print(f"new_name: {new_name}")
+print(f"new_name_hyphens: {new_name}")
 print(f"new_name_camel_case: {new_name_camel_case}")
 print(f"new_config_var: {new_config_var}")
 
@@ -36,7 +39,7 @@ print(f"new_config_var: {new_config_var}")
 # region: Create new app folder
 
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-dest_folder_path = os.path.join(parent_dir, new_name)
+dest_folder_path = os.path.join(parent_dir, new_name_hyphens)
 
 if os.path.exists(dest_folder_path):  # Check if the folder already exists
     print(f"The folder '{new_name}' already exists in parent directory, exiting.")
@@ -128,14 +131,14 @@ find_and_replace_file_dir_names(dest_folder_path, "mycoolapp", new_name)
 # region: Edit pyproject.toml, .github/workflows/main.yml
 
 
-def remove_text(file_path: str, pattern: str) -> None:
+def replace_text(file_path: str, pattern: str, replacement: str = "") -> None:
     """Remove text from file per compiled regex pattern."""
     # Read the file content
     with open(file_path) as file:
         content = file.read()
 
     # Use re.DOTALL to include newline characters in the match
-    modified_content = re.sub(pattern, "", content)
+    modified_content = re.sub(pattern, replacement, content)
 
     # Write the modified content back to the file
     with open(file_path, "w") as file:
@@ -146,17 +149,20 @@ def remove_text(file_path: str, pattern: str) -> None:
 # region: Path to the file you want to modify
 file_path = os.path.join(dest_folder_path, "pyproject.toml")
 pattern = re.compile(r"\"create_my_new_project\.py\".*?\]", re.DOTALL)
-remove_text(file_path, pattern)
+replace_text(file_path, pattern)
 
 file_path = os.path.join(dest_folder_path, ".github", "workflows", "test.yml")
 pattern = re.compile(re.escape("      - name: Upload coverage reports to Codecov") + ".*", re.DOTALL)
-remove_text(file_path, pattern)
+replace_text(file_path, pattern)
+pattern = re.compile(re.escape("test_boilerplate:"))
+replace_text(file_path, pattern, "test_app:")
+
 
 file_path = os.path.join(dest_folder_path, ".gitignore")
 pattern = re.compile(re.escape("# Only for the boilerplate") + ".*\n")
-remove_text(file_path, pattern)
+replace_text(file_path, pattern)
 pattern = re.compile(re.escape("poetry.lock") + ".*\n")
-remove_text(file_path, pattern)
+replace_text(file_path, pattern)
 
 
 # endregion

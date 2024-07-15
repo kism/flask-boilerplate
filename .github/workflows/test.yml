@@ -72,17 +72,10 @@ jobs:
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
 
-      # Uncomment below for workflow caching https://github.com/abatilo/actions-poetry/tree/v2/
-      # - name: Define a cache for the virtual environment based on the dependencies lock file
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ./.venv
-      #     key: venv-${{ hashFiles('poetry.lock') }}
-
       - name: Install dependencies
-        working-directory: ../mydankapp
+        working-directory: ../my-dank-app
         run: poetry install --without dev
 
       - name: Test templated project with pytest
-        working-directory: ../mydankapp
+        working-directory: ../my-dank-app
         run: .venv/bin/pytest # No code coverage for this one
