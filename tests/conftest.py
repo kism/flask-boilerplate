@@ -6,13 +6,12 @@ Fixtures defined in a conftest.py can be used by any test in that package withou
 import contextlib
 import os
 import shutil
+from types import ModuleType
 
 import flask
 import pytest
 import tomlkit
 from jinja2 import Template
-
-from mycoolapp import create_app
 
 TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance", "_TEST")
 TEST_CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "config.toml")
@@ -30,11 +29,27 @@ os.makedirs(TEST_INSTANCE_PATH)
 @pytest.fixture()
 def app() -> any:
     """This fixture uses the default config within the flask app."""
+    from mycoolapp import create_app
+
     assert not os.path.exists(TEST_CONFIG_FILE_PATH), "Tests should start without config file existing by default."
 
     app = create_app(test_config=None, instance_path=TEST_INSTANCE_PATH)
 
     yield app  # This is the state that the test will get the object, anything below is cleanup.
+
+    # Remove any created config/logs
+    with contextlib.suppress(FileNotFoundError):
+        os.unlink(TEST_CONFIG_FILE_PATH)
+
+
+@pytest.fixture()
+def mycoolapp() -> any:
+    """This fixture gives you the mycoolapp module."""
+    assert not os.path.exists(TEST_CONFIG_FILE_PATH), "Tests should start without config file existing by default."
+
+    import mycoolapp
+
+    yield mycoolapp  # This is the state that the test will get the object, anything below is cleanup.
 
     # Remove any created config/logs
     with contextlib.suppress(FileNotFoundError):
