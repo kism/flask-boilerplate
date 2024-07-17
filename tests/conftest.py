@@ -26,6 +26,14 @@ if os.path.exists(TEST_INSTANCE_PATH):
 os.makedirs(TEST_INSTANCE_PATH)
 
 
+def pytest_configure():
+    """This is a magic function for adding things to pytest?"""
+    pytest.TEST_INSTANCE_PATH = TEST_INSTANCE_PATH
+    pytest.TEST_CONFIG_FILE_PATH = TEST_CONFIG_FILE_PATH
+    pytest.TEST_CONFIGS_LOCATION = TEST_CONFIGS_LOCATION
+    pytest.TEST_LOG_PATH = TEST_LOG_PATH
+
+
 @pytest.fixture()
 def app() -> any:
     """This fixture uses the default config within the flask app."""
@@ -107,11 +115,3 @@ def get_test_config() -> dict:
         return out_config
 
     return _get_test_config
-
-
-def pytest_configure():
-    """This is a magic function for adding things to pytest?"""
-    pytest.TEST_INSTANCE_PATH = TEST_INSTANCE_PATH
-    pytest.TEST_CONFIG_FILE_PATH = TEST_CONFIG_FILE_PATH
-    pytest.TEST_CONFIGS_LOCATION = TEST_CONFIGS_LOCATION
-    pytest.TEST_LOG_PATH = TEST_LOG_PATH

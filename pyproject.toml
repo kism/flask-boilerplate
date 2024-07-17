@@ -15,6 +15,8 @@ tomlkit = "^0.12"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
+detect-test-pollution = "*"
+pytest-random-order = "*"
 jinja2 = "*"      # Flask depends on this, I have it here since config loading is templated for tests.
 
 [tool.poetry.group.dev.dependencies]
@@ -78,7 +80,13 @@ docstring-code-format = true
 docstring-code-line-length = 40
 
 [tool.pytest.ini_options]
-addopts = "--cov-context=test --cov=mycoolapp --cov-report=term --cov-report=html"
+addopts = [
+    "--import-mode=importlib",
+    "--cov-context=test",
+    "--cov=mycoolapp",
+    "--cov-report=term",
+    "--cov-report=html",
+]
 testpaths = ["tests"]
 
 [tool.coverage.html]

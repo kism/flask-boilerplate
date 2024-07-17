@@ -23,10 +23,7 @@ def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
 
 
 def test_config_logging_to_dir():
-    """Test if logging to directory raises error.
-
-    This one needs to go at the end since it interferes with other tests???
-    """
+    """Test if logging to directory raises error."""
     from mycoolapp.logger import _add_file_handler
 
     logger = logging.getLogger("TEST_LOGGER")
@@ -46,10 +43,7 @@ def test_config_logging_to_dir():
     ],
 )
 def test_set_log_level(log_level_in: str | int, log_level_expected: int):
-    """Test if logging to directory raises error.
-
-    This one needs to go at the end since it interferes with other tests???
-    """
+    """Test if logging to directory raises error."""
     from mycoolapp.logger import _set_log_level
 
     logger = logging.getLogger("TEST_LOGGER")
