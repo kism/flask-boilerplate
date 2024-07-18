@@ -15,7 +15,9 @@ tomlkit = "^0.12"
 pytest = "*"
 pytest-cov = "*"
 pytest-mock = "*"
-jinja2 = "*"      # Flask depends on this, I have it here since config loading is templated for tests.
+detect-test-pollution = "*"
+pytest-random-order = "*"
+jinja2 = "*"                # Flask depends on this, I have it here since config loading is templated for tests.
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -62,6 +64,7 @@ ignore = [
     "SLF001", # KG Accessing private members is needed for testing.
     "INP001", # KG __init__.py not needed for PyTest.
     "PT004",  # KG monkeypatches don't return.
+    "ANN001", # KG Tests don't need type hints.
 ]
 "create_my_new_project.py" = [ # If you have used this boilerplate to start making your app, you can delete this.
     # Specific rules
@@ -78,7 +81,13 @@ docstring-code-format = true
 docstring-code-line-length = 40
 
 [tool.pytest.ini_options]
-addopts = "--cov-context=test --cov=mycoolapp --cov-report=term --cov-report=html"
+addopts = [
+    "--import-mode=importlib",
+    "--cov-context=test",
+    "--cov=mycoolapp",
+    "--cov-report=term",
+    "--cov-report=html",
+]
 testpaths = ["tests"]
 
 [tool.coverage.html]
