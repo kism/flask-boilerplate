@@ -4,11 +4,11 @@ from flask import Flask, render_template
 
 from . import config, logger
 
-mca_conf = config.MyCoolAppConfig()  # Create the default config object
-
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
+    mca_conf = config.MyCoolAppConfig()  # Create the default config object
+
     app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
 
     if test_config and not instance_path:
@@ -27,6 +27,9 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     logger.setup_logger(app, mca_conf["logging"])  # Setup logger per config
 
     app.config.from_mapping(mca_conf["flask"])  # Flask config, separate
+
+    app.config["app"] = mca_conf["app"]
+    app.config["logging"] = mca_conf["logging"]
 
     # Do some debug logging of config
     mca_conf.log_config()
@@ -50,8 +53,3 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     app.logger.info("Starting Web Server")
 
     return app
-
-
-def get_mycoolapp_config() -> dict:
-    """Return the config object to whatever needs it."""
-    return mca_conf
