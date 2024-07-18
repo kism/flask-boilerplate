@@ -18,11 +18,11 @@ def pytest_configure():
 
 
 @pytest.fixture()
-def app(tmp_path) -> any:
+def app(tmp_path, get_test_config) -> any:
     """This fixture uses the default config within the flask app."""
     from mycoolapp import create_app
 
-    return create_app(test_config=None, instance_path=tmp_path)
+    return create_app(test_config=get_test_config("testing_true_valid"), instance_path=tmp_path)
 
 
 @pytest.fixture()

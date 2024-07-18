@@ -11,12 +11,16 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
 
+    if test_config and not instance_path:
+        app.logger.critical("When testing supply both test_config and instance_path!")
+        raise SystemError
+
     app.logger.info("Instance path is: %s", instance_path)
 
     logger.setup_logger(app, mca_conf["logging"])  # Setup logger per defaults
 
     if test_config:  # For Python testing we will often pass in a config
-        mca_conf.load_from_dictionary(test_config)  # Loads app config from dict provided
+        mca_conf.load_from_dictionary(test_config, app.instance_path)  # Loads app config from dict provided
     else:
         mca_conf.load_from_disk(app.instance_path)  # Loads app config from disk
 

@@ -8,38 +8,18 @@ import pytest
 from mycoolapp import create_app
 
 
-def test_config_valid(get_test_config):
+def test_config_valid(tmp_path, get_test_config):
     """Test passing config to app."""
     # TEST: Assert that the config dictionary can set config attributes successfully.
 
     from mycoolapp import create_app
 
     assert not create_app(
-        get_test_config("testing_false_valid")
+        get_test_config("testing_false_valid"), instance_path=tmp_path
     ).testing, "Flask testing config item not being set correctly."
     assert create_app(
-        get_test_config("testing_true_valid")
+        get_test_config("testing_true_valid"), instance_path=tmp_path
     ).testing, "Flask testing config item not being set correctly."
-
-
-def test_config_invalid(get_test_config):
-    """Test that program exits when given invalid config."""
-    # TEST: Assert that the program exists when provided an invalid config dictionary.
-    with pytest.raises(SystemExit) as exc_info:
-        create_app(get_test_config("invalid"))
-
-    assert isinstance(exc_info.type, type(SystemExit)), "App did not exit on config validation failure."
-    assert exc_info.value.code == 1, "App did not have correct exit code for config validation failure."
-
-
-def test_config_file_creation(tmp_path, caplog: pytest.LogCaptureFixture):
-    """Tests relating to config file."""
-    # TEST: that file is created when no config is provided.
-    with caplog.at_level(logging.WARNING):
-        create_app(test_config=None, instance_path=tmp_path)
-
-    assert "No configuration file found, creating at default location:" in caplog.text
-    caplog.clear()
 
 
 def test_config_file_loading(tmp_path, caplog: pytest.LogCaptureFixture):

@@ -19,7 +19,7 @@ def test_config_permissions_error(tmp_path, mocker: pytest_mock.plugin.MockerFix
 
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
-        conf._write_config({}, tmp_path)
+        conf._write_config()
 
 
 def test_dictionary_functions_of_config():
