@@ -55,12 +55,7 @@ def test_config_invalid(tmp_path, get_test_config):
 
 
 def test_config_file_creation(tmp_path, caplog: pytest.LogCaptureFixture):
-    """Tests relating to config file."""
-    # TEST: that file is created when no config is provided.
-    import contextlib
-    with contextlib.suppress(FileNotFoundError):
-        os.unlink(os.path.join(tmp_path, "config.toml"))
-
+    """TEST: that file is created when no config is provided.."""
     with caplog.at_level(logging.WARNING):
         create_app(test_config=None, instance_path=tmp_path)
 

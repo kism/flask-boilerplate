@@ -10,7 +10,7 @@ import mycoolapp
 DEFAULT_CONFIG = mycoolapp.config.DEFAULT_CONFIG
 
 
-def test_config_permissions_error(tmp_path, get_test_config, mocker: pytest_mock.plugin.MockerFixture):
+def test_config_permissions_error_read(tmp_path, get_test_config, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
     with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
         config_contents = f.read()
@@ -27,6 +27,27 @@ def test_config_permissions_error(tmp_path, get_test_config, mocker: pytest_mock
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
         mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
+
+def test_config_permissions_error_write(tmp_path, get_test_config, mocker: pytest_mock.plugin.MockerFixture):
+    """Mock a Permissions error with mock_open."""
+    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
+        config_contents = f.read()
+
+    tmp_f = tmp_path / "config.toml"
+
+    tmp_f.write_text(config_contents)
+
+    conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
+
+    mock_open_func = mocker.mock_open(read_data="")
+    mock_open_func.side_effect = PermissionError("Permission denied")
+
+    mocker.patch("builtins.open", mock_open_func)
+
+    # TEST: PermissionsError is raised.
+    with pytest.raises(PermissionError):
+        conf._write_config()
+
 
 
 def test_dictionary_functions_of_config(tmp_path):
