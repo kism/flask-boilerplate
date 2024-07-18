@@ -44,7 +44,7 @@ def test_config_dictionary_merge(get_test_config):
 
     test_dictionaries = [
         {},
-        get_test_config("logging_path_valid"),
+        get_test_config("logging_invalid"),
         get_test_config("testing_true_valid"),
     ]
 

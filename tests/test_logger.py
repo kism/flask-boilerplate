@@ -7,13 +7,14 @@ from types import FunctionType
 import pytest
 from flask import Flask
 
-import mycoolapp
+import mycoolapp.logger
+from mycoolapp import create_app
 
 
 def test_config_invalid_log_level(get_test_config: FunctionType, caplog: pytest.LogCaptureFixture):
     """Test if logging to file works."""
     caplog.set_level(logging.WARNING)
-    app = mycoolapp.create_app(get_test_config("logging_invalid_log_level"))
+    app = create_app(get_test_config("logging_invalid_log_level"))
     # TEST: App still starts
     assert app
     # TEST: Assert that the invalid logging level message gets logged
