@@ -3,42 +3,33 @@
 Fixtures defined in a conftest.py can be used by any test in that package without needing to import them.
 """
 
-import contextlib
 import os
-import shutil
 
 import flask
 import pytest
 import tomlkit
 from jinja2 import Template
 
-from mycoolapp import create_app
-
 TEST_INSTANCE_PATH = os.path.join(os.getcwd(), "instance", "_TEST")
 TEST_CONFIG_FILE_PATH = os.path.join(TEST_INSTANCE_PATH, "config.toml")
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), "tests", "configs")
 TEST_LOG_PATH = os.path.join(TEST_INSTANCE_PATH, "test.log")
 
-# Cleanup TEST_INSTANCE_PATH directory, this will be run before any testing.
-if os.path.exists(TEST_INSTANCE_PATH):
-    shutil.rmtree(TEST_INSTANCE_PATH)
 
-# Recreate the folder
-os.makedirs(TEST_INSTANCE_PATH)
+def pytest_configure():
+    """This is a magic function for adding things to pytest?"""
+    pytest.TEST_INSTANCE_PATH = TEST_INSTANCE_PATH
+    pytest.TEST_CONFIG_FILE_PATH = TEST_CONFIG_FILE_PATH
+    pytest.TEST_CONFIGS_LOCATION = TEST_CONFIGS_LOCATION
+    pytest.TEST_LOG_PATH = TEST_LOG_PATH
 
 
 @pytest.fixture()
-def app() -> any:
+def app(tmp_path) -> any:
     """This fixture uses the default config within the flask app."""
-    assert not os.path.exists(TEST_CONFIG_FILE_PATH), "Tests should start without config file existing by default."
+    from mycoolapp import create_app
 
-    app = create_app(test_config=None, instance_path=TEST_INSTANCE_PATH)
-
-    yield app  # This is the state that the test will get the object, anything below is cleanup.
-
-    # Remove any created config/logs
-    with contextlib.suppress(FileNotFoundError):
-        os.unlink(TEST_CONFIG_FILE_PATH)
+    return create_app(test_config=None, instance_path=tmp_path)
 
 
 @pytest.fixture()
@@ -92,11 +83,3 @@ def get_test_config() -> dict:
         return out_config
 
     return _get_test_config
-
-
-def pytest_configure():
-    """This is a magic function for adding things to pytest?"""
-    pytest.TEST_INSTANCE_PATH = TEST_INSTANCE_PATH
-    pytest.TEST_CONFIG_FILE_PATH = TEST_CONFIG_FILE_PATH
-    pytest.TEST_CONFIGS_LOCATION = TEST_CONFIGS_LOCATION
-    pytest.TEST_LOG_PATH = TEST_LOG_PATH
