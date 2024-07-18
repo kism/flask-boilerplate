@@ -21,6 +21,12 @@ def test_config_valid(tmp_path, get_test_config):
         get_test_config("testing_true_valid"), instance_path=tmp_path
     ).testing, "Flask testing config item not being set correctly."
 
+    with pytest.raises(SystemError):
+        (
+            create_app(get_test_config("testing_false_valid")),
+            "App needs to fail if no instance path provided when config dict is provided.",
+        )
+
 
 def test_config_file_loading(tmp_path, caplog: pytest.LogCaptureFixture):
     """Tests relating to config file."""
