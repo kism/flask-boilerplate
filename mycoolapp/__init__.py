@@ -31,7 +31,11 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     app.config["logging"] = mca_conf["logging"]
 
     # Do some debug logging of config
-    app_config_str = f">>>\nFlask config:\n{app.config.items()}"
+    from pprint import pformat
+    app_config_str = ">>>\nFlask config:"
+    for key, value in app.config.items():
+        app_config_str += f"\n  {key}: {pformat(value)}"
+
     app.logger.debug(app_config_str)
 
     # Now that we have loaded out configuration, we can import our blueprints
