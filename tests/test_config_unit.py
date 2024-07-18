@@ -1,6 +1,5 @@
 """Test launching the app and config."""
 
-import logging
 import os
 
 import pytest
@@ -13,16 +12,12 @@ DEFAULT_CONFIG = mycoolapp.config.DEFAULT_CONFIG
 
 def test_config_permissions_error(tmp_path, get_test_config, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
-    conf = mycoolapp.config.MyCoolAppConfig()  # Create the default config object
-
     with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
         config_contents = f.read()
 
     tmp_f = tmp_path / "config.toml"
 
     tmp_f.write_text(config_contents)
-
-    conf.load_from_disk(instance_path=tmp_path)
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -31,13 +26,11 @@ def test_config_permissions_error(tmp_path, get_test_config, mocker: pytest_mock
 
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
-        conf._write_config()
+        mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
 
 def test_dictionary_functions_of_config(tmp_path):
     """Test the functions in the config object that let it behave like a dictionary."""
-    conf = mycoolapp.config.MyCoolAppConfig()  # Create the default config object
-
     with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
         config_contents = f.read()
 
@@ -45,7 +38,7 @@ def test_dictionary_functions_of_config(tmp_path):
 
     tmp_f.write_text(config_contents)
 
-    conf.load_from_disk(instance_path=tmp_path)
+    conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
     # TEST: __contains__ method.
     assert "app" in conf, "__contains__ method of config object doesn't work"
@@ -59,8 +52,6 @@ def test_dictionary_functions_of_config(tmp_path):
 
 def test_config_dictionary_merge(tmp_path, get_test_config):
     """Unit test the dictionary merge in _merge_with_defaults."""
-    conf = mycoolapp.config.MyCoolAppConfig()  # Create the default config object
-
     with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
         config_contents = f.read()
 
@@ -68,7 +59,7 @@ def test_config_dictionary_merge(tmp_path, get_test_config):
 
     tmp_f.write_text(config_contents)
 
-    conf.load_from_disk(instance_path=tmp_path)
+    conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
     test_dictionaries = [
         {},
@@ -93,8 +84,6 @@ def test_config_dictionary_merge(tmp_path, get_test_config):
 
 def test_config_dictionary_not_in_schema(tmp_path, caplog: pytest.LogCaptureFixture):
     """Unit test _warn_unexpected_keys."""
-    conf = mycoolapp.config.MyCoolAppConfig()  # Create the default config object
-
     with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
         config_contents = f.read()
 
@@ -102,7 +91,7 @@ def test_config_dictionary_not_in_schema(tmp_path, caplog: pytest.LogCaptureFixt
 
     tmp_f.write_text(config_contents)
 
-    conf.load_from_disk(instance_path=tmp_path)
+    conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
     test_config = {
         "TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA": "",
