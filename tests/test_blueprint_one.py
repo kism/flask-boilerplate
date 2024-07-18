@@ -10,9 +10,11 @@ def test_hello(client: FlaskClient):
     assert response.json["msg"] == "Hello, World!", "Incorrect response from /hello/ when using default config."
 
 
-def test_hello_with_config(mycoolapp: any, get_test_config: dict):
+def test_hello_with_config(tmp_path, get_test_config):
     """TEST: hello endpoint with different configs."""
-    app = mycoolapp.create_app(get_test_config("different_my_message"))
+    from mycoolapp import create_app
+
+    app = create_app(get_test_config("different_my_message"), instance_path=tmp_path)
     client = app.test_client()
     response = client.get("/hello/")
     # TEST: the hello API endpoint with non-default config

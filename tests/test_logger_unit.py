@@ -6,7 +6,7 @@ import pytest
 import pytest_mock
 
 
-def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
+def test_logging_permissions_error(tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Try mock a permission error."""
     from mycoolapp.logger import _add_file_handler
 
@@ -19,10 +19,10 @@ def test_logging_permissions_error(mocker: pytest_mock.plugin.MockerFixture):
 
     # TEST: That a permissions error is raised.
     with pytest.raises(PermissionError):
-        _add_file_handler(logger, pytest.TEST_LOG_PATH)
+        _add_file_handler(logger, str(tmp_path))
 
 
-def test_config_logging_to_dir():
+def test_config_logging_to_dir(tmp_path):
     """Test if logging to directory raises error."""
     from mycoolapp.logger import _add_file_handler
 
@@ -30,7 +30,7 @@ def test_config_logging_to_dir():
 
     # TEST: Check that correct exception is caught when you try log to a folder
     with pytest.raises(IsADirectoryError):
-        _add_file_handler(logger, pytest.TEST_INSTANCE_PATH)
+        _add_file_handler(logger, tmp_path)
 
 
 @pytest.mark.parametrize(

@@ -5,8 +5,10 @@ import logging
 import pytest
 import pytest_mock
 
+import mycoolapp
 
-def test_config_permissions_error(mycoolapp: any, mocker: pytest_mock.plugin.MockerFixture):
+
+def test_config_permissions_error(tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
     conf = mycoolapp.get_mycoolapp_config()
 
@@ -17,10 +19,10 @@ def test_config_permissions_error(mycoolapp: any, mocker: pytest_mock.plugin.Moc
 
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
-        conf._write_config({}, pytest.TEST_CONFIG_FILE_PATH)
+        conf._write_config({}, tmp_path)
 
 
-def test_dictionary_functions_of_config(mycoolapp: any):
+def test_dictionary_functions_of_config():
     """Test the functions in the config object that let it behave like a dictionary."""
     conf = mycoolapp.get_mycoolapp_config()
 
@@ -34,7 +36,7 @@ def test_dictionary_functions_of_config(mycoolapp: any):
     assert isinstance(conf["app"], dict), "__getitem__ method of config object doesn't work"
 
 
-def test_config_dictionary_merge(mycoolapp: any, get_test_config: dict):
+def test_config_dictionary_merge(get_test_config):
     """Unit test the dictionary merge in _merge_with_defaults."""
     from mycoolapp import config
 
@@ -61,7 +63,7 @@ def test_config_dictionary_merge(mycoolapp: any, get_test_config: dict):
     assert result_dict["TEST_CONFIG_ENTRY_NOT_IN_SCHEMA"]
 
 
-def test_config_dictionary_not_in_schema(mycoolapp: any, caplog: pytest.LogCaptureFixture):
+def test_config_dictionary_not_in_schema(caplog: pytest.LogCaptureFixture):
     """Unit test _warn_unexpected_keys."""
     from mycoolapp import config
 
