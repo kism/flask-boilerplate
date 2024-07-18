@@ -8,7 +8,6 @@ import os
 import flask
 import pytest
 import tomlkit
-from jinja2 import Template
 
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), "tests", "configs")
 
@@ -48,7 +47,7 @@ def get_test_config() -> dict:
 
         filename = f"{config_name}.toml"
 
-        filepath = os.path.join(TEST_CONFIGS_LOCATION, TEST_CONFIGS_LOCATION, filename)
+        filepath = os.path.join(TEST_CONFIGS_LOCATION, filename)
 
         if os.path.isfile(filepath):
             with open(filepath) as file:
