@@ -4,10 +4,6 @@ import logging
 
 from flask import Blueprint, jsonify
 
-from . import get_mycoolapp_config
-
-mca_conf = get_mycoolapp_config()  # Get the config
-
 # This means that the logger will have the right name, logging should be done with this object
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
@@ -21,9 +17,13 @@ bp = Blueprint("mycoolapp", __name__)
 @bp.route("/hello/", methods=["GET"])
 def get_hello() -> int:
     """Hello GET Method."""
-    message = {"msg": mca_conf["app"]["my_message"]}
+    from flask import current_app
+
+    mca_app_conf = current_app.config["app"]  # Get the config
+
+    message = {"msg": mca_app_conf["my_message"]}
     status = 200
 
-    logger.debug("GET request to /hello/, returning: %s", mca_conf["app"]["my_message"])
+    logger.debug("GET request to /hello/, returning: %s", current_app.config["app"])
 
-    return jsonify(message), status # Return json, not a webpage.
+    return jsonify(message), status  # Return json, not a webpage.

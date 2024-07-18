@@ -3,7 +3,6 @@
 import contextlib
 import logging
 import os
-import pprint
 import pwd
 import sys
 
@@ -30,13 +29,30 @@ DEFAULT_CONFIG = {
 class MyCoolAppConfig:
     """Config Object."""
 
-    def __init__(self) -> None:
+    def __init__(self, config: dict | None = None, instance_path: str | None = None) -> None:
         """Initiate object with default config.
 
         Don't validate config yet
         Defaults shouldn't necessarily be enough to get the app to get to the point of starting the webapp.
         """
-        self._config = DEFAULT_CONFIG.copy()
+        self._config_path = None
+
+        self._config = DEFAULT_CONFIG
+
+        self.instance_path = instance_path
+
+        self._get_config_file_path()
+
+        if not config:
+            config = self._load_file()
+
+        self._config = self._merge_with_defaults(DEFAULT_CONFIG, config)
+
+        self._validate_config()
+
+        self._write_config()
+
+        logger.info("Configuration loaded successfully!")
 
     """ These next special methods make this object behave like a dict, a few methods are missing
     __setitem__, __len__,__delitem__
@@ -55,65 +71,34 @@ class MyCoolAppConfig:
         """Return string representation of the config."""
         return repr(self._config)
 
-    def load_from_disk(self, instance_path: str) -> None:
-        """Initiate config object, get config from file."""
-        config_path = self._get_config_file_path(instance_path)
-
-        config = self._load_file(config_path)
-
-        config = self._merge_with_defaults(DEFAULT_CONFIG, config)
-
-        self._write_config(config, config_path)
-
-        self._validate_config(config)
-
-        self._config = config
-
-        logger.info("Configuration loaded successfully!")
-
-    def load_from_dictionary(self, config: dict) -> None:
-        """Load from dictionary, useful for testing."""
-        config = self._merge_with_defaults(DEFAULT_CONFIG, config)
-
-        self._validate_config(config)
-
-        self._config = config
-
-        logger.info("Config looks all good!")
-
-    def log_config(self) -> None:
-        """Log the config in full and nice and structured."""
-        log_text = ">>>\nConfig dict attributes and their values:\n"
-        log_text += pprint.pformat(self._config)
-        logger.debug(log_text)
-
-    def _write_config(self, config: dict, config_path: str) -> None:
+    def _write_config(self) -> None:
         """Write configuration to a file."""
         try:
-            with open(config_path, "w", encoding="utf8") as toml_file:
-                tomlkit.dump(config, toml_file)
+            with open(self._config_path, "w", encoding="utf8") as toml_file:
+                tomlkit.dump(self._config, toml_file)
         except PermissionError as exc:
             user_account = pwd.getpwuid(os.getuid())[0]
-            err = f"Fix permissions: chown {user_account} {config_path}"
+            err = f"Fix permissions: chown {user_account} {self._config_path}"
             raise PermissionError(err) from exc
 
-    def _validate_config(self, config: dict) -> None:
+    def _validate_config(self) -> dict:
         """Validate Config. Exit the program if they don't validate."""
         failure = False
 
-        self._warn_unexpected_keys(DEFAULT_CONFIG, config, "<root>")
+        self._warn_unexpected_keys(DEFAULT_CONFIG, self._config, "<root>")
 
         # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
 
         # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
         # This is a silly example and should be removed!
-        if "configuration_failure" in config["app"]:
+        if "configuration_failure" in self._config["app"]:
             logger.critical("Config contains 'configuration_failure' key!")
             failure = True
 
         if failure:
             logger.critical("Config validation failed, Exiting.")
             sys.exit(1)
+
 
     def _warn_unexpected_keys(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
         """If the loaded config has a key that isn't in the schema (default config), we log a warning.
@@ -143,11 +128,10 @@ class MyCoolAppConfig:
 
         return target_dict
 
-    def _get_config_file_path(self, instance_path: str) -> str:
+    def _get_config_file_path(self) -> str:
         """Figure out the config path to load config from."""
-        config_path = None
         paths = [
-            os.path.join(instance_path, "config.toml"),
+            os.path.join(self.instance_path, "config.toml"),
             os.path.expanduser("~/.config/mycoolapp/config.toml"),
             "/etc/mycoolapp/config.toml",
         ]
@@ -155,22 +139,20 @@ class MyCoolAppConfig:
         for path in paths:
             if os.path.isfile(path):
                 logger.info("Found config at path: %s", path)
-                if not config_path:
+                if not self._config_path:
                     logger.info("Using this path as it's the first one that was found")
-                    config_path = path
+                    self._config_path = path
             else:
                 logger.info("No config file found at: %s", path)
 
-        if not config_path:
-            config_path = paths[0]
-            logger.warning("No configuration file found, creating at default location: %s", config_path)
+        if not self._config_path:
+            self._config_path = paths[0]
+            logger.warning("No configuration file found, creating at default location: %s", self._config_path)
             with contextlib.suppress(FileExistsError):
-                os.makedirs(instance_path)  # Create instance path if it doesn't exist
-            self._write_config(DEFAULT_CONFIG, config_path)
+                os.makedirs(self.instance_path)  # Create instance path if it doesn't exist
+            self._write_config()
 
-        return config_path
-
-    def _load_file(self, config_path: str) -> dict:
+    def _load_file(self) -> dict:
         """Load configuration from a file."""
-        with open(config_path, encoding="utf8") as toml_file:
+        with open(self._config_path, encoding="utf8") as toml_file:
             return tomlkit.load(toml_file)

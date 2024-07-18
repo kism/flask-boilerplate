@@ -4,29 +4,38 @@ from flask import Flask, render_template
 
 from . import config, logger
 
-mca_conf = config.MyCoolAppConfig()  # Create the default config object
-
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True, instance_path=instance_path)
 
-    app.logger.info("Instance path is: %s", instance_path)
-
-    logger.setup_logger(app, mca_conf["logging"])  # Setup logger per defaults
+    logger.setup_logger(app, config.DEFAULT_CONFIG["logging"])
 
     if test_config:  # For Python testing we will often pass in a config
-        mca_conf.load_from_dictionary(test_config)  # Loads app config from dict provided
+        if not instance_path:
+            app.logger.critical("When testing supply both test_config and instance_path!")
+            raise AttributeError
+        mca_conf = config.MyCoolAppConfig(config=test_config, instance_path=app.instance_path)
     else:
-        mca_conf.load_from_disk(app.instance_path)  # Loads app config from disk
+        mca_conf = config.MyCoolAppConfig(instance_path=app.instance_path)  # Loads app config from disk
 
-    logger.setup_logger(app, mca_conf["logging"])  # Setup logger per config
+    app.logger.debug("Instance path is: %s", app.instance_path)
 
-    app.config.from_mapping(mca_conf["flask"])  # Flask config, separate
+    logger.setup_logger(app, mca_conf["logging"])  # Setup logger
+
+    # Flask config, at the root of the config object.
+    app.config.from_mapping(mca_conf["flask"])
+
+    # Other sections handled by config.py
+    app.config["app"] = mca_conf["app"]
+    app.config["logging"] = mca_conf["logging"]
 
     # Do some debug logging of config
-    mca_conf.log_config()
-    app_config_str = f">>>\nFlask object loaded app.config:\n{app.config.items()}"
+    from pprint import pformat
+    app_config_str = ">>>\nFlask config:"
+    for key, value in app.config.items():
+        app_config_str += f"\n  {key}: {pformat(value)}"
+
     app.logger.debug(app_config_str)
 
     # Now that we have loaded out configuration, we can import our blueprints
@@ -46,8 +55,3 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     app.logger.info("Starting Web Server")
 
     return app
-
-
-def get_mycoolapp_config() -> dict:
-    """Return the config object to whatever needs it."""
-    return mca_conf
