@@ -9,6 +9,8 @@ import flask
 import pytest
 import tomlkit
 
+from mycoolapp import create_app
+
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), "tests", "configs")
 
 
@@ -20,8 +22,6 @@ def pytest_configure():
 @pytest.fixture()
 def app(tmp_path, get_test_config) -> any:
     """This fixture uses the default config within the flask app."""
-    from mycoolapp import create_app
-
     return create_app(test_config=get_test_config("testing_true_valid"), instance_path=tmp_path)
 
 
@@ -45,9 +45,7 @@ def get_test_config() -> dict:
         """Load all the .toml configs into a single dict."""
         out_config = None
 
-        filename = f"{config_name}.toml"
-
-        filepath = os.path.join(TEST_CONFIGS_LOCATION, filename)
+        filepath = os.path.join(TEST_CONFIGS_LOCATION, config_name)
 
         if os.path.isfile(filepath):
             with open(filepath) as file:
