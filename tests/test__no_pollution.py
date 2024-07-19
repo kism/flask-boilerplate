@@ -1,10 +1,10 @@
-"""This are some tests to ensure that the app you have made won't accidentally my PyTest polluted.
+"""These are some tests to ensure that the flask app you have made won't accidentally pollute your tests.
 
-My testing became hell when I realised that tests were interfering with each other since they were using real folders.
+Testing became hell when I realised that tests were interfering with each other since they were using real directories.
 PyTest is multi threaded and thus multiple tests can (and will) be running at the same time.
 Without tmp_path they will use each other's config/data.
 
-Tests should always use tmp_path as an instance_path as it means they won't pollute each other.
+Tests should always use the tmp_path fixture as an instance_path as it means they won't pollute each other.
 And thus in the boilerplate I have some checks to ensure that your tests aren't possibly getting polluted.
 """
 
