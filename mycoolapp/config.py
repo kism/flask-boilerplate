@@ -43,21 +43,20 @@ class ConfigValidationError(Exception):
 class MyCoolAppConfig:
     """Config Object."""
 
-    def __init__(self, config: dict | None = None, instance_path: str | None = None) -> None:
-        """Initiate object with default config.
+    def __init__(self, instance_path: str, config: dict | None = None) -> None:
+        """Initiate config object.
 
-        Don't validate config yet
-        Defaults shouldn't necessarily be enough to get the app to get to the point of starting the webapp.
+        Args:
+            instance_path: The flask instance path, should be always from app.instance_path
+            config: If provided config won't be loaded from a file.
         """
         self._config_path = None
-
         self._config = DEFAULT_CONFIG
-
         self.instance_path = instance_path
 
         self._get_config_file_path()
 
-        if not config:
+        if not config:  # If no config is passed in (for testing), we load from a file.
             config = self._load_file()
 
         self._config = self._merge_with_defaults(DEFAULT_CONFIG, config)
@@ -86,7 +85,7 @@ class MyCoolAppConfig:
         return repr(self._config)
 
     def items(self) -> list[str, any]:
-        """Return dictionary items."""
+        """Return dictionary items of configuration."""
         return self._config.items()
 
     def _write_config(self) -> None:
@@ -100,7 +99,7 @@ class MyCoolAppConfig:
             raise PermissionError(err) from exc
 
     def _validate_config(self) -> None:
-        """Validate Config. Exit the program if they don't validate."""
+        """Validate the current config. Raise an exception if it don't validate."""
         failed_items = []
 
         self._warn_unexpected_keys(DEFAULT_CONFIG, self._config, "<root>")
@@ -136,7 +135,10 @@ class MyCoolAppConfig:
         return target_dict
 
     def _merge_with_defaults(self, base_dict: dict, target_dict: dict) -> dict:
-        """This is recursive, be careful."""
+        """Merge a config with another (DEFAULT_CONFIG) to ensure every default key exists.
+
+        This is recursive, be careful.
+        """
         for key, value in base_dict.items():
             if isinstance(value, dict) and key in target_dict:
                 self._merge_with_defaults(value, target_dict[key])
