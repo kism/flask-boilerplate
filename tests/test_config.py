@@ -9,12 +9,15 @@ from mycoolapp import create_app
 
 
 def test_config_valid(tmp_path, get_test_config):
-    """TEST: That the app can load config and the testing attribute is set."""
-    app = create_app(get_test_config("testing_false_valid.toml"), instance_path=tmp_path)
-    assert not app.testing, "Flask testing config item not being set correctly."
-
+    """Test that the app can load config and the testing attribute is set."""
+    # TEST: Testing attribute set
     app = create_app(get_test_config("testing_true_valid.toml"), instance_path=tmp_path)
     assert app.testing, "Flask testing config item not being set correctly."
+
+    # TEST: Testing attribute not set.
+    # The config loaded sets testing to False, do not use this config for any other test.
+    app = create_app(get_test_config("testing_false_valid.toml"), instance_path=tmp_path)
+    assert not app.testing, "Flask testing config item not being set correctly."
 
 
 def test_config_file_loading(tmp_path, caplog: pytest.LogCaptureFixture):

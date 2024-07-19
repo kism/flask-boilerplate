@@ -4,7 +4,7 @@ import logging
 
 from flask import Blueprint, jsonify
 
-# This means that the logger will have the right name, logging should be done with this object
+# Modules should all setup logging like this so the log messages include the modules name.
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
 # Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)

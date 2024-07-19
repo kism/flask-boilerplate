@@ -1,14 +1,14 @@
-"""Config Processing."""
+"""Config loading, setup, validating, writing."""
 
 import contextlib
 import logging
 import os
 import pwd
-import sys
 
 import tomlkit
 
-# This means that the logger will have the right name, logging should be done with this object
+# Logging should be all done at INFO level or higher as the log level hasn't been set yet
+# Modules should all setup logging like this so the log messages include the modules name.
 logger = logging.getLogger(__name__)
 
 # Default config dictionary, also works as a schema
@@ -30,8 +30,14 @@ DEFAULT_CONFIG = {
 class ConfigValidationError(Exception):
     """Error to raise if there is a config validation error."""
 
-    def __init__(self, failure_list) -> None:
-        super().__init__(f"{failure_list}")
+    def __init__(self, failure_list: list) -> None:
+        """Raise exception with list of config issues."""
+        msg = ">>> Config issues:\n"
+
+        for failure in failure_list:
+            msg += f"\n  {failure}"
+
+        super().__init__(failure_list)
 
 
 class MyCoolAppConfig:
@@ -93,13 +99,13 @@ class MyCoolAppConfig:
             err = f"Fix permissions: chown {user_account} {self._config_path}"
             raise PermissionError(err) from exc
 
-    def _validate_config(self) -> dict:
+    def _validate_config(self) -> None:
         """Validate Config. Exit the program if they don't validate."""
         failed_items = []
 
         self._warn_unexpected_keys(DEFAULT_CONFIG, self._config, "<root>")
 
-        # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
+        # KISM-BOILERPLATE: Put your configuration validation here, set failure to True if it's a critical failure
 
         # This is to assure that you don't accidentally test without the tmp_dir fixture.
         if self._config["flask"]["TESTING"] and not any(
@@ -139,8 +145,11 @@ class MyCoolAppConfig:
 
         return target_dict
 
-    def _get_config_file_path(self) -> str:
-        """Figure out the config path to load config from."""
+    def _get_config_file_path(self) -> None:
+        """Figure out the config path to load config from.
+
+        If a config file doesn't exist it will be created and written with current (default) configuration.
+        """
         paths = [
             os.path.join(self.instance_path, "config.toml"),
             os.path.expanduser("~/.config/mycoolapp/config.toml"),
