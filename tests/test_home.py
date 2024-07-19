@@ -1,4 +1,4 @@
-"""PyTest, Tests the hello API endpoint."""
+"""Tests the app home page."""
 
 from http import HTTPStatus
 
@@ -17,7 +17,6 @@ def test_home(client: FlaskClient):
 
 
 def test_static_js_exists(client: FlaskClient):
-    """Check that /static/mycoolapp.js exists."""
+    """TEST: /static/mycoolapp.js loads."""
     response = client.get("/static/mycoolapp.js")
-    # TEST: That the javascript loads
     assert response.status_code == HTTPStatus.OK

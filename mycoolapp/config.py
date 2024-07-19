@@ -22,8 +22,16 @@ DEFAULT_CONFIG = {
     },
     "flask": {  # This section is for Flask default config entries https://flask.palletsprojects.com/en/3.0.x/config/
         "DEBUG": False,
+        "TESTING": False,
     },
 }
+
+
+class ConfigValidationError(Exception):
+    """Error to raise if there is a config validation error."""
+
+    def __init__(self, failure_list) -> None:
+        super().__init__(f"{failure_list}")
 
 
 class MyCoolAppConfig:
@@ -71,6 +79,10 @@ class MyCoolAppConfig:
         """Return string representation of the config."""
         return repr(self._config)
 
+    def items(self) -> list[str, any]:
+        """Return dictionary items."""
+        return self._config.items()
+
     def _write_config(self) -> None:
         """Write configuration to a file."""
         try:
@@ -83,22 +95,21 @@ class MyCoolAppConfig:
 
     def _validate_config(self) -> dict:
         """Validate Config. Exit the program if they don't validate."""
-        failure = False
+        failed_items = []
 
         self._warn_unexpected_keys(DEFAULT_CONFIG, self._config, "<root>")
 
         # KISM-BOILERPLATE: Put your settings validation here, set failure to True if it's a critical failure
 
-        # Check & fail if key exists in app settings, this is just for testing/code coverage for the boilerplate.
-        # This is a silly example and should be removed!
-        if "configuration_failure" in self._config["app"]:
-            logger.critical("Config contains 'configuration_failure' key!")
-            failure = True
+        # This is to assure that you don't accidentally test without the tmp_dir fixture.
+        if self._config["flask"]["TESTING"] and not any(
+            substring in str(self.instance_path) for substring in ["tmp", "temp", "TMP", "TEMP"]
+        ):
+            failed_items.append("['flask']['TESTING'] is True but instance_path is not a tmp_path")
 
-        if failure:
-            logger.critical("Config validation failed, Exiting.")
-            sys.exit(1)
-
+        # If the config doesn't validate, we exit.
+        if len(failed_items) != 0:
+            raise ConfigValidationError(failed_items)
 
     def _warn_unexpected_keys(self, target_dict: dict, base_dict: dict, parent_key: str) -> dict:
         """If the loaded config has a key that isn't in the schema (default config), we log a warning.

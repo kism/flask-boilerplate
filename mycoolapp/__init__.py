@@ -1,5 +1,7 @@
 """Flask webapp mycoolapp."""
 
+from pprint import pformat
+
 from flask import Flask, render_template
 
 from . import config, logger
@@ -27,11 +29,11 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     app.config.from_mapping(mca_conf["flask"])
 
     # Other sections handled by config.py
-    app.config["app"] = mca_conf["app"]
-    app.config["logging"] = mca_conf["logging"]
+    for key, value in mca_conf.items():
+        if key != "flask":
+            app.config[key] = value
 
     # Do some debug logging of config
-    from pprint import pformat
     app_config_str = ">>>\nFlask config:"
     for key, value in app.config.items():
         app_config_str += f"\n  {key}: {pformat(value)}"
