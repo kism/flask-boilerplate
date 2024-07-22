@@ -41,3 +41,4 @@ def test_config_file_creation(tmp_path, caplog: pytest.LogCaptureFixture):
         create_app(test_config=None, instance_path=tmp_path)
 
     assert "No configuration file found, creating at default location:" in caplog.text
+    assert os.path.exists(os.path.join(tmp_path, "config.toml"))

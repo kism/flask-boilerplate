@@ -27,7 +27,7 @@ while len(new_project_name_split) == 1:
 new_name = ("".join(new_project_name_split)).lower()
 new_name_hyphens = ("-".join(new_project_name_split)).lower()
 new_name_camel_case = "".join(x for x in new_project_name_prompt.title() if not x.isspace())
-new_config_var = "".join([word[0] for word in new_project_name_split]) + "_conf"
+new_config_var = "".join([word[0].lower() for word in new_project_name_split]) + "_conf"
 
 
 print(f"new_name: {new_name}")
