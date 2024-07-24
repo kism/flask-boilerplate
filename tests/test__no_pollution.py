@@ -18,10 +18,7 @@ from mycoolapp.config import ConfigValidationError
 def test_instance_path_check(get_test_config: dict):
     """TEST: When passed a dictionary as a config, the instance path must be specified."""
     with pytest.raises(AttributeError):
-        (
-            create_app(get_test_config("testing_false_valid.toml")),
-            "App needs to fail if no instance path provided when config dict is provided.",
-        )
+        create_app(get_test_config("testing_false_valid.toml"))
 
 
 def test_config_validate_test_instance_path(get_test_config: dict):

@@ -44,7 +44,9 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     # KISM-BOILERPLATE: This is a demo blueprint blueprint_one.py. Rename the file
     #  and vars to make your own http endpoints and pages. Use multiple blueprints if
     #  you have functionality you can categorise.
-    from . import blueprint_one
+    # We use app_context so that `from flask import current_app` works despite there not being a returned app yet.
+    with app.app_context():
+        from . import blueprint_one
 
     app.register_blueprint(blueprint_one.bp)  # Register blueprint
 
