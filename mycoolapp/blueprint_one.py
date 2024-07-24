@@ -2,12 +2,7 @@
 
 import logging
 
-from flask import Blueprint, current_app, jsonify
-
-# The current_app import is a bit special, do not use it outside of a function because
-# when the parent (__init__.py create_app()) imports this module, it needs to `with app.app_context():`
-# which will keep current_app in a pretty default state. Once flask is serving the app the current_app
-# object will function fine... i'm pretty sure. https://flask.palletsprojects.com/en/3.0.x/appcontext/
+from flask import Blueprint, Response, current_app, jsonify
 
 # Modules should all setup logging like this so the log messages include the modules name.
 # If you were to list all loggers with something like...
@@ -18,12 +13,26 @@ logger = logging.getLogger(__name__)  # Create a logger: mycoolapp.this_module_n
 # Register this module (__name__) as available to the blueprints of mycoolapp, I think https://flask.palletsprojects.com/en/3.0.x/blueprints/
 bp = Blueprint("mycoolapp", __name__)
 
+my_message = ""
+
+
+# So regarding current_app, have a read of https://flask.palletsprojects.com/en/3.0.x/appcontext/
+# This function is a bit of a silly example, but often you need to do things to initialise the module.
+# You can't use the current_app object outside of a function since it behaves a bit weird, even if
+#   you import the module under `with app.app_context():`
+# So we call this to set globals in this module.
+# You don't need to use this to set every variable as current_app will work fine in any function.
+def start_blueprint_one() -> None:
+    """Method to 'configure' this module. Needs to be called under `with app.app_context():` from __init__.py."""
+    global my_message  # noqa: PLW0603 Necessary evil as far as I can tell, could move to all objects but eh...
+    my_message = current_app.config["app"]["my_message"]  # We set the my_message var globally
+
 
 # KISM-BOILERPLATE: This is the demo api endpoint, enough to show a basic javascript interaction.
 @bp.route("/hello/", methods=["GET"])
-def get_hello() -> int:
+def get_hello() -> Response:
     """Hello GET Method."""
-    message = {"msg": current_app.config["app"]["my_message"]}
+    message = {"msg": my_message}
     status = 200
 
     logger.debug("GET request to /hello/, returning: %s", current_app.config["app"])

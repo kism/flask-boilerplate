@@ -4,7 +4,7 @@ from pprint import pformat
 
 from flask import Flask, render_template
 
-from . import config, logger
+from . import blueprint_one, config, logger
 
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
@@ -44,11 +44,12 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
     # KISM-BOILERPLATE: This is a demo blueprint blueprint_one.py. Rename the file
     #  and vars to make your own http endpoints and pages. Use multiple blueprints if
     #  you have functionality you can categorise.
-    # We use app_context so that `from flask import current_app` works despite there not being a returned app yet.
-    with app.app_context():
-        from . import blueprint_one
-
     app.register_blueprint(blueprint_one.bp)  # Register blueprint
+
+    # For modules that need information from the app object we need to start them under `with app.app_context():`
+    # Since in the blueprint_one module, we use `from flask import current_app` to get the app object to get the config
+    with app.app_context():
+        blueprint_one.start_blueprint_one()
 
     # Flask homepage, generally don't have this as a blueprint.
     @app.route("/")
