@@ -51,5 +51,4 @@ At the end of the script it will give you some instructions to use poetry, and g
 
 ## Todo
 
-- rant about when to use current_app
-- fixture for getting test config from a file before starting the app
+- cookiecutter
