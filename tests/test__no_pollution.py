@@ -9,19 +9,21 @@ Tests should always use the tmp_path fixture as an instance_path as it means the
 And thus in the boilerplate I have some checks to ensure that your tests aren't possibly getting polluted.
 """
 
+from collections.abc import Callable
+
 import pytest
 
 from mycoolapp import create_app
 from mycoolapp.config import ConfigValidationError
 
 
-def test_instance_path_check(get_test_config: dict):
+def test_instance_path_check(get_test_config: Callable):
     """TEST: When passed a dictionary as a config, the instance path must be specified."""
     with pytest.raises(AttributeError):
         create_app(get_test_config("testing_false_valid.toml"))
 
 
-def test_config_validate_test_instance_path(get_test_config: dict):
+def test_config_validate_test_instance_path(get_test_config: Callable):
     """My boilerplate catches when you forget to use tmp_path in testing.
 
     This test exists because I spent so much time troubleshooting why some tests are using the default instance path.

@@ -95,7 +95,7 @@ testpaths = ["tests"]
 show_contexts = true
 
 [tool.mypy]
-files = "mycoolapp"
+files = ["mycoolapp", "tests"]
 namespace_packages = true
 explicit_package_bases = true
 show_error_codes = true
