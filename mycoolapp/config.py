@@ -4,6 +4,7 @@ import contextlib
 import logging
 import os
 import pwd
+import typing
 
 import tomlkit
 
@@ -12,7 +13,7 @@ import tomlkit
 logger = logging.getLogger(__name__)
 
 # Default config dictionary, also works as a schema
-DEFAULT_CONFIG = {
+DEFAULT_CONFIG: dict[str, dict] = {
     "app": {
         "my_message": "Hello, World!",
     },
@@ -50,9 +51,9 @@ class MyCoolAppConfig:
             instance_path: The flask instance path, should be always from app.instance_path
             config: If provided config won't be loaded from a file.
         """
-        self._config_path = None
-        self._config = DEFAULT_CONFIG
-        self.instance_path = instance_path
+        self._config_path: str | None = None
+        self._config: dict = DEFAULT_CONFIG
+        self.instance_path: str = instance_path
 
         self._get_config_file_path()
 
@@ -72,11 +73,11 @@ class MyCoolAppConfig:
     https://gist.github.com/turicas/1510860
     """
 
-    def __getitem__(self, key: str) -> any:
+    def __getitem__(self, key: str) -> typing.Any:  # noqa: ANN401 Yes this will return Any, but it's a dict.
         """Get item from config like a dictionary."""
         return self._config[key]
 
-    def __contains__(self, key: str) -> str:
+    def __contains__(self, key: str) -> bool:
         """Check if key is 'in' the configuration."""
         return key in self._config
 
@@ -84,7 +85,7 @@ class MyCoolAppConfig:
         """Return string representation of the config."""
         return repr(self._config)
 
-    def items(self) -> list[str, any]:
+    def items(self) -> typing.ItemsView[typing.Any, typing.Any]:
         """Return dictionary items of configuration."""
         return self._config.items()
 

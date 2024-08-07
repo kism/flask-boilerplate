@@ -17,6 +17,7 @@ bp = Blueprint("mycoolapp", __name__)
 
 my_cool_object = None
 
+
 # KISM-BOILERPLATE:
 # So regarding current_app, have a read of https://flask.palletsprojects.com/en/3.0.x/appcontext/
 # This function is a bit of a silly example, but often you need to do things to initialise the module.
@@ -32,7 +33,7 @@ def start_blueprint_one() -> None:
 
 # KISM-BOILERPLATE: This is the demo api endpoint, enough to show a basic javascript interaction.
 @bp.route("/hello/", methods=["GET"])
-def get_hello() -> Response:
+def get_hello() -> tuple[Response, int]:
     """Hello GET Method."""
     message = {"msg": current_app.config["app"]["my_message"]}
     status = 200
@@ -48,7 +49,7 @@ def get_hello() -> Response:
 
 # KISM-BOILERPLATE: This is the demo api endpoint, enough to demonstrate object loading.
 @bp.route("/hello_backwards/", methods=["GET"])
-def get_hello_backwards() -> Response:
+def get_hello_backwards() -> tuple[Response, int]:
     """Hello GET Method."""
     message = {"msg": my_cool_object.get_my_message_backwards()}
     status = 200

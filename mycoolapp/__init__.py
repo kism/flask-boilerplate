@@ -6,6 +6,8 @@ from flask import Flask, render_template
 
 from . import blueprint_one, config, logger
 
+__version__ = "0.0.1"  # This is the version of the app, used in pyproject.toml, enforced in a test.
+
 
 def create_app(test_config: dict | None = None, instance_path: str | None = None) -> Flask:
     """Create and configure an instance of the Flask application."""
