@@ -4,7 +4,7 @@ import logging
 
 from flask import Blueprint, Response, current_app, jsonify
 
-from . import blueprint_one_object
+from mycoolapp.blueprint_one_object import MyCoolObject
 
 # Modules should all setup logging like this so the log messages include the modules name.
 # If you were to list all loggers with something like...
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)  # Create a logger: mycoolapp.this_module_n
 # Register this module (__name__) as available to the blueprints of mycoolapp, I think https://flask.palletsprojects.com/en/3.0.x/blueprints/
 bp = Blueprint("mycoolapp", __name__)
 
-my_cool_object = None
+my_cool_object: MyCoolObject | None = None
 
 
 # KISM-BOILERPLATE:
@@ -28,7 +28,7 @@ my_cool_object = None
 def start_blueprint_one() -> None:
     """Method to 'configure' this module. Needs to be called under `with app.app_context():` from __init__.py."""
     global my_cool_object  # noqa: PLW0603 Necessary evil as far as I can tell, could move to all objects but eh...
-    my_cool_object = blueprint_one_object.MyCoolObject(current_app.config)
+    my_cool_object = MyCoolObject(current_app.config)
 
 
 # KISM-BOILERPLATE: This is the demo api endpoint, enough to show a basic javascript interaction.
@@ -51,6 +51,8 @@ def get_hello() -> tuple[Response, int]:
 @bp.route("/hello_backwards/", methods=["GET"])
 def get_hello_backwards() -> tuple[Response, int]:
     """Hello GET Method."""
+    assert my_cool_object is not None  # noqa: S101 Appease mypy
+
     message = {"msg": my_cool_object.get_my_message_backwards()}
     status = 200
 
