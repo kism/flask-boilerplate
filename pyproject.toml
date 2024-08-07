@@ -17,6 +17,7 @@ pytest-cov = "*"
 pytest-mock = "*"
 detect-test-pollution = "*"
 pytest-random-order = "*"
+mypy = "*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -92,3 +93,17 @@ testpaths = ["tests"]
 
 [tool.coverage.html]
 show_contexts = true
+
+[tool.mypy]
+files = ["mycoolapp", "tests"]
+namespace_packages = true
+explicit_package_bases = true
+show_error_codes = true
+strict = false
+strict_optional = false # Allows any variable to be None
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool",
+    "type-arg",
+]

@@ -10,14 +10,9 @@ import mycoolapp
 DEFAULT_CONFIG = mycoolapp.config.DEFAULT_CONFIG
 
 
-def test_config_permissions_error_read(tmp_path, mocker: pytest_mock.plugin.MockerFixture):
+def test_config_permissions_error_read(place_config, tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
-    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
-        config_contents = f.read()
-
-    tmp_f = tmp_path / "config.toml"
-
-    tmp_f.write_text(config_contents)
+    place_config("testing_true_valid.toml", tmp_path)
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -29,14 +24,9 @@ def test_config_permissions_error_read(tmp_path, mocker: pytest_mock.plugin.Mock
         mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
 
-def test_config_permissions_error_write(tmp_path, mocker: pytest_mock.plugin.MockerFixture):
+def test_config_permissions_error_write(place_config, tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
-    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
-        config_contents = f.read()
-
-    tmp_f = tmp_path / "config.toml"
-
-    tmp_f.write_text(config_contents)
+    place_config("testing_true_valid.toml", tmp_path)
 
     conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
@@ -50,14 +40,9 @@ def test_config_permissions_error_write(tmp_path, mocker: pytest_mock.plugin.Moc
         conf._write_config()
 
 
-def test_dictionary_functions_of_config(tmp_path):
+def test_dictionary_functions_of_config(place_config, tmp_path):
     """Test the functions in the config object that let it behave like a dictionary."""
-    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
-        config_contents = f.read()
-
-    tmp_f = tmp_path / "config.toml"
-
-    tmp_f.write_text(config_contents)
+    place_config("testing_true_valid.toml", tmp_path)
 
     conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
@@ -76,14 +61,9 @@ def test_dictionary_functions_of_config(tmp_path):
     assert isinstance(conf.items(), ItemsView), ".items() method of config object doesn't work"
 
 
-def test_config_dictionary_merge(tmp_path, get_test_config):
+def test_config_dictionary_merge(place_config, tmp_path, get_test_config):
     """Unit test the dictionary merge in _merge_with_defaults."""
-    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
-        config_contents = f.read()
-
-    tmp_f = tmp_path / "config.toml"
-
-    tmp_f.write_text(config_contents)
+    place_config("testing_true_valid.toml", tmp_path)
 
     conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 
@@ -108,14 +88,9 @@ def test_config_dictionary_merge(tmp_path, get_test_config):
     assert result_dict["TEST_CONFIG_ENTRY_NOT_IN_SCHEMA"]
 
 
-def test_config_dictionary_not_in_schema(tmp_path, caplog: pytest.LogCaptureFixture):
+def test_config_dictionary_not_in_schema(place_config, tmp_path, caplog: pytest.LogCaptureFixture):
     """Unit test _warn_unexpected_keys."""
-    with open(os.path.join(pytest.TEST_CONFIGS_LOCATION, "testing_true_valid.toml")) as f:
-        config_contents = f.read()
-
-    tmp_f = tmp_path / "config.toml"
-
-    tmp_f.write_text(config_contents)
+    place_config("testing_true_valid.toml", tmp_path)
 
     conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
 

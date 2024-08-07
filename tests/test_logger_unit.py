@@ -2,6 +2,7 @@
 
 import logging
 import os
+from collections.abc import Generator
 
 import pytest
 import pytest_mock
@@ -11,7 +12,7 @@ import mycoolapp.logger
 
 
 @pytest.fixture()
-def logger() -> any:
+def logger() -> Generator:
     """Logger to use in unit tests, including cleanup."""
     logger = logging.getLogger("TEST_LOGGER")
 
