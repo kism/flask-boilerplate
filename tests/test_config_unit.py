@@ -1,7 +1,5 @@
 """Unit testing for the config module."""
 
-import os
-
 import pytest
 import pytest_mock
 
@@ -103,3 +101,20 @@ def test_config_dictionary_not_in_schema(place_config, tmp_path, caplog: pytest.
     conf._warn_unexpected_keys(DEFAULT_CONFIG, test_config, "<root>")
     assert "Config entry key <root>[TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
     assert "Config entry key [app][TEST_CONFIG_APP_ENTRY_NOT_IN_SCHEMA] not in schema" in caplog.text
+
+
+def test_load_write_no_config_path(place_config, tmp_path):
+    """Unit test the dictionary merge in _merge_with_defaults."""
+    place_config("testing_true_valid.toml", tmp_path)
+
+    conf = mycoolapp.config.MyCoolAppConfig(instance_path=tmp_path)
+
+    conf._config_path = None
+
+    # TEST: PermissionsError is raised.
+    with pytest.raises(ValueError, match="Config path not set, cannot load config"):
+        conf._load_file()
+
+    # TEST: PermissionsError is raised.
+    with pytest.raises(ValueError, match="Config path not set, cannot write config"):
+        conf._write_config()

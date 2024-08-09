@@ -3,8 +3,9 @@ name: Type Check (Mypy)
 
 on:
   push:
-    paths-ignore:
-      - "**/*.md"
+    branches:
+      - main
+      - test
 
 jobs:
   mypy:

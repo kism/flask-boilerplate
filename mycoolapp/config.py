@@ -182,7 +182,7 @@ class MyCoolAppConfig:
     def _load_file(self) -> dict:
         """Load configuration from a file."""
         if not self._config_path:  # Appease mypy
-            msg = "Config path not set, cannot write config"
+            msg = "Config path not set, cannot load config"
             raise ValueError(msg, self._config_path)
 
         with open(self._config_path, encoding="utf8") as toml_file:
