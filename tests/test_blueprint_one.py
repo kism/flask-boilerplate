@@ -12,7 +12,8 @@ def test_hello(client: FlaskClient):
     """TEST: The default /hello/ response, This one uses the fixture in conftest.py."""
     response = client.get("/hello/")
     assert response.status_code == HTTPStatus.OK
-    assert response.json["msg"] == "Hello, World!", "Incorrect response from /hello/ when using default config."
+    json_data = response.get_json()
+    assert json_data["msg"] == "Hello, World!", "Incorrect response from /hello/ when using default config."
 
 
 def test_hello_with_config(tmp_path, get_test_config, caplog):
@@ -21,7 +22,8 @@ def test_hello_with_config(tmp_path, get_test_config, caplog):
     client = app.test_client()
     response = client.get("/hello/")
     assert response.status_code == HTTPStatus.OK
-    assert response.json["msg"] == "Hello, PyTest!", "Incorrect response from /hello/ when using non-default config."
+    json_data = response.get_json()
+    assert json_data["msg"] == "Hello, PyTest!", "Incorrect response from /hello/ when using non-default config."
 
     expected_log = (
         "GET request to /hello/, returning: {'msg': 'Hello, PyTest!'} as json,"
@@ -35,6 +37,7 @@ def test_hello_backwards(client: FlaskClient):
     """TEST: The default /hello/ response, This one uses the fixture in conftest.py."""
     response = client.get("/hello_backwards/")
     assert response.status_code == HTTPStatus.OK
+    json_data = response.get_json()
     assert (
-        response.json["msg"] == "!dlroW ,olleH"  # cspell:disable-line
+        json_data["msg"] == "!dlroW ,olleH"  # cspell:disable-line
     ), "Incorrect response from /hello_backwards/ when using default config."

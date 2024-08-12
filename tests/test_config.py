@@ -20,9 +20,9 @@ def test_config_valid(tmp_path, get_test_config):
     assert not app.testing, "Flask testing config item not being set correctly."
 
 
-def test_config_file_loading(place_config, tmp_path, caplog: pytest.LogCaptureFixture):
+def test_config_file_loading(place_test_config, tmp_path, caplog: pytest.LogCaptureFixture):
     """Test config file loading, use tmp_path."""
-    place_config("testing_true_valid.toml", tmp_path)
+    place_test_config("testing_true_valid.toml", tmp_path)
 
     # TEST: Config file is created when no test_config is provided.
     caplog.set_level(logging.INFO)

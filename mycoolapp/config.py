@@ -91,6 +91,10 @@ class MyCoolAppConfig:
 
     def _write_config(self) -> None:
         """Write configuration to a file."""
+        if not self._config_path:  # Appease mypy
+            msg = "Config path not set, cannot write config"
+            raise ValueError(msg, self._config_path)
+
         try:
             with open(self._config_path, "w", encoding="utf8") as toml_file:
                 tomlkit.dump(self._config, toml_file)
@@ -177,5 +181,9 @@ class MyCoolAppConfig:
 
     def _load_file(self) -> dict:
         """Load configuration from a file."""
+        if not self._config_path:  # Appease mypy
+            msg = "Config path not set, cannot load config"
+            raise ValueError(msg, self._config_path)
+
         with open(self._config_path, encoding="utf8") as toml_file:
             return tomlkit.load(toml_file)
