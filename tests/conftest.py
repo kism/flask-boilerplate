@@ -55,16 +55,16 @@ def get_test_config() -> Callable:
 
 
 @pytest.fixture()
-def place_config() -> Callable:
+def place_test_config() -> Callable:
     """Fixture that places a config in the tmp_path.
 
     Returns: a function to place a config in the tmp_path.
     """
 
-    def _place_config(config_name: str, path: str) -> None:
+    def _place_test_config(config_name: str, path: str) -> None:
         """Place config in tmp_path by name."""
         filepath = os.path.join(TEST_CONFIGS_LOCATION, config_name)
 
         shutil.copyfile(filepath, os.path.join(path, "config.toml"))
 
-    return _place_config
+    return _place_test_config
