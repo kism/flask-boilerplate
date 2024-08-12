@@ -7,10 +7,10 @@ import os
 import shutil
 from collections.abc import Callable
 
-import flask
-import flask.testing
 import pytest
 import tomlkit
+from flask import Flask
+from flask.testing import FlaskClient, FlaskCliRunner
 
 from mycoolapp import create_app
 
@@ -23,19 +23,19 @@ def pytest_configure():
 
 
 @pytest.fixture()
-def app(tmp_path, get_test_config) -> flask.Flask:
+def app(tmp_path, get_test_config) -> Flask:
     """This fixture uses the default config within the flask app."""
     return create_app(test_config=get_test_config("testing_true_valid.toml"), instance_path=tmp_path)
 
 
 @pytest.fixture()
-def client(app: flask.Flask) -> flask.testing.FlaskClient:
+def client(app: Flask) -> FlaskClient:
     """This returns a test client for the default app()."""
     return app.test_client()
 
 
 @pytest.fixture()
-def runner(app: flask.Flask) -> flask.testing.FlaskCliRunner:
+def runner(app: Flask) -> FlaskCliRunner:
     """TODO?????"""
     return app.test_cli_runner()
 
