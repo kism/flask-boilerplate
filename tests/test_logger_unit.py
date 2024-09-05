@@ -11,7 +11,7 @@ from flask import Flask
 import mycoolapp.logger
 
 
-@pytest.fixture()
+@pytest.fixture
 def logger() -> Generator:
     """Logger to use in unit tests, including cleanup."""
     logger = logging.getLogger("TEST_LOGGER")
