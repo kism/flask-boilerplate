@@ -12,7 +12,7 @@ import tomlkit
 from flask import Flask
 from flask.testing import FlaskClient, FlaskCliRunner
 
-from mycoolapp import create_app
+from {{cookiecutter.app_slug}} import create_app
 
 TEST_CONFIGS_LOCATION = os.path.join(os.getcwd(), "tests", "configs")
 

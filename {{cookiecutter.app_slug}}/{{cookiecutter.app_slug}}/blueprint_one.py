@@ -4,16 +4,16 @@ import logging
 
 from flask import Blueprint, Response, current_app, jsonify
 
-from mycoolapp.blueprint_one_object import MyCoolObject
+from {{cookiecutter.app_slug}}.blueprint_one_object import MyCoolObject
 
 # Modules should all setup logging like this so the log messages include the modules name.
 # If you were to list all loggers with something like...
 # `loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]`
-# Before creating this object, you would not see a logger with this modules name (mycoolapp.this_module_name)
-logger = logging.getLogger(__name__)  # Create a logger: mycoolapp.this_module_name, inherit config from root logger
+# Before creating this object, you would not see a logger with this modules name ({{cookiecutter.app_slug}}.this_module_name)
+logger = logging.getLogger(__name__)  # Create a logger: {{cookiecutter.app_slug}}.this_module_name, inherit config from root logger
 
-# Register this module (__name__) as available to the blueprints of mycoolapp, I think https://flask.palletsprojects.com/en/3.0.x/blueprints/
-bp = Blueprint("mycoolapp", __name__)
+# Register this module (__name__) as available to the blueprints of {{cookiecutter.app_slug}}, I think https://flask.palletsprojects.com/en/3.0.x/blueprints/
+bp = Blueprint("{{cookiecutter.app_slug}}", __name__)
 
 my_cool_object: MyCoolObject | None = None
 

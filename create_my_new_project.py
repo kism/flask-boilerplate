@@ -92,7 +92,7 @@ def find_and_replace_in_files(directory: str, find_str: str, replace_str: str) -
 
 find_and_replace_in_files(dest_folder_path, "mycoolapp", new_name)
 find_and_replace_in_files(dest_folder_path, "MyCoolApp", new_name_camel_case)
-find_and_replace_in_files(dest_folder_path, "mca_conf", new_config_var)
+find_and_replace_in_files(dest_folder_path, "{{cookiecutter.app_config_var}}", new_config_var)
 
 
 # endregion

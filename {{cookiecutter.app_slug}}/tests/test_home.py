@@ -17,6 +17,6 @@ def test_home(client: FlaskClient):
 
 
 def test_static_js_exists(client: FlaskClient):
-    """TEST: /static/mycoolapp.js loads."""
-    response = client.get("/static/mycoolapp.js")
+    """TEST: /static/{{cookiecutter.app_slug}}.js loads."""
+    response = client.get("/static/{{cookiecutter.app_slug}}.js")
     assert response.status_code == HTTPStatus.OK

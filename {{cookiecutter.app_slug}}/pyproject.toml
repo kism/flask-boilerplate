@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mycoolapp"
+name = "{{cookiecutter.app_slug}}"
 version = "0.0.1"
 description = ""
 authors = ["Your Name <youremailaddress@example.com>"]
@@ -88,7 +88,7 @@ docstring-code-line-length = 40
 addopts = [
     "--import-mode=importlib",
     "--cov-context=test",
-    "--cov=mycoolapp",
+    "--cov={{cookiecutter.app_slug}}",
     "--cov-report=term",
     "--cov-report=html",
 ]
@@ -98,7 +98,7 @@ testpaths = ["tests"]
 show_contexts = true
 
 [tool.mypy]
-files = ["mycoolapp", "tests"]
+files = ["{{cookiecutter.app_slug}}", "tests"]
 namespace_packages = true
 explicit_package_bases = true
 show_error_codes = true

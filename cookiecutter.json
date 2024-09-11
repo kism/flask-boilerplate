@@ -1,0 +1,9 @@
+{
+    "app_nice_name": "My Cool App",
+    "app_slug": "mycoolapp",
+    "app_camel_case": "MyCoolApp",
+    "app_config_var": "mca_conf",
+    "_copy_without_render": [
+        "*.j2"
+    ]
+}

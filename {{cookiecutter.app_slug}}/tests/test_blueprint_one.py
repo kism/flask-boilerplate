@@ -5,7 +5,7 @@ from http import HTTPStatus
 
 from flask.testing import FlaskClient
 
-from mycoolapp import create_app
+from {{cookiecutter.app_slug}} import create_app
 
 
 def test_hello(client: FlaskClient):
