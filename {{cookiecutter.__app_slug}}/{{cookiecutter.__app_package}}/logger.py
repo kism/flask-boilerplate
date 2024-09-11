@@ -1,4 +1,4 @@
-"""Setup the logger functionality for {{cookiecutter.__app_slug}}."""
+"""Setup the logger functionality for {{cookiecutter.__app_package}}."""
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -11,8 +11,8 @@ LOG_FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"  # This is the log
 
 # In flask the root logger doesn't have any handlers, its all in app.logger
 # root_logger : root,
-# app.logger  : root, {{cookiecutter.__app_slug}},
-# logger      : root, {{cookiecutter.__app_slug}}, {{cookiecutter.__app_slug}}.module_name,
+# app.logger  : root, {{cookiecutter.__app_package}},
+# logger      : root, {{cookiecutter.__app_package}}, {{cookiecutter.__app_package}}.module_name,
 # The issue is that waitress, werkzeug (any any other modules that log) will log separately.
 # The aim is, remove the default handler from the flask App and create one on the root logger to apply config to all.
 

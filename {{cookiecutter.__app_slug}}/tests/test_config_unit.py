@@ -3,9 +3,9 @@
 import pytest
 import pytest_mock
 
-import {{cookiecutter.__app_slug}}
+import {{cookiecutter.__app_package}}
 
-DEFAULT_CONFIG = {{cookiecutter.__app_slug}}.config.DEFAULT_CONFIG
+DEFAULT_CONFIG = {{cookiecutter.__app_package}}.config.DEFAULT_CONFIG
 
 
 def test_config_permissions_error_read(place_test_config, tmp_path, mocker: pytest_mock.plugin.MockerFixture):
@@ -19,14 +19,14 @@ def test_config_permissions_error_read(place_test_config, tmp_path, mocker: pyte
 
     # TEST: PermissionsError is raised.
     with pytest.raises(PermissionError):
-        {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+        {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
 
 def test_config_permissions_error_write(place_test_config, tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Mock a Permissions error with mock_open."""
     place_test_config("testing_true_valid.toml", tmp_path)
 
-    conf = {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+    conf = {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -42,7 +42,7 @@ def test_dictionary_functions_of_config(place_test_config, tmp_path):
     """Test the functions in the config object that let it behave like a dictionary."""
     place_test_config("testing_true_valid.toml", tmp_path)
 
-    conf = {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+    conf = {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
     # TEST: __contains__ method.
     assert "app" in conf, "__contains__ method of config object doesn't work"
@@ -63,7 +63,7 @@ def test_config_dictionary_merge(place_test_config, tmp_path, get_test_config):
     """Unit test the dictionary merge in _merge_with_defaults."""
     place_test_config("testing_true_valid.toml", tmp_path)
 
-    conf = {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+    conf = {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
     test_dictionaries = [
         {},
@@ -90,7 +90,7 @@ def test_config_dictionary_not_in_schema(place_test_config, tmp_path, caplog: py
     """Unit test _warn_unexpected_keys."""
     place_test_config("testing_true_valid.toml", tmp_path)
 
-    conf = {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+    conf = {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
     test_config = {
         "TEST_CONFIG_ROOT_ENTRY_NOT_IN_SCHEMA": "",
@@ -107,7 +107,7 @@ def test_load_write_no_config_path(place_test_config, tmp_path):
     """Unit test the dictionary merge in _merge_with_defaults."""
     place_test_config("testing_true_valid.toml", tmp_path)
 
-    conf = {{cookiecutter.__app_slug}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
+    conf = {{cookiecutter.__app_package}}.config.{{cookiecutter.__app_camel_case}}Config(instance_path=tmp_path)
 
     conf._config_path = None
 

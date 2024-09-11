@@ -159,8 +159,8 @@ class {{cookiecutter.__app_camel_case}}Config:
         """
         paths = [
             os.path.join(self.instance_path, "config.toml"),
-            os.path.expanduser("~/.config/{{cookiecutter.__app_slug}}/config.toml"),
-            "/etc/{{cookiecutter.__app_slug}}/config.toml",
+            os.path.expanduser("~/.config/{{cookiecutter.__app_package}}/config.toml"),
+            "/etc/{{cookiecutter.__app_package}}/config.toml",
         ]
 
         for path in paths:

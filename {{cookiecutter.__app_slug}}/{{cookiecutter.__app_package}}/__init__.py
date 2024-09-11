@@ -1,4 +1,4 @@
-"""Flask webapp {{cookiecutter.__app_slug}}."""
+"""Flask webapp {{cookiecutter.__app_package}}."""
 
 from pprint import pformat
 
