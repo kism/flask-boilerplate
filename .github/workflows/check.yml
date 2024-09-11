@@ -36,9 +36,9 @@ jobs:
         working-directory: ../
 
       - name: Install dependencies
-        working-directory: ../mycoolapp
+        working-directory: ../my-cool-app
         run: poetry install --without dev
 
       - name: Lint with ruff
-        working-directory: ../mycoolapp
+        working-directory: ../my-cool-app
         run: poetry run ruff check .
