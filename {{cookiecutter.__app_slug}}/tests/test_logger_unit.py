@@ -8,7 +8,7 @@ import pytest
 import pytest_mock
 from flask import Flask
 
-import {{cookiecutter.app_slug}}.logger
+import {{cookiecutter.__app_slug}}.logger
 
 
 @pytest.fixture
@@ -28,7 +28,7 @@ def logger() -> Generator:
 
 def test_logging_permissions_error(logger, tmp_path, mocker: pytest_mock.plugin.MockerFixture):
     """Test logging, mock a permission error."""
-    from {{cookiecutter.app_slug}}.logger import _add_file_handler
+    from {{cookiecutter.__app_slug}}.logger import _add_file_handler
 
     mock_open_func = mocker.mock_open(read_data="")
     mock_open_func.side_effect = PermissionError("Permission denied")
@@ -42,7 +42,7 @@ def test_logging_permissions_error(logger, tmp_path, mocker: pytest_mock.plugin.
 
 def test_config_logging_to_dir(logger, tmp_path):
     """TEST: Correct exception is caught when you try log to a folder."""
-    from {{cookiecutter.app_slug}}.logger import _add_file_handler
+    from {{cookiecutter.__app_slug}}.logger import _add_file_handler
 
     with pytest.raises(IsADirectoryError):
         _add_file_handler(logger, tmp_path)
@@ -53,11 +53,11 @@ def test_handler_console_added(logger, app: Flask):
     logging_conf = {"path": "", "level": "INFO"}  # Test only console handler
 
     # TEST: Only one handler (console), should exist when no logging path provided
-    {{cookiecutter.app_slug}}.logger.setup_logger(app, logging_conf, logger)
+    {{cookiecutter.__app_slug}}.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 1
 
     # TEST: If a console handler exists, another one shouldn't be created
-    {{cookiecutter.app_slug}}.logger.setup_logger(app, logging_conf, logger)
+    {{cookiecutter.__app_slug}}.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 1
 
 
@@ -66,11 +66,11 @@ def test_handler_file_added(logger, tmp_path, app: Flask):
     logging_conf = {"path": os.path.join(tmp_path, "test.log"), "level": "INFO"}  # Test file handler
 
     # TEST: Two handlers when logging to file expected
-    {{cookiecutter.app_slug}}.logger.setup_logger(app, logging_conf, logger)
+    {{cookiecutter.__app_slug}}.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
 
     # TEST: Two handlers when logging to file expected, another one shouldn't be created
-    {{cookiecutter.app_slug}}.logger.setup_logger(app, logging_conf, logger)
+    {{cookiecutter.__app_slug}}.logger.setup_logger(app, logging_conf, logger)
     assert len(logger.handlers) == 2  # noqa: PLR2004 A console and a file handler are expected
 
 
@@ -85,7 +85,7 @@ def test_handler_file_added(logger, tmp_path, app: Flask):
 )
 def test_set_log_level(log_level_in: str | int, log_level_expected: int, logger):
     """Test if _set_log_level results in correct log_level."""
-    from {{cookiecutter.app_slug}}.logger import _set_log_level
+    from {{cookiecutter.__app_slug}}.logger import _set_log_level
 
     # TEST: Logger ends up with correct values
     _set_log_level(logger, log_level_in)

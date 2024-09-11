@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from {{cookiecutter.app_slug}} import create_app
+from {{cookiecutter.__app_slug}} import create_app
 
 
 def test_config_valid(tmp_path, get_test_config):
