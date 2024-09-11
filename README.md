@@ -28,27 +28,17 @@ Project features:
 
 Boilerplate features:
 
+- Template the repo with cookiecutter
 - Comments marked with KISM-BOILERPLATE where there is placeholder code that you will remove/replace.
-- `create_my_new_project.py` script to make you a new project based on this, with a different name.
-  - New repo has a README.md file with instructions for running the web app
-  - This repo has a test workflow to ensure that it works and tests pass after generating.
+- New repo has a README.md file with instructions for running the web app
+- This repo has a test workflow to ensure that it works and tests pass after generating.
 
-This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css>. Have a look at <https://github.com/dbohdan/classless-css> too if you want a different css.
+This goes with a simple CSS I made which is close to classless: <https://github.com/kism/zy.css> Cookie cutter grabs this and puts it in the right place. Have a look at <https://github.com/dbohdan/classless-css> too if you want a different css.
 
 ## Get started
 
 ```bash
-git clone https://github.com/kism/flask-boilerplate
-cd flask-boilerplate
-python create_my_new_project.py
+pipx run cookiecutter gh:kism/flask-boilerplate
 ```
 
-`create_my_new_project.py` Doesn't require any pip packages and can be run with your operating systems default python.
-
-This will create the new project directory in the parent directory, with the new name.
-
-At the end of the script it will give you some instructions to use poetry, and grab the my css.
-
-## Todo
-
-- cookiecutter
+After some prompts, this will create the new project directory in the parent directory, with the new name.

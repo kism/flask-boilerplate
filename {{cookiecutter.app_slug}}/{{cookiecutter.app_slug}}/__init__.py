@@ -1,4 +1,4 @@
-"""Flask webapp mycoolapp."""
+"""Flask webapp {{cookiecutter.app_slug}}."""
 
 from pprint import pformat
 
@@ -19,19 +19,19 @@ def create_app(test_config: dict | None = None, instance_path: str | None = None
         if not instance_path:
             app.logger.critical("When testing supply both test_config and instance_path!")
             raise AttributeError(instance_path)
-        mca_conf = config.MyCoolAppConfig(config=test_config, instance_path=app.instance_path)
+        {{cookiecutter.app_config_var}} = config.{{cookiecutter.app_camel_case}}Config(config=test_config, instance_path=app.instance_path)
     else:
-        mca_conf = config.MyCoolAppConfig(instance_path=app.instance_path)  # Loads app config from disk
+        {{cookiecutter.app_config_var}} = config.{{cookiecutter.app_camel_case}}Config(instance_path=app.instance_path)  # Loads app config from disk
 
     app.logger.debug("Instance path is: %s", app.instance_path)
 
-    logger.setup_logger(app, mca_conf["logging"])  # Setup logger with config
+    logger.setup_logger(app, {{cookiecutter.app_config_var}}["logging"])  # Setup logger with config
 
     # Flask config, at the root of the config object.
-    app.config.from_mapping(mca_conf["flask"])
+    app.config.from_mapping({{cookiecutter.app_config_var}}["flask"])
 
     # Other sections handled by config.py
-    for key, value in mca_conf.items():
+    for key, value in {{cookiecutter.app_config_var}}.items():
         if key != "flask":
             app.config[key] = value
 

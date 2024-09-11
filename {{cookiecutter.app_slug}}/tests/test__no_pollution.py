@@ -13,8 +13,8 @@ from collections.abc import Callable
 
 import pytest
 
-from mycoolapp import create_app
-from mycoolapp.config import ConfigValidationError
+from {{cookiecutter.app_slug}} import create_app
+from {{cookiecutter.app_slug}}.config import ConfigValidationError
 
 
 def test_instance_path_check(get_test_config: Callable):

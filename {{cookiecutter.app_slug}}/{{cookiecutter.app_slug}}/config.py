@@ -41,7 +41,7 @@ class ConfigValidationError(Exception):
         super().__init__(failure_list)
 
 
-class MyCoolAppConfig:
+class {{cookiecutter.app_camel_case}}Config:
     """Config Object."""
 
     def __init__(self, instance_path: str, config: dict | None = None) -> None:
@@ -159,8 +159,8 @@ class MyCoolAppConfig:
         """
         paths = [
             os.path.join(self.instance_path, "config.toml"),
-            os.path.expanduser("~/.config/mycoolapp/config.toml"),
-            "/etc/mycoolapp/config.toml",
+            os.path.expanduser("~/.config/{{cookiecutter.app_slug}}/config.toml"),
+            "/etc/{{cookiecutter.app_slug}}/config.toml",
         ]
 
         for path in paths:
