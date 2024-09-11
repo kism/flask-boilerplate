@@ -2,7 +2,7 @@
 name = "{{cookiecutter.app_slug}}"
 version = "0.0.1"
 description = ""
-authors = ["Your Name <youremailaddress@example.com>"]
+authors = ["{{cookiecutter.your_name}} <{{cookiecutter.your_email}}>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -18,9 +18,9 @@ pytest-mock = "*"
 detect-test-pollution = "*"
 pytest-random-order = "*"
 mypy = "*"
+ruff = "*"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "*"
 pylance = "*"
 
 [build-system]

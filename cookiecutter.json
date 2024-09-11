@@ -3,7 +3,10 @@
     "app_slug": "mycoolapp",
     "app_camel_case": "MyCoolApp",
     "app_config_var": "mca_conf",
+    "your_name": "Test Name",
+    "your_email": "test@example.com",
     "_copy_without_render": [
-        "*.j2"
+        "*.j2",
+        "*workflows/*"
     ]
 }

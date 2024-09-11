@@ -6,10 +6,39 @@ on:
     branches:
       - main
       - test
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: chartboost/ruff-action@v1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install cookiecutter
+        run: pip install cookiecutter
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
+
+      - name: Configure Poetry to install dependencies in virtualenv
+        run: |
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
+
+      - name: Generate cookiecutter project
+        run: cookiecutter flask-boilerplate --no-input
+        working-directory: ../
+
+      - name: Install dependencies
+        working-directory: ../mycoolapp
+        run: poetry install --without dev
+
+      - name: Lint with ruff
+        working-directory: ../mycoolapp
+        run: poetry run ruff check .
