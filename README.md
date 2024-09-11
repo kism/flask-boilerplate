@@ -41,4 +41,4 @@ This goes with a simple CSS I made which is close to classless: <https://github.
 pipx run cookiecutter gh:kism/flask-boilerplate
 ```
 
-After some prompts, this will create the new project directory in the parent directory, with the new name.
+After some prompts, this will create the new project directory in the current directory, with the name you specified.
