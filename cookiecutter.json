@@ -4,7 +4,7 @@
     "app_camel_case": "MyCoolApp",
     "app_config_var": "mca_conf",
     "_copy_without_render": [
-        "*.j2"
+        "*.j2",
         "*workflows/*"
     ]
 }
