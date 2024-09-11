@@ -42,7 +42,7 @@ jobs:
 
       - name: Test templated project with pytest
         working-directory: ../mycoolapp
-        run: .venv/bin/pytest
+        run: poetry run pytest --cov-report=xml
 
       - name: Move coverage report to correct location
         run: mv ../mycoolapp/coverage.xml .
