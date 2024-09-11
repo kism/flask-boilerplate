@@ -1,39 +1,42 @@
-# ---
-# name: Type Check (Mypy)
+---
+  name: Check (Ruff)
 
-# on:
-#   push:
-#     branches:
-#       - main
-#       - test
+  on:
+    push:
+      branches:
+        - main
+        - test
 
-# jobs:
-#   mypy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
+  jobs:
+    check:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: "3.11"
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: ${{ matrix.python-version }}
 
-#       - name: Run image
-#         uses: abatilo/actions-poetry@v2
+        - name: Install cookiecutter
+          run: pip install cookiecutter
 
-#       - name: Configure Poetry to install dependencies in virtualenv
-#         run: |
-#           poetry config virtualenvs.create true --local
-#           poetry config virtualenvs.in-project true --local
+        - name: Run image
+          uses: abatilo/actions-poetry@v2
 
-#       - name: Define a cache for the virtual environment based on the dependencies lock file
-#         uses: actions/cache@v4
-#         with:
-#           path: ./.venv
-#           key: venv-${{ hashFiles('poetry.lock') }}
+        - name: Configure Poetry to install dependencies in virtualenv
+          run: |
+            poetry config virtualenvs.create true --local
+            poetry config virtualenvs.in-project true --local
 
-#       - name: Install dependencies
-#         run: poetry install --without dev
+        - name: Generate cookiecutter project
+          run: cookiecutter flask-boilerplate --no-input
+          working-directory: ../
 
-#       - name: Check types with mypy
-#         run: .venv/bin/mypy
+        - name: Install dependencies
+          working-directory: ../mycoolapp
+          run: poetry install --without dev
+
+        - name: Check types with mypy
+          working-directory: ../mycoolapp
+          run: .venv/bin/mypy
