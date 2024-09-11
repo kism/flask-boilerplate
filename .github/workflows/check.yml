@@ -39,4 +39,4 @@ jobs:
 
       - name: Lint with ruff
         working-directory: ../mycoolapp
-        run: .venv/bin/ruff
+        run: poetry run ruff
