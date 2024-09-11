@@ -28,8 +28,8 @@ Project features:
 
 Boilerplate features:
 
-- Comments marked with KISM-BOILERPLATE where there is placeholder code that you will remove/replace.
 - Template the repo with cookiecutter
+- Comments marked with KISM-BOILERPLATE where there is placeholder code that you will remove/replace.
 - New repo has a README.md file with instructions for running the web app
 - This repo has a test workflow to ensure that it works and tests pass after generating.
 
@@ -42,7 +42,3 @@ pipx run cookiecutter gh:kism/flask-boilerplate
 ```
 
 After some prompts, this will create the new project directory in the parent directory, with the new name.
-
-## Todo
-
-- cookiecutter

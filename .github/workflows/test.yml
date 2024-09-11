@@ -6,7 +6,8 @@ on:
     branches:
       - main
       - test
-
+    paths-ignore:
+      - '**/README.md'
 jobs:
   test_create_my_new_project:
     runs-on: ubuntu-latest
