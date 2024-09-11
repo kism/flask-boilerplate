@@ -26,8 +26,8 @@ jobs:
 
       - name: Configure Poetry to install dependencies in virtualenv
         run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
 
       - name: Generate cookiecutter project
         run: cookiecutter flask-boilerplate --no-input
