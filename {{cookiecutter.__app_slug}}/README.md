@@ -1,4 +1,4 @@
-# {{cookiecutter.app_slug}}
+# {{cookiecutter.__app_package}}
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ Install poetry with pipx `pipx install poetry`
 ```bash
 poetry install
 poetry shell
-flask --app {{cookiecutter.app_slug}} run --port 5000
+flask --app {{cookiecutter.__app_package}} run --port 5000
 ```
 
 ### Run Prod
@@ -27,7 +27,7 @@ poetry install --only main
     --log-untrusted-proxy-headers \
     --clear-untrusted-proxy-headers \
     --threads 4 \
-    --call {{cookiecutter.app_slug}}:create_app
+    --call {{cookiecutter.__app_package}}:create_app
 ```
 
 ## Check/Test
@@ -54,7 +54,7 @@ Or if you are not using GitHub you can check out workflow badges from your Git h
 
 #### Locally
 
-To get code coverage locally, the config is set in 'pyproject.toml', or run with `pytest --cov={{cookiecutter.app_slug}} --cov-report=term --cov-report=html`
+To get code coverage locally, the config is set in 'pyproject.toml', or run with `pytest --cov={{cookiecutter.__app_package}} --cov-report=term --cov-report=html`
 
 ```bash
 python -m http.server -b 127.0.0.1 8000

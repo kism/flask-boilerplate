@@ -6,7 +6,7 @@ from types import FunctionType
 import pytest
 from flask import Flask
 
-from {{cookiecutter.app_slug}} import create_app
+from {{cookiecutter.__app_package}} import create_app
 
 
 def test_config_invalid_log_level(tmp_path, get_test_config: FunctionType, caplog: pytest.LogCaptureFixture):
