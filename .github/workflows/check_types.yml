@@ -39,4 +39,4 @@ jobs:
 
       - name: Check types with mypy
         working-directory: ../mycoolapp
-        run: .venv/bin/mypy
+        run: poetry run mypy
