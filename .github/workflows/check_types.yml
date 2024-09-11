@@ -1,42 +1,42 @@
 ---
-  name: Check (Ruff)
+name: Type Check (Mypy)
 
-  on:
-    push:
-      branches:
-        - main
-        - test
+on:
+  push:
+    branches:
+      - main
+      - test
 
-  jobs:
-    check:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: ${{ matrix.python-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-        - name: Install cookiecutter
-          run: pip install cookiecutter
+      - name: Install cookiecutter
+        run: pip install cookiecutter
 
-        - name: Run image
-          uses: abatilo/actions-poetry@v2
+      - name: Run image
+        uses: abatilo/actions-poetry@v2
 
-        - name: Configure Poetry to install dependencies in virtualenv
-          run: |
-            poetry config virtualenvs.create true --local
-            poetry config virtualenvs.in-project true --local
+      - name: Configure Poetry to install dependencies in virtualenv
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
 
-        - name: Generate cookiecutter project
-          run: cookiecutter flask-boilerplate --no-input
-          working-directory: ../
+      - name: Generate cookiecutter project
+        run: cookiecutter flask-boilerplate --no-input
+        working-directory: ../
 
-        - name: Install dependencies
-          working-directory: ../mycoolapp
-          run: poetry install --without dev
+      - name: Install dependencies
+        working-directory: ../mycoolapp
+        run: poetry install --without dev
 
-        - name: Check types with mypy
-          working-directory: ../mycoolapp
-          run: .venv/bin/mypy
+      - name: Check types with mypy
+        working-directory: ../mycoolapp
+        run: .venv/bin/mypy
