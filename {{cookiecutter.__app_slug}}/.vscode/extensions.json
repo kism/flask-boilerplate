@@ -1,9 +1,10 @@
 {
     "recommendations": [
         "esbenp.prettier-vscode",
+        "samuelcolvin.jinjahtml",
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "samuelcolvin.jinjahtml",
+        "ms-python.mypy-type-checker",
         "charliermarsh.ruff",
     ]
 }

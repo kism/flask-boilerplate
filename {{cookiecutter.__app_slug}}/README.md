@@ -36,6 +36,10 @@ poetry install --only main
 
 Run `ruff check .` or get the vscode ruff extension, the rules are defined in pyproject.toml.
 
+### Type Checking
+
+Run `mypy .` or get the vscode mypy extension by Microsoft, the rules are defined in pyproject.toml.
+
 ### Testing
 
 Run `pytest`, It will get its config from pyproject.toml
