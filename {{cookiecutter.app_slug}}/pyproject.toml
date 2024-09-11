@@ -18,9 +18,9 @@ pytest-mock = "*"
 detect-test-pollution = "*"
 pytest-random-order = "*"
 mypy = "*"
+ruff = "*"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "*"
 pylance = "*"
 
 [build-system]
