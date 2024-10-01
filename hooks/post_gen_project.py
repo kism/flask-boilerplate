@@ -12,7 +12,7 @@ original_dir = os.getcwd()
 
 print("Grabbing CSS:")
 
-os.chdir(f"{__app_package}/static")
+os.chdir(f"{__app_package}")
 
 proc = subprocess.Popen(
     "curl -LsS https://github.com/kism/zy.css/releases/download/main/grab.sh | bash",
@@ -38,7 +38,7 @@ with open(file_path, "r") as file:
 
 j2_file_content = j2_file_content.replace(
     '<script src="PLACEHOLDER_DUE_TO_TEMPLATE_CONFLICT"></script>',
-    f'<script src="{__app_package}.js"></script>',
+    f'<script src="static/{__app_package}.js"></script>',
 )
 
 with open(file_path, "w") as file:
