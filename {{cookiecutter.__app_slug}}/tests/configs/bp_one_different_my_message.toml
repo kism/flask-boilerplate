@@ -2,7 +2,7 @@
 my_message = "Hello, PyTest!"
 
 [logging]
-level = "DEBUG"
+level = "TRACE"
 
 [flask]
 TESTING = true
