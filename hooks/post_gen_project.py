@@ -38,7 +38,7 @@ with open(file_path, "r") as file:
 
 j2_file_content = j2_file_content.replace(
     '<script src="PLACEHOLDER_DUE_TO_TEMPLATE_CONFLICT"></script>',
-    f'<script src="static/{__app_package}.js"></script>',
+    f'<script src="/static/{__app_package}.js"></script>',
 )
 
 with open(file_path, "w") as file:
