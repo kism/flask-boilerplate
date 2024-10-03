@@ -85,7 +85,7 @@ def setup_logger(
     logger.info("Logger configuration set!")
 
 
-def get_logger(name: str) -> logging.Logger:
+def get_logger(name: str) -> CustomLogger:
     """Get a logger with the name provided."""
     return cast(CustomLogger, logging.getLogger(name))
 
