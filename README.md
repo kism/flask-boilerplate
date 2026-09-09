@@ -21,7 +21,7 @@ git grep -lz -e my_cool_app -e my-cool-app -e kism/fastapi-boilerplate | \
 git mv src/my_cool_app "src/$NEW_MODULE"
 git mv "src/$NEW_MODULE/static/my_cool_app.js" "src/$NEW_MODULE/static/$NEW_MODULE.js"
 git mv frontend/my_cool_app.ts "frontend/$NEW_MODULE.ts"
-rm -rf .venv *.egg-info && uv sync --all-extras
+rm -rf .venv *.egg-info && uv sync --all-groups
 bun install && bun run all
 rm -f .github/workflows/dependabot_automerge.yml
 rm -rf .git && git init -q && git add -A && git commit -qm "Initial commit"
@@ -70,7 +70,7 @@ the frontend, the built javascript is committed.
 ```bash
 uv venv
 source .venv/bin/activate
-uv sync --all-extras # Omit --all-extras for prod
+uv sync --all-groups # Omit --all-groups for prod
 ```
 
 ### Run Dev
@@ -88,7 +88,7 @@ uvicorn --factory my_cool_app:create_app --reload --port 5000
 ### Run Prod
 
 ```bash
-uv sync --no-dev
+uv sync
 .venv/bin/my-cool-app --host 127.0.0.1 --port 5000
 ```
 

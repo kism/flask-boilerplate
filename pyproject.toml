@@ -12,7 +12,7 @@ dependencies = [
     "pydantic>=2.12",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 type = ["ty>=0.0.69"]
 
 lint = ["ruff>=0.16.2"]
