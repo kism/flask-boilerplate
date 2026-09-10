@@ -12,7 +12,7 @@ on:
       - ".github/workflows/check_types.yml"
 
 jobs:
-  test_boilerplate:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
