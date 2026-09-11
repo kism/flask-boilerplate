@@ -1,4 +1,18 @@
-# KiSM's FastAPI Boilerplate
+# my_cool_app
+
+## Using this template
+
+Run the rename script and answer the prompts (module name, dist name, repo):
+
+```bash
+./AAA_RENAME_TEMPLATE.sh
+```
+
+It rewrites every `my_cool_app` / `my-cool-app` / `kism/fastapi-boilerplate` reference,
+renames `src/my_cool_app`, drops template-only files, resyncs the venv, rebuilds the frontend,
+re-inits git with a fresh initial commit, and deletes itself (and this section) when done.
+
+Then delete this section.
 
 [![Check](https://github.com/kism/fastapi-boilerplate/actions/workflows/check.yml/badge.svg)](https://github.com/kism/fastapi-boilerplate/actions/workflows/check.yml)
 [![CheckType](https://github.com/kism/fastapi-boilerplate/actions/workflows/check_types.yml/badge.svg)](https://github.com/kism/fastapi-boilerplate/actions/workflows/check_types.yml)
@@ -6,28 +20,6 @@
 [![Test](https://github.com/kism/fastapi-boilerplate/actions/workflows/test.yml/badge.svg)](https://github.com/kism/fastapi-boilerplate/actions/workflows/test.yml)
 
 See [README_dev.md](README_dev.md) for checking, testing and CI.
-
-## Using this template
-
-Rename the app and repo references (replace `your_app` and `youruser/your-repo`):
-
-```bash
-NEW_MODULE=your_app                 # python module name, snake_case
-NEW_DIST=your-app                   # package/dist name, kebab-case
-NEW_REPO=youruser/your-repo         # github <user>/<repo>
-
-git grep -lz -e my_cool_app -e my-cool-app -e kism/fastapi-boilerplate | \
-  xargs -0 sed -i "s|my_cool_app|$NEW_MODULE|g; s|my-cool-app|$NEW_DIST|g; s|kism/fastapi-boilerplate|$NEW_REPO|g"
-git mv src/my_cool_app "src/$NEW_MODULE"
-git mv "src/$NEW_MODULE/static/my_cool_app.js" "src/$NEW_MODULE/static/$NEW_MODULE.js"
-git mv frontend/my_cool_app.ts "frontend/$NEW_MODULE.ts"
-rm -rf .venv *.egg-info && uv sync --all-groups
-bun install && bun run all
-rm -f .github/workflows/dependabot_automerge.yml
-rm -rf .git && git init -q && git add -A && git commit -qm "Initial commit"
-```
-
-Then delete this section.
 
 ## This Boilerplate
 
